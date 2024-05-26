@@ -1,7 +1,7 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js'
 import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js'
 
-const fbCfg = {
+const firebaseConfig = {
     apiKey: "AIzaSyCwbb7PceRaS4TpHA422uRqU3f7aHKLB38",
     authDomain: "reel-talk-28ac2.firebaseapp.com",
     projectId: "reel-talk-28ac2",
@@ -14,7 +14,7 @@ const fbCfg = {
 const Db = async () => {
 
     const initDB = async () => {
-        return await initializeApp(fbCfg)  
+        return await initializeApp(firebaseConfig)  
     }
 
     const get = () => {
@@ -22,7 +22,6 @@ const Db = async () => {
     }
 
     const app = await initDB()
-    console.log('hello')
 
     return {
         get

@@ -11,7 +11,10 @@ document.querySelector('#login').addEventListener('click', () => {
   auth.login(email, password)
 })
 
+document.querySelector('#login-google').addEventListener('click', () => {
+  auth.loginWithGoogle()
+})
+
 document.querySelector('#logout').addEventListener('click', () => {
   auth.logout()
 })
-

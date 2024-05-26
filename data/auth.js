@@ -1,5 +1,8 @@
 import { 
-    getAuth, 
+    getAuth,
+    GoogleAuthProvider,
+    signInWithPopup,
+    signInWithRedirect, 
     signInWithEmailAndPassword, 
     signOut, 
     onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js'
@@ -13,11 +16,22 @@ const Auth = () => {
 
     const login = async ( email, password ) => {
         const user = await signInWithEmailAndPassword(auth, email, password)
-        console.log(user)
     }
 
-    const logout = async () => {
-        signOut(auth)
+    const loginWithGoogle = async () => {
+        const result = await signInWithPopup(auth, google)
+        // const credential = GoogleAuthProvider.credentialFromResult(result)
+        // const token = credential.accessToken
+        const user = result.user
+    }
+
+    const logout = () => {
+        try { 
+            signOut(auth)
+        }
+        catch (error) {
+            console.error(`Error signing out. The error was: ${error}`)
+        }
     }
 
     const watchAuthState = auth => {
@@ -31,13 +45,20 @@ const Auth = () => {
         })
     }
 
-    const auth = getAuth(db.get())
+    const get = () => {
+        return auth
+    }
 
+    const auth = getAuth(db.get())
+    const google = new GoogleAuthProvider()
+    
     watchAuthState(auth)
 
     return {
        login,
-       logout
+       logout,
+       get,
+       loginWithGoogle
     }
 }
 
