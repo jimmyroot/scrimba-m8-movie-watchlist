@@ -28,9 +28,9 @@ const Omdb = async () => {
         return result
     }
 
-    const getPosterByIMDBId = async id => {
-        const path = `${OMDB_BASE_IMG_PATH}`
-    }
+    // const getPosterByIMDBId = async id => {
+    //     const path = `${OMDB_BASE_IMG_PATH}`
+    // }
     
     // console.log(await searchMovies('star wars'))
     // console.log(await getMovieByIMDBId('tt0076759'))

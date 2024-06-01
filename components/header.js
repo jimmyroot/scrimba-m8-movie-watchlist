@@ -6,17 +6,20 @@ const Header = () => {
 
     const render = page => {
         const html = `
-            <div class="header-wrapper">
+            
                 <div>
-                    <!--<img class="header-logo-img" src="/assets/logo.png" data-type="refresh" alt="Reel Talk logo">-->
+                    <img class="header-logo-img" src="/assets/logo.png" data-type="refresh" alt="Reel Talk logo">
                     <h1 class="header-logo" data-type="refresh">Reel Talk</h1>
                 </div>
                 <ul class="header-menu" id="menu">
-                    <li>
+                    <!--<li>
                         <a href="#">Find Movies</a>
                     </li>
                     <li>
                         <a href="#">My Lists</a>
+                    </li>-->
+                    <li>
+                        <a href="#">Sign up</a>
                     </li>
                     <li>
                         <a href="#" class="sign-in">Sign in</a>
@@ -27,7 +30,7 @@ const Header = () => {
                         <span class="hamburger-inner"></span>
                     </span>
                 </button>
-            </div>
+            
         `
         return html
     }

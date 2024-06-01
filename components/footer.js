@@ -5,7 +5,10 @@ const Footer = () => {
     }
 
     const render = () => {
-        const html = `<h2>Footer</h2>`
+        const html = `
+            <p>Reel Talk</p>
+            <p>Copyright Jimmy ©2024</p>
+        `
         return html
     }
 

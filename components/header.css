@@ -1,4 +1,4 @@
-.header-wrapper {
+.header {
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -8,24 +8,24 @@
 
     div:first-child {
         display: flex;
-        gap: .5em;
+        gap: 1em;
         align-items: center;
     }
 
     .header-logo {
         color: var(--txt-dark);
-        font-family: sans-serif;
+        font-family: Oswald, sans-serif;
         text-transform: uppercase;
         cursor: pointer;
         margin: 0;
     }
 
-    /* .header-logo-img {
+    .header-logo-img {
         display: block;
-        width: 35px;
+        width: 30px;
         aspect-ratio: 1/1;
         cursor: pointer;
-    } */
+    }
     
     .header-menu {
         list-style-type: none;

@@ -8,7 +8,7 @@ wouldn't be an issue if I was using the function keyword but...well, I'm not!
 
 import { home } from '../pages/home'
 import { findmovies } from '../pages/findmovies'
-import { watchlist } from '../pages/watchlist'
+import { watchlist } from './mylists'
 import { header } from '../components/header'
 import { footer } from '../components/footer'
 // import { post } from '../pages/post'
@@ -32,7 +32,7 @@ const Router = () => {
                 linkLabel: 'Find Movie',
                 content: []
             },
-            '/watchlist': {
+            '/mylists': {
                 module: watchlist,
                 linkLabel: 'My Watchlist',
                 content: []
@@ -147,6 +147,7 @@ const Router = () => {
     }
 
     populateRoutes()
+    registerRouterWithBrowserNavigation()
     
     return {
         navigate,
