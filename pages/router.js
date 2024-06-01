@@ -7,6 +7,8 @@ wouldn't be an issue if I was using the function keyword but...well, I'm not!
 */
 
 import { home } from '../pages/home'
+import { findmovies } from '../pages/findmovies'
+import { watchlist } from '../pages/watchlist'
 import { header } from '../components/header'
 import { footer } from '../components/footer'
 // import { post } from '../pages/post'
@@ -21,15 +23,18 @@ const Router = () => {
     const populateRoutes = () => {
         routes = {
             '/': {
+                module: home,
                 linkLabel: 'Home',
-                content: compilePage(home) // imported module.get() ?
+                content: [] // imported module.get() ?
             },
-            '/find': {
+            '/findmovies': {
+                module: findmovies,
                 linkLabel: 'Find Movie',
                 content: []
             },
-            '/list': {
-                content: 'My Watchlist',
+            '/watchlist': {
+                module: watchlist,
+                linkLabel: 'My Watchlist',
                 content: []
             },
             // '/about': {
@@ -132,6 +137,7 @@ const Router = () => {
         
         // Try to render the given path, if anything goes wrong set route to unknown and go...
         try {
+            routes[route].content = compilePage(routes[route].module)
             const nodesToRender = routes[route].content
             document.querySelector('#app').replaceChildren(...nodesToRender)
         }

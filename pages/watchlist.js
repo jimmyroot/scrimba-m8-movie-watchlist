@@ -1,15 +1,13 @@
-import { omdb } from "../data/omdb"
+const Watchlist = () => {
 
-const Home = () => {
-
-    const name = 'home'
+    const name = 'watchlist'
 
     const registerEventListeners = () => {
 
     }
 
     const render = () => {
-        const html = `<h1>Home</h1>`
+        const html = `<h1>My Watchlists</h1>`
         return html
     }
 
@@ -23,7 +21,7 @@ const Home = () => {
     }
 
     const node = document.createElement('main')
-    node.classList.add('home')
+    node.classList.add('watchlist')
 
     return {
         get,
@@ -31,4 +29,4 @@ const Home = () => {
     }
 }
 
-export const home = Home()
+export const watchlist = Watchlist()

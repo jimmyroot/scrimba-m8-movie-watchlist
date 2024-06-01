@@ -1,0 +1,12 @@
+:root {
+    --primary: #0275FF;
+    --primary-darker: #006aeb;
+    --secondary: #011936;
+    --txt-light: #FFFFFF;
+    --txt-dark: #272932;
+    --btn-hover: #00000011;
+    --btn-active: #00000020;
+    --br: 7px;
+    --divider: #00000022;
+    --spinner-main: #FFFFFF66;
+}
