@@ -15,3 +15,7 @@ html {
   overflow-y: scroll;
   scrollbar-gutter: stable;
 }
+
+.main {
+  flex-grow: 1;
+}

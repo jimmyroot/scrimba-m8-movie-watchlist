@@ -5,10 +5,11 @@ as it uses an arrow function that has to be declard first, of course this
 wouldn't be an issue if I was using the function keyword but...well, I'm not!
 
 */
-
+import { auth } from '../data/auth'
 import { home } from '../pages/home'
 import { findmovies } from '../pages/findmovies'
-import { watchlist } from './mylists'
+import { mylists } from './mylists'
+import { signIn } from './signin'
 import { header } from '../components/header'
 import { footer } from '../components/footer'
 // import { post } from '../pages/post'
@@ -33,8 +34,13 @@ const Router = () => {
                 content: []
             },
             '/mylists': {
-                module: watchlist,
-                linkLabel: 'My Watchlist',
+                module: mylists,
+                linkLabel: 'My Lists',
+                content: []
+            },
+            '/signin': {
+                module: signIn,
+                linkLabel: 'Sign In',
                 content: []
             },
             // '/about': {
@@ -69,8 +75,9 @@ const Router = () => {
     }
 
     const compilePage = page => {
+        const user = auth.getUser()
         return [
-            header.get(page),
+            header.get(page, user),
             page.get(),
             footer.get()
         ]
@@ -80,23 +87,22 @@ const Router = () => {
         render(location.pathname)
     }
 
-    const navigate = e => {
-        const route = e.target.pathname
+    const navigate = route => {
         history.pushState({}, "", route)
         render(route)
     }
 
-    const navigateToPost = (e) => {
+    // const navigateToPost = (e) => {
     
-        // routes['/post'].content = post.get(id)
-        const route = `/post${e.target.pathname}`
-        history.pushState({}, "", route)
-        render(route)
-        window.scrollTo({
-            top: 0,
-            behaviour: 'smooth'
-        })
-    }
+    //     // routes['/post'].content = post.get(id)
+    //     const route = `/post${e.target.pathname}`
+    //     history.pushState({}, "", route)
+    //     render(route)
+    //     window.scrollTo({
+    //         top: 0,
+    //         behaviour: 'smooth'
+    //     })
+    // }
 
     const render = route => {
 
@@ -151,9 +157,7 @@ const Router = () => {
     
     return {
         navigate,
-        navigateToPost,
-        renderStartPage,
-        registerRouterWithBrowserNavigation
+        renderStartPage
     }
 }
 

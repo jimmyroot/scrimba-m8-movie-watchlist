@@ -12,20 +12,22 @@ const db = await (async () => {
     return db
 })()
 
+import { router } from '../pages/router'
+
 const Auth = () => {
 
-    const login = async ( email, password ) => {
+    const fbSignIn = async ( email, password ) => {
         const user = await signInWithEmailAndPassword(auth, email, password)
     }
 
-    const loginWithGoogle = async () => {
+    const signInWithGoogle = async () => {
         const result = await signInWithPopup(auth, google)
         // const credential = GoogleAuthProvider.credentialFromResult(result)
         // const token = credential.accessToken
         const user = result.user
     }
 
-    const logout = () => {
+    const fbSignOut = () => {
         try { 
             signOut(auth)
         }
@@ -38,9 +40,11 @@ const Auth = () => {
         onAuthStateChanged(auth, user => {
             if (user) {
                 console.log(`User ${user.email} is logged in`)
+                router.navigate('/mylists')
             }
             else {
                 console.log('User is logged out')
+                router.navigate('/')
             }
         })
     }
@@ -49,16 +53,21 @@ const Auth = () => {
         return auth
     }
 
+    const getUser = () => {
+        return auth.currentUser || null
+    }
+
     const auth = getAuth(db.get())
     const google = new GoogleAuthProvider()
     
     watchAuthState(auth)
 
     return {
-       login,
-       logout,
-       get,
-       loginWithGoogle
+        get,
+        fbSignIn,
+        fbSignOut,
+        signInWithGoogle,
+        getUser
     }
 }
 

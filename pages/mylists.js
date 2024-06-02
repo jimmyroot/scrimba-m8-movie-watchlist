@@ -1,6 +1,6 @@
-const Watchlist = () => {
+const MyLists = () => {
 
-    const name = 'watchlist'
+    const name = 'mylists'
 
     const registerEventListeners = () => {
 
@@ -21,7 +21,7 @@ const Watchlist = () => {
     }
 
     const node = document.createElement('main')
-    node.classList.add('watchlist')
+    node.classList.add('mylists')
 
     return {
         get,
@@ -29,4 +29,4 @@ const Watchlist = () => {
     }
 }
 
-export const watchlist = Watchlist()
+export const mylists = MyLists()

@@ -1,0 +1,53 @@
+import { auth } from '../data/auth'
+
+const SignIn = () => {
+
+    const registerEventListeners = () => {
+        node.addEventListener('click', e => {
+            handleClick(e)
+        })
+    }
+
+    const handleClick = e => {
+        const execute = {
+            'signin': () => {
+                const email = document.getElementById('login-email').value
+                const password = document.getElementById('login-password').value
+                auth.fbSignIn(email, password)
+            },
+        }
+
+        const { type } = e.target.dataset
+        if (execute[type]) execute[type]()
+    }
+
+    const render = () => {
+        const html = `
+            <h1>Sign in</h1>
+            <input type="text" id="login-email" />
+            <input type="password" id="login-password" />
+            <button type="submit" data-type="signin">Sign in</button>
+        `
+        return html
+    }
+
+    const refresh = () => {
+        node.innerHTML = render()
+    }
+
+    const get = () => {
+        refresh()
+        return node
+    }
+
+    const node = document.createElement('main')
+    node.classList.add('main')
+
+    registerEventListeners()
+    
+    return {
+        get
+    }
+}
+
+export const signIn = SignIn()
