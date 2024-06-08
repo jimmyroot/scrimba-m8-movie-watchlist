@@ -1,5 +1,5 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js'
-import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js'
+import { getFirestore, getDoc, doc } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js'
 
 const firebaseConfig = {
     apiKey: "AIzaSyCwbb7PceRaS4TpHA422uRqU3f7aHKLB38",
@@ -17,14 +17,34 @@ const Db = async () => {
         return await initializeApp(firebaseConfig)  
     }
 
+    const getAccount = async id => {
+        const profileDocRef = doc(db, 'accounts', id)
+        const profileDocSnapshot = await getDoc(profileDocRef)
+
+        if (profileDocSnapshot.exists()) {
+            return profileDocSnapshot.data()
+        }
+        else {
+            console.log('User account does not exist')
+        }
+    }
+
+    const createAccount = async user => {
+        console.log(`Creating account with UID: ${user.uid}`)
+        // set the new doc inside profiles
+    }
+
     const get = () => {
         return app
     }
 
     const app = await initDB()
+    const db = await getFirestore(app)
 
     return {
-        get
+        get,
+        getAccount,
+        createAccount
     }
 }
 

@@ -21,7 +21,6 @@ const Header = () => {
         }
         e.preventDefault()
         const { type } = e.target.dataset
-        console.log(type)
         if (execute[type]) execute[type]()
     }
 
@@ -29,10 +28,10 @@ const Header = () => {
         const nav = Boolean(user) ? 
             `
                 <li>
-                    <a href="#">Find Movies</a>
+                    <a href="/findmovies" data-type="navigate">Find Movies</a>
                 </li>
                 <li>
-                    <a href="#">My Lists</a>
+                    <a href="/mylists" data-type="navigate">My Lists</a>
                 </li>
                 <li>
                     <a href="#" class="sign-in" data-type="signout">Sign out</a>
@@ -61,6 +60,7 @@ const Header = () => {
                     </span>
                 </button>
         `
+        
         return html
     }
 

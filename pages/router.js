@@ -26,34 +26,27 @@ const Router = () => {
             '/': {
                 module: home,
                 linkLabel: 'Home',
+                requiresLogin: false,
                 content: [] // imported module.get() ?
             },
             '/findmovies': {
                 module: findmovies,
                 linkLabel: 'Find Movie',
+                requiresLogin: true,
                 content: []
             },
             '/mylists': {
                 module: mylists,
                 linkLabel: 'My Lists',
+                requiresLogin: true,
                 content: []
             },
             '/signin': {
                 module: signIn,
                 linkLabel: 'Sign In',
+                requiresLogin: false,
                 content: []
             },
-            // '/about': {
-            //     linkLabel: 'About',
-            //     content: [about.get()]
-            // },
-            // '/mywork': {
-            //     linkLabel: 'Post',
-            //     content: [myWork.get()]
-            // },
-            // '/post': {
-            //     content: ``
-            // },
             '/unknown': {
                 content: (() => {
                     const node = document.createElement('div')
@@ -71,79 +64,73 @@ const Router = () => {
     }
 
     const registerRouterWithBrowserNavigation = () => {
-        window.onpopstate = e => render(location.pathname)
+        window.onpopstate = () => navigate(location.pathname)
     }
 
-    const compilePage = page => {
-        const user = auth.getUser()
-        return [
-            header.get(page, user),
-            page.get(),
-            footer.get()
-        ]
+
+    const compilePage = (page, user) => {
+        try {
+            const nodes = [
+                header.get(page, user),
+                page.get(user),
+                footer.get()
+            ]
+            return nodes
+        } catch (e) {
+            console.error(`Error compiling page. The error was: ${e}`)
+        }
     }
 
-    const renderStartPage = () => {
-        render(location.pathname)
+    const initialize = () => {
+        // render(location.pathname)
+        auth.onAuthStateChanged(auth.get(), user => {
+            const destination = location.pathname
+            const routeExists = Boolean(routes[destination])
+            if (routeExists) {
+                const { requiresLogin } = routes[destination]
+                if (user) {
+                    console.log(destination)
+                    destination === '/signin' ? navigate('/mylists') : navigate(destination)
+                    // navigate(destination)
+                }
+                else {
+                    if (requiresLogin) {
+                        navigate('/')
+                    }
+                    else {
+                        navigate(destination)
+                    }
+                }
+            }
+            else {
+                navigate(destination)
+            }
+        })
     }
 
-    const navigate = route => {
+    const navigate = (route) => {
         history.pushState({}, "", route)
         render(route)
     }
 
-    // const navigateToPost = (e) => {
-    
-    //     // routes['/post'].content = post.get(id)
-    //     const route = `/post${e.target.pathname}`
-    //     history.pushState({}, "", route)
-    //     render(route)
-    //     window.scrollTo({
-    //         top: 0,
-    //         behaviour: 'smooth'
-    //     })
-    // }
-
-    const render = route => {
-
+    const render = async (route) => {
+        
         // Remove any trailing slash (unless route is homepage)
         if (route != '/') route = route.replace(/\/$/, "")
-        // console.log(route)
 
-        // Split the requested path so we can do some quick parsing to see if
-        // a blog post was requested directly
-        const path = route.split('/')   
+        // Split the requested path in case we want to query it
+        const path = route.split('/')
 
-        // // Check if we're trying to access a post
-        // if (path[1] === 'post') {
-        //     // check if the path contains a sub URL
-        //     const postPath = path[2]
-        //     // try to set post content to the requested post, getPostByPath will return
-        //     // false if it can't find the post
-        //     let postToRender = post.getPostByPath(postPath)
-
-        //     // if post was retrieved successfully, append recent posts 
-        //     if (postToRender) {
-        //         const options = {
-        //             qty: 3,
-        //             postIdToExclude: post.getRenderedPostId(),
-        //             showHeader: true,
-        //             randomize: true
-        //         }
-        //         // console.log(options)
-        //         const recentPostsSection = post.getPosts(options)
-
-        //         routes['/post'].content = [postToRender, recentPostsSection]
-        //     }
-
-        //     // If the post was returned successfully, set route to post, else if it's 'false' set route to
-        //     // unknown before render
-        //     routes['/post'].content ? route = '/post' : route = '/unknown'
-        // } 
+        // Get the user info to pass to the page for rendering.
+        // Don't allow user to load the sign in page whilst logged in (the user could do this by clicking
+        // back in the browser, or manually typing the URL. If they do, we'll redirect them
+        // const user = auth.getUser()
+        // console.log(user)
+        // if (user && path[1] === 'signin') route = '/mylists'
         
         // Try to render the given path, if anything goes wrong set route to unknown and go...
         try {
-            routes[route].content = compilePage(routes[route].module)
+            routes[route].content = compilePage(routes[route].module, auth.getUser())
             const nodesToRender = routes[route].content
             document.querySelector('#app').replaceChildren(...nodesToRender)
         }
@@ -157,7 +144,7 @@ const Router = () => {
     
     return {
         navigate,
-        renderStartPage
+        initialize
     }
 }
 

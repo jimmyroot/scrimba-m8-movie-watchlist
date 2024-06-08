@@ -3,10 +3,9 @@ const db = await (async () => {
     return db
 })()
 
-import { auth } from './data/auth'
 import { router } from './pages/router'
 
-router.renderStartPage()
+router.initialize()
 
 // document.querySelector('#login').addEventListener('click', () => {
 //   const email = document.querySelector('#email').value

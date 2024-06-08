@@ -15,6 +15,9 @@ const SignIn = () => {
                 const password = document.getElementById('login-password').value
                 auth.fbSignIn(email, password)
             },
+            'signinwithgoogle': () => {
+                auth.signInWithGoogle()
+            }
         }
 
         const { type } = e.target.dataset
@@ -24,9 +27,13 @@ const SignIn = () => {
     const render = () => {
         const html = `
             <h1>Sign in</h1>
+            <div>
             <input type="text" id="login-email" />
             <input type="password" id="login-password" />
             <button type="submit" data-type="signin">Sign in</button>
+            </div>
+            <div>
+            <button data-type="signinwithgoogle">Continue with Google</button>
         `
         return html
     }
@@ -42,9 +49,8 @@ const SignIn = () => {
 
     const node = document.createElement('main')
     node.classList.add('main')
-
     registerEventListeners()
-    
+
     return {
         get
     }
