@@ -32,7 +32,9 @@ const Omdb = async () => {
     //     const path = `${OMDB_BASE_IMG_PATH}`
     // }
     
-    // console.log(await searchMovies('star wars'))
+    // const movies = await searchMovies('star wars')
+    // console.log(movies.Search[0])
+
     // console.log(await getMovieByIMDBId('tt0076759'))
 
     return {
