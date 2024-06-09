@@ -25,7 +25,7 @@ const Auth = () => {
         // const credential = GoogleAuthProvider.credentialFromResult(result)
         // const token = credential.accessToken
         const user = result.user
-        console.log(user.uid)
+        // console.log(user.uid)
         const profile = await db.getAccount(user.uid)
         Boolean(profile) ? console.log('exists') : db.createAccount(user)
     }
@@ -42,11 +42,11 @@ const Auth = () => {
     const watchAuthState = () => {
         onAuthStateChanged(auth, user => {
             if (user) {
-                console.log(`User ${user.email} is logged in`)
+                // console.log(`User ${user.email} is logged in`)
                 // router.navigate(location.pathname)
             }
             else {
-                console.log('User is logged out')
+                // console.log('User is logged out')
                 // router.navigate('/')
             }
         })
@@ -63,7 +63,7 @@ const Auth = () => {
     const auth = getAuth(db.get())
     const google = new GoogleAuthProvider()
 
-    watchAuthState()
+    // watchAuthState()
 
     return {
         get,

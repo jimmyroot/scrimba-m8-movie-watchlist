@@ -69,6 +69,7 @@ const Db = async () => {
         }
     }
 
+    // Create a new list with unique ID — addDoc()
     const createList = async params => {
         const lists = collection(db, 'lists')
         const listDocRef = await addDoc(lists, {
@@ -79,77 +80,84 @@ const Db = async () => {
         })
     }
 
-    // Convert this to a transaction based function
-    const addMovie = async movie => {
-
+    // addMovie, called when a user adds a movie to a list, adds the movie
+    // to our internal movies collection if it doesn't already exist
+    const addMovieToDB = async movie => {
         try {
-            const moviesRef = collection(db, 'movies')
-            
+            await runTransaction(db, async transaction => {
+                const movieRef = doc(db, 'movies', movie.imdbID)
+                const movieDoc = await transaction.get(movieRef)
+                if (!movieDoc.exists()) {
+                    const fullMovieData = await omdb.getMovieByIMDBId(movie.imdbID)
+                    transaction.set(movieRef, fullMovieData)
+                }
+                else {
+                    throw `There is already a local entry for ${movie.imdbID}`
+                }
+            })
+            console.log(`Success! Movie ${movie.imdbID} was added to the local movies collection.`)
         }
         catch (e) {
-            console.log(`The add movie transaction failed. The error was: ${e}`)
+            console.log(`Adding movie to local DB failed because: ${e}`)
         }
-
-        // if (!await getMovie(movie.imdbID)) {
-        //     const fullMovieData = await omdb.getMovieByIMDBId(movie.imdbID)
-        //     const movieDocRef = doc(db, 'movies', movie.imdbID)
-        //     await setDoc(movieDocRef, fullMovieData)
-        // }
     }
 
     const addMovieToList = async (listID, movie) => {
-
         try {
-            await runTransaction(db, async (transaction) => {
+            await runTransaction(db, async transaction => {
+
+                // First make sure requested list exists
                 const listDocRef = doc(db, 'lists', listID)
                 const list = await transaction.get(listDocRef)
                 if (!list.exists()) {
-                    throw "List not found!"
+                    throw `The specified list does not exist`
                 }
 
+                // Now check that the movie is not already on the
+                // list
                 const movies = list.data().movies
                 const movieExists = movies.find(entry => entry.imdbID === movie.imdbID)
 
-                // If the movie doesn't exist
-                if (!Boolean(movieExists)) {
-                    const now = Timestamp.now()
-                    const newEntry = {
-                        imdbID: movie.imdbID,
-                        watched: false,
-                        addedAt: now,
-                        comments: null
+                // Try to add the movie
+                try {
+                    if (!Boolean(movieExists)) {
+
+                        const now = Timestamp.now()
+                        const newEntry = {
+                            imdbID: movie.imdbID,
+                            watched: false,
+                            addedAt: now,
+                            comments: null
+                        }
+
+                        // Add the movie to the movies collection
+                        await addMovieToDB(movie)
+
+                        // Check it exists in the local movies collection and proceed
+                        const localMovieDataRef = doc(db, 'movies', movie.imdbID)
+                        const movieInDB = await transaction.get(localMovieDataRef)
+
+                        if (movieInDB.exists()) {
+                            transaction.update(listDocRef, {
+                                movies: arrayUnion(newEntry)
+                            })
+                            console.log(`Successfully added movie ${movie.imdbID} to list ${listID}`)
+                        } else {
+                            throw `Local movie data not found...was it added to local movies collection?`
+                        }
                     }
-
-                    transaction.update(listDocRef, {
-                        movies: arrayUnion(newEntry)
-                    })
-                    console.log('The add movie transaction completed successfully')
+                    else {
+                        throw `The movie is already on the list`
+                    }
                 }
-                else {
-                    console.log('The movie already exists in the list.')
+                catch (e) {
+                    console.error(`Failed to add movie ${movie.imdbID} to list ${listID} because: ${e}`)
                 }
-
-                
             })
-        
         }
         catch (e) {
-            console.error('Add movie transaction failed. The error was: ', e)
+            console.error(`Failed to add movie ${movie.imdbID} to list ${listID} because: ${e}`)
         }
-        // const now = Timestamp.now()
-        // const listDocRef = doc(db, 'lists', listID)
-
-        // const movieEntry = {
-        //     imdbID: movie.imdbID,
-        //     watched: false,
-        //     addedAt: now,
-        //     comments: null
-        // }
-       
-        // await updateDoc(listDocRef, {
-        //     movies: arrayUnion(movieEntry)
-        // })
-        // // console.log(movie)
     }
 
     const removeMovieFromList = async (listID, movie) => {
@@ -158,26 +166,36 @@ const Db = async () => {
 
         try {
             await runTransaction(db, async (transaction) => {
+
                 const listDocRef = doc(db, 'lists', listID)
                 const list = await transaction.get(listDocRef)
-                if (!list.exists()) {
-                    throw "List not found!"
+                if (!list.exists()) throw `The specified list doesn't exist`
+                
+                const movies = list.data().movies
+                const movieToRemove = movies.find(entry => entry.imdbID === movie.imdbID)
+
+                try {
+                    if (movieToRemove) {
+                        await transaction.update(listDocRef, {
+                            movies: arrayRemove(movieToRemove)
+                        })
+                        console.log(`Success! The movie ${movie.imdbID} was removed from list ${listID}`)
+                    }
+                    else {
+                        throw `The specified movie wasn't found on this list`
+                    }
+                }
+                catch (e) {
+                    console.error(`Couldn't remove the movie ${movie.imdbID} from list ${listID} because: ${e}`)
                 }
 
-                const movies = list.data().movies
-                console.log(movies)
+                
             })
-            console.log('Movie successfully deleted!')
+            
         }
         catch (e) {
-            console.error('Transaction failed:', e)
+            console.error(`Failed to remove because: ${e}`)
         }
-
-        const listDocRef = doc(db, 'lists', listID)
-
-        await updateDoc(listDocRef, {
-            movies: arrayRemove(movie)
-        })
     }
 
     const get = () => {
@@ -192,7 +210,7 @@ const Db = async () => {
         getAccount,
         createAccount,
         createList,
-        addMovie,
+        addMovieToDB,
         addMovieToList,
         removeMovieFromList
     }

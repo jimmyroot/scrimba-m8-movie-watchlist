@@ -67,7 +67,6 @@ const Router = () => {
         window.onpopstate = () => navigate(location.pathname)
     }
 
-
     const compilePage = (page, user) => {
         try {
             const nodes = [
@@ -81,17 +80,17 @@ const Router = () => {
         }
     }
 
+    // This will run every time the user manually refreshes, makes sure that the current
+    // location in the address bar is always loaded
     const initialize = () => {
-        // render(location.pathname)
         auth.onAuthStateChanged(auth.get(), user => {
             const destination = location.pathname
             const routeExists = Boolean(routes[destination])
             if (routeExists) {
                 const { requiresLogin } = routes[destination]
                 if (user) {
-                    console.log(destination)
+                    // console.log(destination)
                     destination === '/signin' ? navigate('/mylists') : navigate(destination)
-                    // navigate(destination)
                 }
                 else {
                     if (requiresLogin) {
@@ -139,6 +138,7 @@ const Router = () => {
         }
     }
 
+    // Router init
     populateRoutes()
     registerRouterWithBrowserNavigation()
     
