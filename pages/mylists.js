@@ -1,3 +1,8 @@
+const db = await (async () => {
+    const { db } = await import('../data/db')
+    return db
+})()
+
 const MyLists = () => {
 
     const name = 'mylists'

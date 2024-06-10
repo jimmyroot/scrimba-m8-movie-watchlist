@@ -13,7 +13,6 @@ const db = await (async () => {
     return db
 })()
 
-
 const Auth = () => {
 
     const fbSignIn = async ( email, password ) => {

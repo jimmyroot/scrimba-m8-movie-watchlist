@@ -1,5 +1,7 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js'
-import { getFirestore, collection, doc, getDoc, setDoc, addDoc, updateDoc, arrayUnion, arrayRemove, serverTimestamp, Timestamp, runTransaction } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js'
+import { getFirestore, collection, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, arrayUnion, arrayRemove, serverTimestamp, Timestamp, runTransaction, query, where } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js'
+
+import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js'
 
 const omdb = await (async () => {
     const { omdb } = await import('../data/omdb')
@@ -18,10 +20,12 @@ const firebaseConfig = {
 
 const Db = async () => {
 
+    // Initialize the database instance
     const initDB = async () => {
         return await initializeApp(firebaseConfig)  
     }
 
+    // Get account data 
     const getAccount = async id => {
         const profileDocRef = doc(db, 'accounts', id)
         const profileDocSnapshot = await getDoc(profileDocRef)
@@ -34,6 +38,7 @@ const Db = async () => {
         }
     }
 
+    // Get movie data for a single movie in our local movies collection
     const getMovie = async id => {
         const movieDocRef = doc(db, 'movies', id)
 
@@ -47,6 +52,18 @@ const Db = async () => {
         }
     }
 
+    // Get all lists for a specific user id
+    const getListsForUser = async id => {
+        const listsRef = collection(db, 'lists')
+        const q = query(listsRef, where("uid", "==", id))
+
+        const querySnapshot = await getDocs(q)
+        querySnapshot.forEach(doc => {
+            console.log(doc.id, " => ", doc.data())
+        })
+    }
+
+    // Create the account data for our user in the db
     const createAccount = async user => {
         try {
             const accounts = collection(db, 'accounts')
@@ -61,8 +78,6 @@ const Db = async () => {
 
             // set the new doc inside profiles
             await setDoc(accountDoc, userObj)
-            
-            createList({ uid: user.uid})
         }
         catch (e) {
             console.error(`Something went wrong during user creation. The error was ${e}`)
@@ -74,14 +89,14 @@ const Db = async () => {
         const lists = collection(db, 'lists')
         const listDocRef = await addDoc(lists, {
             uid: params.uid,
-            title: 'My Sci-Fi list',
+            title: params.title,
             createdAt: serverTimestamp(),
             movies: []
         })
     }
 
-    // addMovie, called when a user adds a movie to a list, adds the movie
-    // to our internal movies collection if it doesn't already exist
+    // addMovie, called when a user adds a movie to a list, checks if the full movie data
+    // already exists in our
     const addMovieToDB = async movie => {
         try {
             await runTransaction(db, async transaction => {
@@ -102,6 +117,7 @@ const Db = async () => {
         }
     }
 
+    // Add a movie to a list
     const addMovieToList = async (listID, movie) => {
         try {
             await runTransaction(db, async transaction => {
@@ -160,10 +176,8 @@ const Db = async () => {
         }
     }
 
+    // Remove movie from list
     const removeMovieFromList = async (listID, movie) => {
-        // check if the list contains the movie we want to remove
-        // remove the movie using arrayRemove (the object)
-
         try {
             await runTransaction(db, async (transaction) => {
 
@@ -204,6 +218,20 @@ const Db = async () => {
 
     const app = await initDB()
     const db = await getFirestore(app)
+    const auth = getAuth(app)
+
+    // TEST CODE
+    // const unsub = onAuthStateChanged(auth, async user => {
+    //     const params = {
+    //         uid: user.uid,
+    //         title: 'Top ten car chase films'
+    //     }
+    //     createList(params)
+    //     // const uid = user.uid
+
+
+    //     // await getListsForUser(uid)
+    // })
 
     return {
         get,

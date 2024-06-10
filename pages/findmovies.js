@@ -88,13 +88,13 @@ const Findmovies = () => {
 
     // const test = async searchTerm => {
     //     const results = await omdb.searchMovies(searchTerm)
-    //     // db.addMovieToList('lWTlKEI3WEd084YkfKTL', results.Search[0])
+    //     db.addMovieToList('Qf1eI5H57wkXvhYZksOn', results.Search[0])
 
-    //     db.removeMovieFromList('lWTlKEI3WEd084YkfKTL', results.Search[0])
+    //     // db.removeMovieFromList('lWTlKEI3WEd084YkfKTL', results.Search[0])
     // }
     // // console.log(results)
-    // // 
-    // test('heat')
+    
+    // test('Fast Furious')
 
     return {
         get,

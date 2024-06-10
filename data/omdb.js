@@ -39,7 +39,7 @@ const Omdb = async () => {
 
     return {
         searchMovies,
-        getMovieByIMDBId
+        getMovieByIMDBId,
     }
 }
 
