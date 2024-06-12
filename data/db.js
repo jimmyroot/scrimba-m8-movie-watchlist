@@ -1,7 +1,28 @@
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js'
-import { getFirestore, collection, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, arrayUnion, arrayRemove, serverTimestamp, Timestamp, runTransaction, query, where } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js'
+import { 
+    initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js'
 
-import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js'
+import { 
+    getFirestore, 
+    collection, 
+    doc, 
+    getDoc, 
+    getDocs, 
+    setDoc, 
+    addDoc,
+    deleteDoc,
+    updateDoc, 
+    arrayUnion, 
+    arrayRemove, 
+    serverTimestamp, 
+    Timestamp, 
+    runTransaction, 
+    query, 
+    where, 
+    orderBy } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js'
+
+import {   
+    getAuth, 
+    onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js'
 
 const omdb = await (async () => {
     const { omdb } = await import('../data/omdb')
@@ -52,32 +73,69 @@ const Db = async () => {
         }
     }
 
+    const getMovies = async moviesArray => {
+        const movies = []
+        const moviesRef = collection(db, 'movies')
+        const q = query(moviesRef, where('imdbID', 'in', moviesArray))
+        const querySnapshot = await getDocs(q)
+        if (!querySnapshot.empty) {
+            querySnapshot.forEach(doc => {
+                movies.push(doc.data())
+            })
+            return movies
+        }
+        else {
+            return false
+        }        
+    }
+
     // Get all lists for a specific user id
     const getListsForUser = async id => {
         const listsRef = collection(db, 'lists')
         const q = query(listsRef, where("uid", "==", id))
 
         const querySnapshot = await getDocs(q)
-        querySnapshot.forEach(doc => {
-            console.log(doc.id, " => ", doc.data())
-        })
+        
+        if (!querySnapshot.empty) {
+            const lists = []
+            querySnapshot.forEach(doc => {
+                lists.push({
+                    docPath: doc.ref.path,
+                    data: doc.data()
+                })
+            })
+            return lists
+        }
+        else {
+            return false
+        }
+    }
+
+    const getListByPath = async path => {
+        const listDocRef = doc(db, path)
+        const listDoc = await getDoc(listDocRef)
+        if (listDoc.exists()) {
+            return listDoc.data()
+        }
     }
 
     // Create the account data for our user in the db
     const createAccount = async user => {
         try {
-            const accounts = collection(db, 'accounts')
-            const accountDoc = doc(accounts, user.uid)
-            const userObj = {
-                displayName: user.displayName,
-                firstName: null,
-                familyName: null,
-                photoURL: user.photoURL,
-                favoriteGenres: []
-            }
-
-            // set the new doc inside profiles
-            await setDoc(accountDoc, userObj)
+            await runTransaction(db, async transaction => {
+                const accountDocRef = doc(db, 'accounts', user.uid)
+                const accountDoc = await transaction.get(accountDocRef)
+                if (!accountDoc.exists()) {
+                    const newAccount = {
+                        displayName: user.displayName,
+                        givenName: null,
+                        familyName: null,
+                        photoURL: user.photoURL,
+                        favoriteGenres: []
+                    }
+                    await transaction.set(accountDocRef, newAccount)
+                }
+            })
         }
         catch (e) {
             console.error(`Something went wrong during user creation. The error was ${e}`)
@@ -95,6 +153,10 @@ const Db = async () => {
         })
     }
 
+    const removeList = async listID => {
+        await deleteDoc(doc(db, 'lists', listID))
+    }
+
     // addMovie, called when a user adds a movie to a list, checks if the full movie data
     // already exists in our
     const addMovieToDB = async movie => {
@@ -104,7 +166,7 @@ const Db = async () => {
                 const movieDoc = await transaction.get(movieRef)
                 if (!movieDoc.exists()) {
                     const fullMovieData = await omdb.getMovieByIMDBId(movie.imdbID)
-                    transaction.set(movieRef, fullMovieData)
+                    await transaction.set(movieRef, fullMovieData)
                 }
                 else {
                     throw `There is already a local entry for ${movie.imdbID}`
@@ -154,7 +216,7 @@ const Db = async () => {
                         const movieInDB = await transaction.get(localMovieDataRef)
 
                         if (movieInDB.exists()) {
-                            transaction.update(listDocRef, {
+                            await transaction.update(listDocRef, {
                                 movies: arrayUnion(newEntry)
                             })
                             console.log(`Successfully added movie ${movie.imdbID} to list ${listID}`)
@@ -236,11 +298,16 @@ const Db = async () => {
     return {
         get,
         getAccount,
+        getListsForUser,
+        getListByPath,
+        getMovies,
         createAccount,
         createList,
+        removeList,
         addMovieToDB,
         addMovieToList,
         removeMovieFromList
+        
     }
 }
 

@@ -9,7 +9,9 @@ import { auth } from '../data/auth'
 import { home } from '../pages/home'
 import { findmovies } from '../pages/findmovies'
 import { mylists } from './mylists'
+import { list } from './list'
 import { signIn } from './signin'
+import { signUp } from './signup'
 import { header } from '../components/header'
 import { footer } from '../components/footer'
 // import { post } from '../pages/post'
@@ -41,9 +43,21 @@ const Router = () => {
                 requiresLogin: true,
                 content: []
             },
+            '/list': {
+                module: list,
+                linkLabel: null,
+                requiresLogin: true,
+                content: []
+            },
             '/signin': {
                 module: signIn,
                 linkLabel: 'Sign In',
+                requiresLogin: false,
+                content: []
+            },
+            '/signup': {
+                module: signUp,
+                linkLabel: 'Sign Up',
                 requiresLogin: false,
                 content: []
             },
@@ -67,11 +81,11 @@ const Router = () => {
         window.onpopstate = () => navigate(location.pathname)
     }
 
-    const compilePage = (page, user) => {
+    const compilePage = async (page, user, listPath) => {
         try {
             const nodes = [
                 header.get(page, user),
-                page.get(user),
+                await page.get(user, listPath),
                 footer.get()
             ]
             return nodes
@@ -107,12 +121,12 @@ const Router = () => {
         })
     }
 
-    const navigate = (route) => {
+    const navigate = (route, listPath) => {
         history.pushState({}, "", route)
-        render(route)
+        render(route, listPath)
     }
 
-    const render = async (route) => {
+    const render = async (route, listPath) => {
         
         // Remove any trailing slash (unless route is homepage)
         if (route != '/') route = route.replace(/\/$/, "")
@@ -129,7 +143,7 @@ const Router = () => {
         
         // Try to render the given path, if anything goes wrong set route to unknown and go...
         try {
-            routes[route].content = compilePage(routes[route].module, auth.getUser())
+            routes[route].content = await compilePage(routes[route].module, auth.getUser(), listPath)
             const nodesToRender = routes[route].content
             document.querySelector('#app').replaceChildren(...nodesToRender)
         }

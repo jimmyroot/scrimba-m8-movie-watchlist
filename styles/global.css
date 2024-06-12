@@ -1,6 +1,8 @@
 @import './reset.css';
 @import './theme.css';
 @import './components.css';
+@import '../pages/signup.css';
+
 
 html {
   font-family: Inter, sans-serif;

@@ -1,9 +1,7 @@
 import { omdb } from "../data/omdb"
 
 const Home = () => {
-
-    const name = 'home'
-
+    
     const registerEventListeners = () => {
 
     }
@@ -27,7 +25,6 @@ const Home = () => {
 
     return {
         get,
-        name
     }
 }
 

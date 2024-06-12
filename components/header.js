@@ -39,7 +39,7 @@ const Header = () => {
             ` 
         :   `
                 <li>
-                    <a href="#">Sign up</a>
+                    <a href="/signup" data-type="navigate">Sign up</a>
                 </li>
                 <li>
                     <a href="/signin" class="sign-in" data-type="navigate">Sign in</a>
