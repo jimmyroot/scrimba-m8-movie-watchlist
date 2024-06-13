@@ -159,20 +159,20 @@ const Db = async () => {
 
     // addMovie, called when a user adds a movie to a list, checks if the full movie data
     // already exists in our
-    const addMovieToDB = async movie => {
+    const addMovieToDB = async movieID => {
         try {
             await runTransaction(db, async transaction => {
-                const movieRef = doc(db, 'movies', movie.imdbID)
+                const movieRef = doc(db, 'movies', movieID)
                 const movieDoc = await transaction.get(movieRef)
                 if (!movieDoc.exists()) {
-                    const fullMovieData = await omdb.getMovieByIMDBId(movie.imdbID)
+                    const fullMovieData = await omdb.getMovieByIMDBId(movieID)
                     await transaction.set(movieRef, fullMovieData)
                 }
                 else {
-                    throw `There is already a local entry for ${movie.imdbID}`
+                    throw `There is already a local entry for ${movieID}`
                 }
             })
-            console.log(`Success! Movie ${movie.imdbID} was added to the local movies collection.`)
+            console.log(`Success! Movie ${movieID} was added to the local movies collection.`)
         }
         catch (e) {
             console.error(`Adding movie to local DB failed because: ${e}`)
@@ -180,12 +180,12 @@ const Db = async () => {
     }
 
     // Add a movie to a list
-    const addMovieToList = async (listID, movie) => {
+    const addMovieToList = async (docPath, movieID) => {
         try {
             await runTransaction(db, async transaction => {
-
+                console.log(docPath)
                 // First make sure requested list exists
-                const listDocRef = doc(db, 'lists', listID)
+                const listDocRef = doc(db, docPath)
                 const list = await transaction.get(listDocRef)
                 if (!list.exists()) {
                     throw `The specified list does not exist`
@@ -194,31 +194,31 @@ const Db = async () => {
                 // Now check that the movie is not already on the
                 // list
                 const movies = list.data().movies
-                const movieExists = movies.find(entry => entry.imdbID === movie.imdbID)
+                const movieExists = movies.find(entry => entry.imdbID === movieID)
 
                 // Try to add the movie
                 try {
                     if (!Boolean(movieExists)) {
                         const now = Timestamp.now()
                         const newEntry = {
-                            imdbID: movie.imdbID,
+                            imdbID: movieID,
                             watched: false,
                             addedAt: now,
                             comments: null
                         }
 
                         // Add the movie to the movies collection
-                        await addMovieToDB(movie)
+                        await addMovieToDB(movieID)
 
                         // Check it exists in the local movies collection and proceed
-                        const localMovieDataRef = doc(db, 'movies', movie.imdbID)
+                        const localMovieDataRef = doc(db, 'movies', movieID)
                         const movieInDB = await transaction.get(localMovieDataRef)
 
                         if (movieInDB.exists()) {
                             await transaction.update(listDocRef, {
                                 movies: arrayUnion(newEntry)
                             })
-                            console.log(`Successfully added movie ${movie.imdbID} to list ${listID}`)
+                            console.log(`Successfully added movie ${movieID} to list ${docPath}`)
                         } else {
                             throw `Local movie data not found...was it added to local movies collection?`
                         }
@@ -228,12 +228,12 @@ const Db = async () => {
                     }
                 }
                 catch (e) {
-                    console.error(`Failed to add movie ${movie.imdbID} to list ${listID} because: ${e}`)
+                    console.error(`Failed to add movie ${movieID} to list ${docPath} because: ${e}`)
                 }
             })
         }
         catch (e) {
-            console.error(`Failed to add movie ${movie.imdbID} to list ${listID} because: ${e}`)
+            console.error(`Failed to add movie ${movieID} to list ${docPath} because: ${e}`)
         }
     }
 

@@ -25,7 +25,8 @@ const Findmovies = () => {
                 getResults(value)
             },
             add: async () => {
-                listMenu.handleOpenMenu(lists)
+                const { movieid } = e.target.dataset
+                if (movieid) listMenu.handleOpenMenu(lists, movieid)
                 listMenu.positionMenu(e)
                 // const listID = 'AhMw6h0rXq6MvL5OjuTM'
                 // const { movieid } = e.target.dataset
@@ -97,7 +98,6 @@ const Findmovies = () => {
     let currentSearch = null
     let lists = null
     
-
     const node = document.createElement('main')
     node.classList.add('findmovies')
 

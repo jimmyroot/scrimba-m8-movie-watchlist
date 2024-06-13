@@ -1,24 +1,45 @@
+const db = await (async () => {
+    const { db } = await import('../data/db')
+    return db
+})()
+
 const ListMenu = () => {
 
     const registerEventListeners = () => {
-    
+        node.addEventListener('click', e => {
+            handleClick(e)
+        })
     }
 
-    const render = lists => {
-        console.log(lists)
+    const handleClick = e => {
+        const execute = {
+            addmovie: async () => {
+                const { list, movieid } = e.target.dataset
+                if (list) await db.addMovieToList(list, movieid)
+                closeMenu()
+            }
+        }
+        e.preventDefault()
+        const { type } = e.target.dataset
+        if (execute[type]) execute[type]()
+    }
+
+    const render = (lists, movieid) => {
         let html = `
             <h3>Add to...</h3>
-            ${renderLists(lists)}
+            ${renderLists(lists, movieid)}
         `
         return html
     }
 
-    const renderLists = lists => {
+    const renderLists = (lists, movieid) => {
         if (lists) {
             let html = lists.map(list => {
                 const { title } = list.data
+                const { docPath } = list
+
                 return `
-                    <p>${title}</p>
+                    <p><span data-type="addmovie" data-list="${docPath}" data-movieid="${movieid}">${title}</span></p>
                 `
             })
             return html
@@ -28,12 +49,12 @@ const ListMenu = () => {
         }
     }
 
-    const refresh = lists => {   
-        node.innerHTML = render(lists)
+    const refresh = (lists, movieid) => {   
+        node.innerHTML = render(lists, movieid)
     }
 
-    const handleOpenMenu = lists => {
-        refresh(lists)
+    const handleOpenMenu = (lists, movieid) => {
+        refresh(lists, movieid)
         if (menuState != 1) {
             menuState = 1
             node.classList.add(active)
@@ -48,7 +69,6 @@ const ListMenu = () => {
 
     const handleCloseMenu = e => {
         const wasInside = document.querySelector('#context-menu').contains(e.target)
-        console.log('fired')
         if (!wasInside) {
             closeMenu()
         }
