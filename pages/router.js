@@ -103,7 +103,6 @@ const Router = () => {
             if (routeExists) {
                 const { requiresLogin } = routes[destination]
                 if (user) {
-                    // console.log(destination)
                     destination === '/signin' ? navigate('/mylists') : navigate(destination)
                 }
                 else {
@@ -132,14 +131,7 @@ const Router = () => {
         if (route != '/') route = route.replace(/\/$/, "")
 
         // Split the requested path in case we want to query it
-        const path = route.split('/')
-
-        // Get the user info to pass to the page for rendering.
-        // Don't allow user to load the sign in page whilst logged in (the user could do this by clicking
-        // back in the browser, or manually typing the URL. If they do, we'll redirect them
-        // const user = auth.getUser()
-        // console.log(user)
-        // if (user && path[1] === 'signin') route = '/mylists'
+        // const path = route.split('/')
         
         // Try to render the given path, if anything goes wrong set route to unknown and go...
         try {
@@ -147,7 +139,8 @@ const Router = () => {
             const nodesToRender = routes[route].content
             document.querySelector('#app').replaceChildren(...nodesToRender)
         }
-        catch {
+        catch (e) {
+            console.error(e)
             document.querySelector('#app').replaceChildren(routes['/unknown'].content)
         }
     }

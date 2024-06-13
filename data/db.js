@@ -3,7 +3,8 @@ import {
 
 import { 
     getFirestore, 
-    collection, 
+    collection,
+    onSnapshot, 
     doc, 
     getDoc, 
     getDocs, 
@@ -73,10 +74,10 @@ const Db = async () => {
         }
     }
 
-    const getMovies = async moviesArray => {
+    const getMovies = async arrMovieIDs => {
         const movies = []
         const moviesRef = collection(db, 'movies')
-        const q = query(moviesRef, where('imdbID', 'in', moviesArray))
+        const q = query(moviesRef, where('imdbID', 'in', arrMovieIDs))
         const querySnapshot = await getDocs(q)
         if (!querySnapshot.empty) {
             querySnapshot.forEach(doc => {
@@ -112,8 +113,7 @@ const Db = async () => {
     }
 
     const getListByPath = async path => {
-        const listDocRef = doc(db, path)
-        const listDoc = await getDoc(listDocRef)
+        const listDoc = await getDoc(doc(db, path))
         if (listDoc.exists()) {
             return listDoc.data()
         }
@@ -153,8 +153,8 @@ const Db = async () => {
         })
     }
 
-    const removeList = async listID => {
-        await deleteDoc(doc(db, 'lists', listID))
+    const removeListAtPath = async path => {
+        await deleteDoc(doc(db, path))
     }
 
     // addMovie, called when a user adds a movie to a list, checks if the full movie data
@@ -175,7 +175,7 @@ const Db = async () => {
             console.log(`Success! Movie ${movie.imdbID} was added to the local movies collection.`)
         }
         catch (e) {
-            console.log(`Adding movie to local DB failed because: ${e}`)
+            console.error(`Adding movie to local DB failed because: ${e}`)
         }
     }
 
@@ -199,7 +199,6 @@ const Db = async () => {
                 // Try to add the movie
                 try {
                     if (!Boolean(movieExists)) {
-
                         const now = Timestamp.now()
                         const newEntry = {
                             imdbID: movie.imdbID,
@@ -303,11 +302,15 @@ const Db = async () => {
         getMovies,
         createAccount,
         createList,
-        removeList,
+        removeListAtPath,
         addMovieToDB,
         addMovieToList,
-        removeMovieFromList
-        
+        removeMovieFromList,
+        collection,
+        onSnapshot,
+        query,
+        where,
+        db
     }
 }
 

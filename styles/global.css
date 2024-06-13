@@ -1,7 +1,9 @@
 @import './reset.css';
 @import './theme.css';
 @import './components.css';
+@import '../components/listmenu.css';
 @import '../pages/signup.css';
+@import '../pages/mylists.css';
 
 
 html {

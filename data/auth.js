@@ -42,7 +42,8 @@ const Auth = () => {
         // const token = credential.accessToken
         const user = result.user
         const profile = await db.getAccount(user.uid)
-        Boolean(profile) ? console.log('exists') : db.createAccount(user)
+        if (!Boolean(profile)) db.createAccount(user)
+        // Boolean(profile) ? `` : db.createAccount(user)
     }
 
     const fbSignOut = () => {
@@ -58,7 +59,6 @@ const Auth = () => {
         onAuthStateChanged(auth, user => {
             if (user) {
                 console.log(`User ${user.email} is logged in`)
-                console.log(user)
                 // router.navigate(location.pathname)
             }
             else {
@@ -79,7 +79,7 @@ const Auth = () => {
     const auth = getAuth(db.get())
     const google = new GoogleAuthProvider()
 
-    watchAuthState()
+    // watchAuthState()
 
     return {
         get,

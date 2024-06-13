@@ -33,26 +33,32 @@ const List = () => {
             return movie.imdbID
         })
 
-        const movieData = await db.getMovies(moviesArray)
-
-        const moviesHtml = movieData.map(movie => {
-            console.log(movie)
-            return `
-                <div>
-                    <h4>${movie.Title}</h4>
-                    <p>${movie.imdbRating}</p>
-                    <p>${movie.Plot}</p>
-                </div>
-            `
-        })
-
-        console.log(movieData)
-
-        const html = `
+        let html = `
             <a href="#" data-type="back">Back</a>
             <h1>${title}</h1>
-            ${moviesHtml}
         `
+
+        try {
+            const movieData = await db.getMovies(moviesArray)
+
+            const moviesHtml = movieData.map(movie => {
+                return `
+                    <div>
+                        <h4>${movie.Title}</h4>
+                        <p>${movie.imdbRating}</p>
+                        <p>${movie.Plot}</p>
+                    </div>
+                `
+            })
+    
+            html += `
+                ${moviesHtml}
+            `
+        }
+        catch {
+            html += `<p>You didn't add anything to this list yet!</p>`
+        }
+
         return html
     }
 
@@ -68,8 +74,6 @@ const List = () => {
     const node = document.createElement('main')
     node.classList.add('list')
     registerEventListeners()
-
-    db.removeList('9fOrwXR4Iyfd9HUVeuSc')
 
     return {
         get
