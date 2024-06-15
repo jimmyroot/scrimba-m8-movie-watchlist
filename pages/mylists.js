@@ -6,7 +6,7 @@ const db = await (async () => {
     return db
 })()
 
-const MyLists = () => {
+const MyLists = async () => {
 
     const registerEventListeners = () => {
         node.addEventListener('click', e => {
@@ -51,11 +51,11 @@ const MyLists = () => {
 
     const renderLists = lists => {
         let html = ``
-        
+
         if (lists) {
             html = lists.map(list => {
                 const { data, docPath } = list
-                
+
                 return `
                 <div data-path="${docPath}">
                     <h3><a href="#" data-type="navigate">${data.title}</a></h3>
@@ -64,7 +64,7 @@ const MyLists = () => {
                 `
             })
         }
-        
+
         return html
     }
 
@@ -80,7 +80,7 @@ const MyLists = () => {
 
     const listenForChangesAndRefreshLists = async uid => {
         const q = db.query(db.collection(db.db, 'lists'), db.where("uid", "==", uid))
-        const unsubscribe = db.onSnapshot(q, querySnapshot => {
+        unsubscribeFromListsListener = db.onSnapshot(q, querySnapshot => {
             const lists = []
             if (!querySnapshot.empty) {
                 querySnapshot.forEach(doc => {
@@ -98,24 +98,30 @@ const MyLists = () => {
         node.innerHTML = render(lists)
     }
 
-    // THIS ISN'T WORKING WHEN WE LOG OUT AND BACK IN, STILL SHOWS PREVIOUS USERS LIST
-    const get = () => {
-        // Make sure we don't register more than one auth state listener
-        const unsubscribe = auth.onAuthStateChanged(auth.get(), user => {
-            if (user) {
-                listenForChangesAndRefreshLists(user.uid)
-                console.log(user.uid)
-            } else {
-                console.log('logging out')
-                unsubscribe()
-            }
-        })
-        
+    const get = async () => {
+        // node.innerHTML = ``
+        // We don't need to refresh as the listener is doing this for us
         return node
     }
 
     const node = document.createElement('main')
     node.classList.add('mylists')
+    let unsubscribeFromListsListener = null
+
+    // for any content that will use the user id, we need to use
+    // onAuthState changed. E.g. here we are loading lists based on 
+    // if they belong to the logged in user ID. Unlike list.js which 
+    // only loads a list based on it's path, we don't use the user ID...so there,
+    // we don't need on authstatechanged
+    await auth.onAuthStateChanged(auth.get(), user => {
+        if (user) {
+            node.innerHTML = ``
+            listenForChangesAndRefreshLists(user.uid)
+        } else {
+            if (!unsubscribeFromListsListener === null) unsubscribeFromListsListener()
+        }
+    })
+
     registerEventListeners()
 
     return {
@@ -123,4 +129,4 @@ const MyLists = () => {
     }
 }
 
-export const mylists = MyLists()
+export const mylists = await MyLists()

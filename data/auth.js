@@ -2,6 +2,7 @@
 import { 
     getAuth,
     GoogleAuthProvider,
+    GithubAuthProvider,
     signInWithPopup,
     signInWithRedirect,
     createUserWithEmailAndPassword,
@@ -29,7 +30,6 @@ const Auth = () => {
         catch (e) {
             console.error(`User could not be created. Error code and message were: ${e.code}, ${e.message}`)
         }
-
     }
 
     const fbSignIn = async ( email, password ) => {
@@ -37,13 +37,31 @@ const Auth = () => {
     }
 
     const signInWithGoogle = async () => {
-        const result = await signInWithPopup(auth, google)
-        // const credential = GoogleAuthProvider.credentialFromResult(result)
-        // const token = credential.accessToken
-        const user = result.user
-        const profile = await db.getAccount(user.uid)
-        if (!Boolean(profile)) db.createAccount(user)
-        // Boolean(profile) ? `` : db.createAccount(user)
+        try {
+            const result = await signInWithPopup(auth, google)
+            const user = result.user
+            const profile = await db.getAccount(user.uid)
+            if (!Boolean(profile)) db.createAccount(user)
+        }
+        catch (e) {
+            if (e.code === 'auth/account-exists-with-different-credential') {
+                console.error(`An account is already registered using either an alternate provider, or email & password.`)            }
+        }
+    }
+
+    const signInWithGithub = async () => {
+        try {
+            const result = await signInWithPopup(auth, github)
+            const user = result.user
+            const profile = await db.getAccount(user.uid)
+            if (!Boolean(profile)) db.createAccount(user)
+        }
+        catch (e) {
+            console.error(e)
+            if (e.code === 'auth/account-exists-with-different-credential') {
+                console.error(`An account is already registered using either an alternate provider, or email & password.`)
+            }
+        }
     }
 
     const fbSignOut = () => {
@@ -78,6 +96,7 @@ const Auth = () => {
 
     const auth = getAuth(db.get())
     const google = new GoogleAuthProvider()
+    const github = new GithubAuthProvider()
 
     // watchAuthState()
 
@@ -87,6 +106,7 @@ const Auth = () => {
         fbSignIn,
         fbSignOut,
         signInWithGoogle,
+        signInWithGithub,
         getUser,
         watchAuthState,
         onAuthStateChanged

@@ -14,10 +14,6 @@ import { signIn } from './signin'
 import { signUp } from './signup'
 import { header } from '../components/header'
 import { footer } from '../components/footer'
-// import { post } from '../pages/post'
-// import { myWork } from '../pages/mywork'
-// import { about } from '../pages/about'
-// import { header } from '../layout/header'
 
 const Router = () => {
 
@@ -102,17 +98,17 @@ const Router = () => {
             const routeExists = Boolean(routes[destination])
             if (routeExists) {
                 const { requiresLogin } = routes[destination]
-                if (user) {
-                    destination === '/signin' ? navigate('/mylists') : navigate(destination)
-                }
-                else {
-                    if (requiresLogin) {
-                        navigate('/')
+                const go = {
+                    loggedIn: () => {
+                        (destination === '/signin' || destination === "/signup") ?
+                            navigate('/mylists') : 
+                            navigate(destination)
+                    },
+                    notLoggedIn: () => {
+                        requiresLogin ? navigate('/') : navigate(destination)
                     }
-                    else {
-                        navigate(destination)
-                    }
                 }
+                user ? go['loggedIn']() : go['notLoggedIn']()
             }
             else {
                 navigate(destination)

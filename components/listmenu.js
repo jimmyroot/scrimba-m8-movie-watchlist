@@ -15,8 +15,8 @@ const ListMenu = () => {
         const execute = {
             addmovie: async () => {
                 const { list, movieid } = e.target.dataset
-                if (list) await db.addMovieToList(list, movieid)
                 closeMenu()
+                if (list) await db.addMovieToList(list, movieid)
             }
         }
         e.preventDefault()

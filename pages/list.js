@@ -6,53 +6,50 @@ const db = await (async () => {
     return db
 })()
 
-const List = () => {
-
-    const registerEventListeners = () => {
-        node.addEventListener('click', e => {
-            handleClick(e)
-        })
-    }
+const List = async () => {
 
     const handleClick = e => {
         const execute = {
             back: () => {
                 router.navigate('/mylists')
+            },
+            removemovie: async () => {
+                const { list } = e.target.closest('ul').dataset
+                const { movieid } = e.target.dataset
+                if ( list && movieid) await db.removeMovieFromList(list, movieid)
             }
         }
         const { type } = e.target.dataset
         if (execute[type]) execute[type]()
     }
 
-    const render = async (user, listPath) => {
-
-        const list = await db.getListByPath(listPath)
-        const { title, movies } = list
-        
-        const moviesArray = Object.values(movies).map(movie => {
-            return movie.imdbID
-        })
+    const render = async (listPath, title, arrMovieIDs) => {
 
         let html = `
             <a href="#" data-type="back">Back</a>
             <h1>${title}</h1>
+            <ul data-list="${listPath}">
         `
 
+        // refactor -> 'if (moviesArray.length > 0) { do stuff }
         try {
-            const movieData = await db.getMovies(moviesArray)
+            const movieData = await db.getMovies(arrMovieIDs)
 
             const moviesHtml = movieData.map(movie => {
                 return `
-                    <div>
+                    <li>
                         <h4>${movie.Title}</h4>
                         <p>${movie.imdbRating}</p>
                         <p>${movie.Plot}</p>
-                    </div>
+                        <button data-type="removemovie" data-movieid="${movie.imdbID}">Remove</button>
+                    </li>
+
                 `
-            })
+            }).join('')
     
             html += `
                 ${moviesHtml}
+                </ul>
             `
         }
         catch {
@@ -62,22 +59,48 @@ const List = () => {
         return html
     }
 
-    const refresh = async (user, listPath) => {
-        node.innerHTML = await render(user, listPath)
+    const refresh = async (listPath, title, arrMovieIDs) => {
+        const html = await render(listPath, title, arrMovieIDs)
+        node.innerHTML = html
+    }
+
+    const listenForChangesAndRefreshList = async (listPath) => {
+        const listDoc = db.doc(db.db, listPath)
+        unsubscribeFromListListener = db.onSnapshot(listDoc, docSnapshot => {
+            if (!docSnapshot.empty) {
+                const { title, movies } = docSnapshot.data()
+                const arrMovieIDs = Object.values(movies).map(movie => {
+                    return movie.imdbID
+                })
+                refresh(listPath, title, arrMovieIDs)
+            }
+        })
     }
 
     const get = async (user, listPath) => {
-        await refresh(user, listPath)
+        node.innerHTML = ``
+
+        if (listPath) {
+            if (unsubscribeFromListListener === null) {
+                await listenForChangesAndRefreshList(listPath)
+            }
+            else {
+                unsubscribeFromListListener()
+                await listenForChangesAndRefreshList(listPath)
+            }
+        }
+        
         return node
     }
 
     const node = document.createElement('main')
     node.classList.add('list')
-    registerEventListeners()
+    node.addEventListener('click', handleClick)
+    let unsubscribeFromListListener = null
 
     return {
         get
     }
 }
 
-export const list = List()
+export const list = await List()

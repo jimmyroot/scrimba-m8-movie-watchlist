@@ -8,10 +8,8 @@ import {
     doc, 
     getDoc, 
     getDocs, 
-    setDoc, 
     addDoc,
-    deleteDoc,
-    updateDoc, 
+    deleteDoc, 
     arrayUnion, 
     arrayRemove, 
     serverTimestamp, 
@@ -238,33 +236,32 @@ const Db = async () => {
     }
 
     // Remove movie from list
-    const removeMovieFromList = async (listID, movie) => {
+    const removeMovieFromList = async (listPath, movieID) => {
         try {
             await runTransaction(db, async (transaction) => {
 
-                const listDocRef = doc(db, 'lists', listID)
+                const listDocRef = doc(db, listPath)
                 const list = await transaction.get(listDocRef)
                 if (!list.exists()) throw `The specified list doesn't exist`
                 
                 const movies = list.data().movies
-                const movieToRemove = movies.find(entry => entry.imdbID === movie.imdbID)
+                const movieToRemove = movies.find(entry => entry.imdbID === movieID)
 
                 try {
                     if (movieToRemove) {
                         await transaction.update(listDocRef, {
                             movies: arrayRemove(movieToRemove)
                         })
-                        console.log(`Success! The movie ${movie.imdbID} was removed from list ${listID}`)
+                        console.log(`Success! The movie ${movieID} was removed from list ${listPath}`)
                     }
                     else {
                         throw `The specified movie wasn't found on this list`
                     }
                 }
                 catch (e) {
-                    console.error(`Couldn't remove the movie ${movie.imdbID} from list ${listID} because: ${e}`)
+                    console.error(`Couldn't remove the movie ${movieID} from list ${listPath} because: ${e}`)
                 }
-
-                
+                                
             })
             
         }
@@ -310,7 +307,8 @@ const Db = async () => {
         onSnapshot,
         query,
         where,
-        db
+        db,
+        doc
     }
 }
 

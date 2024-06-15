@@ -17,6 +17,9 @@ const SignIn = () => {
             },
             'signinwithgoogle': () => {
                 auth.signInWithGoogle()
+            },
+            'signinwithgithub': () => {
+                auth.signInWithGithub()
             }
         }
 
@@ -34,6 +37,7 @@ const SignIn = () => {
             </div>
             <div>
             <button data-type="signinwithgoogle">Continue with Google</button>
+            <button data-type="signinwithgithub">Continue with Github</button>
         `
         return html
     }
