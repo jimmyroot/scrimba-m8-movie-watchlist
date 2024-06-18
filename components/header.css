@@ -3,7 +3,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #00000022;
+    border-bottom: 1px solid var(--ui-black-10);
     padding: .4em 1em;
 
     div:first-child {

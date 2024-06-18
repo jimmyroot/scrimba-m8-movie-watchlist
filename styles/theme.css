@@ -7,6 +7,9 @@
     --btn-hover: #00000011;
     --btn-active: #00000020;
     --br: 7px;
-    --divider: #00000022;
+    --ui-black-10: #00000020;
+    --ui-black-20: #00000032;
+    --ui-black-40: #00000068;
+    --ui-black-60: #00000099;
     --spinner-main: #FFFFFF66;
 }

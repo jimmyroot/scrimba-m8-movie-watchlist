@@ -4,14 +4,19 @@
 @import '../components/listmenu.css';
 @import '../pages/signup.css';
 @import '../pages/mylists.css';
+@import '../pages/findmovies.css';
 
 
 html {
   font-family: Inter, sans-serif;
 }
 
+button * {
+  pointer-events: none;
+}
+
 #app {
-  background-color: ;
+  background-color: transparent;
   height: 100vh;
   display: flex;
   flex-direction: column;

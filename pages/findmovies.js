@@ -26,14 +26,10 @@ const Findmovies = () => {
             },
             add: async () => {
                 const { movieid } = e.target.dataset
-                if (movieid) listMenu.handleOpenMenu(lists, movieid)
-                listMenu.positionMenu(e)
-                // const listID = 'AhMw6h0rXq6MvL5OjuTM'
-                // const { movieid } = e.target.dataset
-                // const movie = currentSearch.find(movie => movie.imdbID === movieid)
-                // if ( listID && movie ) {
-                //     await db.addMovieToList(listID, movie)
-                // }
+                if (movieid) {
+                    listMenu.handleOpenMenu(lists, movieid)
+                    listMenu.positionMenu(e)
+                }
             }
         }
         e.preventDefault()
@@ -41,25 +37,32 @@ const Findmovies = () => {
         if (execute[type]) execute[type]()
     }
 
-    const render = () => {
+    const render = async () => {
         const html = `
-            <h1>Find Movies</h1>
-            <input type="text" id="find-movies-input" />
-            <button id="find-movies-btn" data-type="submit">Search</button>
-            ${renderResults(currentSearch)}
+            <header class="page__header">
+                <div class="header__search">
+                    <input class="search__input" type="text" id="find-movies-input" placeholder="e.g. 'The Matrix' or 'Keanu Reeves'"/>
+                    <button class="search__btn" id="find-movies-btn" data-type="submit">
+                        <i class='bx bx-search'></i>
+                    </button>
+                </div>
+            </header>
+            <section class="page__results">
+                ${await renderResults(currentSearch)}
+            </section>
             `
         return html
     }
 
-    const refresh = () => {
-        node.innerHTML = render()
+    const refresh = async () => {
+        node.innerHTML = await render()
         node.appendChild(listMenu.get())
     }
 
     const get = async user => {
         uid = user.uid
         lists = await db.getListsForUser(uid)
-        refresh()
+        await refresh()
         return node
     }
 
@@ -75,22 +78,41 @@ const Findmovies = () => {
         }
     }
 
-    const renderResults = currentSearch => {
+    const renderResults = async currentSearch => {
         let html = ``
 
         if (currentSearch) {
-            html = currentSearch.map(
-                movie => {
+            html = await Promise.all(currentSearch.map(
+                async movie => {
+                    const fullMovieData = await omdb.getMovieByIMDBId(movie.imdbID)
+                    const { Title, Runtime, Genre, Plot, Poster, imdbID } = fullMovieData
+                    let Rating = ''
+                    if (fullMovieData.Ratings[0]) {
+                        Rating = fullMovieData.Ratings[0].Value
+                    }
+                    // let Rating = ''
+                    // if (Boolean(fullMovieData.Ratings[0])) {
+                    //     Rating = fullMovieData.Ratings[0].value
+                    // }
                     return `
-                    <div>
-                        <h3>${movie.Title}</h3>
-                        <button data-type="add" data-movieid="${movie.imdbID}">Add</button>
-                    </div>
+                        <div>
+                            <img src="${Poster}" alt="The poster for the movie '${Title}'">
+                            <h3>${Title}</h3>
+                            <p>${Rating}</p>
+                            <p>${Runtime}</p>
+                            <p>${Genre}</p>
+                            <p>${Plot}</p>
+                            <button data-type="add" data-movieid="${imdbID}">Add</button>
+                        </div>
                     `
                 }
-            ).join('')
+            )
+        )}
+        else {
+            console.log('Nothing to do, currentSearch is empty')
         }
-        return html
+        
+        return [...html].join('')
     }
 
     
@@ -103,16 +125,6 @@ const Findmovies = () => {
 
 
     registerEventListeners()
-
-    // const test = async searchTerm => {
-    //     const results = await omdb.searchMovies(searchTerm)
-    //     db.addMovieToList('Qf1eI5H57wkXvhYZksOn', results.Search[0])
-
-    //     // db.removeMovieFromList('lWTlKEI3WEd084YkfKTL', results.Search[0])
-    // }
-    // // console.log(results)
-    
-    // test('Fast Furious')
 
     return {
         get,
