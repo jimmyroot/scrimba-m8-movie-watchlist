@@ -9,6 +9,7 @@ const omdb = await (async () => {
 })()
 
 import { listMenu } from '../components/listmenu'
+import { modal } from '../components/modal'
 
 const Findmovies = () => {
 
@@ -16,6 +17,15 @@ const Findmovies = () => {
         node.addEventListener('click', e => {
             handleClick(e)
         })
+
+        const resizeObserver = new ResizeObserver(entries => {
+
+            // REFACTOR TO DO THE SHAVING HERE
+            shavePlotPs()
+            shaveTitles()
+        })
+
+        resizeObserver.observe(node)
     }
 
     const handleClick = e => {
@@ -25,13 +35,18 @@ const Findmovies = () => {
                 getResults(value)
             },
             add: async () => {
-                const { movieid } = e.target.dataset
-                if (movieid) {
-                    listMenu.handleOpenMenu(lists, movieid)
-                    listMenu.positionMenu(e)
+                if (lists.length > 0) {
+                    if (e.target.dataset.movieid) {
+                        listMenu.handleOpenMenu(lists, e.target)
+                        listMenu.positionMenu(e)
+                    }
+                }
+                else {
+                    modal.show(`You don't have any lists yet! To get started, go to My Lists and create a list or two.`)
                 }
             }
         }
+
         e.preventDefault()
         const { type } = e.target.dataset
         if (execute[type]) execute[type]()
@@ -50,20 +65,34 @@ const Findmovies = () => {
             <section class="page__results">
                 ${await renderResults(currentSearch)}
             </section>
-            `
+        `
         return html
     }
 
     const refresh = async () => {
         node.innerHTML = await render()
+        shavePlotPs()
         node.appendChild(listMenu.get())
+        node.appendChild(modal.get())
     }
 
     const get = async user => {
         uid = user.uid
         lists = await db.getListsForUser(uid)
+        currentSearch = null
         await refresh()
         return node
+    }
+
+    const shaveTitles = () => {
+        const elsToShave = node.querySelectorAll('.movie__title')
+        shave(elsToShave, 50)
+    }
+
+    const shavePlotPs = () => {
+        console.log('firing')
+        const elsToShave = node.querySelectorAll('.is__truncated')
+        shave(elsToShave, 80)
     }
 
     const getResults = async value => {
@@ -84,25 +113,33 @@ const Findmovies = () => {
         if (currentSearch) {
             html = await Promise.all(currentSearch.map(
                 async movie => {
+
                     const fullMovieData = await omdb.getMovieByIMDBId(movie.imdbID)
                     const { Title, Runtime, Genre, Plot, Poster, imdbID } = fullMovieData
+
                     let Rating = ''
+
                     if (fullMovieData.Ratings[0]) {
                         Rating = fullMovieData.Ratings[0].Value
                     }
-                    // let Rating = ''
-                    // if (Boolean(fullMovieData.Ratings[0])) {
-                    //     Rating = fullMovieData.Ratings[0].value
-                    // }
+                    
                     return `
-                        <div>
-                            <img src="${Poster}" alt="The poster for the movie '${Title}'">
-                            <h3>${Title}</h3>
-                            <p>${Rating}</p>
-                            <p>${Runtime}</p>
-                            <p>${Genre}</p>
-                            <p>${Plot}</p>
-                            <button data-type="add" data-movieid="${imdbID}">Add</button>
+                        <div class="movie__card">
+                            <img class="movie__thumbnail" src="${Poster}" alt="Poster for the movie ${Title}">
+                            <div class="movie__info">
+                                <div class="movie__header">
+                                    <h3 class="movie__title">${Title}</h3>
+                                    <p>${Rating}</p>
+                                </div>
+                                <div class="movie__details">
+                                    <p>${Runtime}</p>       
+                                    <p>${Genre}</p>
+                                </div>
+                                <p class="movie__plot is__truncated">${Plot}</p>
+                                <div class="movie__buttons">
+                                    <button class="movie__add-btn" data-type="add" data-movieid="${imdbID}" data-movietitle="${Title}"><i class='bx bx-add-to-queue bx-sm'></i> <span>Add to list</span></button>
+                                </div>
+                            </div>
                         </div>
                     `
                 }
@@ -115,7 +152,6 @@ const Findmovies = () => {
         return [...html].join('')
     }
 
-    
     let uid = null
     let currentSearch = null
     let lists = null
@@ -123,12 +159,10 @@ const Findmovies = () => {
     const node = document.createElement('main')
     node.classList.add('findmovies')
 
-
     registerEventListeners()
 
     return {
-        get,
-        name
+        get
     }
 }
 

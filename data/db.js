@@ -178,10 +178,11 @@ const Db = async () => {
     }
 
     // Add a movie to a list
-    const addMovieToList = async (docPath, movieID) => {
+    const addMovieToList = async (docPath, movieID, modal, movieTitle) => {
         try {
             await runTransaction(db, async transaction => {
-                console.log(docPath)
+                // console.log(docPath)
+
                 // First make sure requested list exists
                 const listDocRef = doc(db, docPath)
                 const list = await transaction.get(listDocRef)
@@ -205,7 +206,7 @@ const Db = async () => {
                             comments: null
                         }
 
-                        // Add the movie to the movies collection
+                        // Add the movie to the movies collection (will gracefully fail if it's already there)
                         await addMovieToDB(movieID)
 
                         // Check it exists in the local movies collection and proceed
@@ -222,7 +223,7 @@ const Db = async () => {
                         }
                     }
                     else {
-                        throw `The movie is already on the list`
+                        if (modal) modal.show(`'${movieTitle}' is already on that watchlist!`)
                     }
                 }
                 catch (e) {

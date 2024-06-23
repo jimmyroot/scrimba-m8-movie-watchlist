@@ -1,0 +1,41 @@
+.modal {
+    background-color: var(--context-menu-surface);
+    border-radius: 7px;
+    border: 0;
+    color: var(--context-menu-text);
+    padding: 0;
+
+    .modal__inner {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 1em;
+
+        i {
+            filter: brightness(0.3);
+        }
+
+        .modal__p {
+            text-align: center;
+            margin: 0 0 .8em 0;
+        }
+
+        .modal__btn-close {
+            align-self: center;
+            padding: 1em;
+            background-color: var(--primary);
+            border-radius: 5px;
+            color: var(--context-menu-text);
+
+            &:hover {
+                filter: brightness(0.9);
+            }
+
+            &:active {
+                filter: brightness(0.8);
+            }
+        }
+        
+    }
+}
+

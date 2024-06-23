@@ -2,10 +2,8 @@
 @import './theme.css';
 @import './components.css';
 @import '../components/listmenu.css';
-@import '../pages/signup.css';
-@import '../pages/mylists.css';
-@import '../pages/findmovies.css';
-
+@import '../components/modal.css';
+@import '../pages/pagesglobal.css';
 
 html {
   font-family: Inter, sans-serif;
@@ -13,6 +11,14 @@ html {
 
 button * {
   pointer-events: none;
+}
+
+button {
+  background-color: transparent;
+  border: none;
+  margin: 0;
+  padding: 0;
+  line-height: 0;
 }
 
 #app {
@@ -27,4 +33,11 @@ button * {
 
 .main {
   flex-grow: 1;
+}
+
+dialog {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

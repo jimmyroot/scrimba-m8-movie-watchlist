@@ -3,7 +3,11 @@ const db = await (async () => {
     return db
 })()
 
+import { modal } from '../components/modal'
+
 const ListMenu = () => {
+
+    let btnThatOpenedTheMenu = null
 
     const registerEventListeners = () => {
         node.addEventListener('click', e => {
@@ -15,8 +19,9 @@ const ListMenu = () => {
         const execute = {
             addmovie: async () => {
                 const { list, movieid } = e.target.dataset
+                const { movietitle } = e.target.closest('ul').dataset
                 closeMenu()
-                if (list) await db.addMovieToList(list, movieid)
+                if (list) await db.addMovieToList(list, movieid, modal, movietitle)
             }
         }
         e.preventDefault()
@@ -24,11 +29,13 @@ const ListMenu = () => {
         if (execute[type]) execute[type]()
     }
 
-    const render = (lists, movieid) => {
+    const render = (lists, movieid, movietitle) => {
         let html = `
-            <h3>Add to...</h3>
+            <ul class="context-menu__watchlists" data-movietitle="${movietitle}">
             ${renderLists(lists, movieid)}
+            </ul>
         `
+        
         return html
     }
 
@@ -39,9 +46,13 @@ const ListMenu = () => {
                 const { docPath } = list
 
                 return `
-                    <p><span data-type="addmovie" data-list="${docPath}" data-movieid="${movieid}">${title}</span></p>
+                    <li class="context-menu__list" data-type="addmovie" data-list="${docPath}" data-movieid="${movieid}">
+                        <i class='bx bx-list-plus bx-sm'></i>
+                        <span>${title}</span>
+                    </li>
                 `
-            })
+
+            }).join('')
             return html
         }
         else {
@@ -49,12 +60,18 @@ const ListMenu = () => {
         }
     }
 
-    const refresh = (lists, movieid) => {   
-        node.innerHTML = render(lists, movieid)
+    const refresh = (lists, movieid, movietitle) => {   
+        node.innerHTML = render(lists, movieid, movietitle)
     }
 
-    const handleOpenMenu = (lists, movieid) => {
-        refresh(lists, movieid)
+    const handleOpenMenu = (lists, target) => {
+
+        // Set this value in the module scope so the close function can access it
+        // when the context menu is closed
+        btnThatOpenedTheMenu = target
+        btnThatOpenedTheMenu.classList.add('movie__add-btn--active')
+        const { movieid, movietitle } = target.dataset
+        refresh(lists, movieid, movietitle)
         if (menuState != 1) {
             menuState = 1
             node.classList.add(active)
@@ -75,6 +92,7 @@ const ListMenu = () => {
     }
 
     const closeMenu = () => {
+        btnThatOpenedTheMenu.classList.remove('movie__add-btn--active')
         if (menuState != 0) {
             menuState = 0
             node.classList.remove(active)

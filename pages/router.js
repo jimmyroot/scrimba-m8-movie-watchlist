@@ -77,10 +77,10 @@ const Router = () => {
         window.onpopstate = () => navigate(location.pathname)
     }
 
-    const compilePage = async (page, user, listPath) => {
+    const compilePage = async (page, user, route, listPath) => {
         try {
             const nodes = [
-                header.get(page, user),
+                header.get(route, user),
                 await page.get(user, listPath),
                 footer.get()
             ]
@@ -131,7 +131,7 @@ const Router = () => {
         
         // Try to render the given path, if anything goes wrong set route to unknown and go...
         try {
-            routes[route].content = await compilePage(routes[route].module, auth.getUser(), listPath)
+            routes[route].content = await compilePage(routes[route].module, auth.getUser(), route, listPath)
             const nodesToRender = routes[route].content
             document.querySelector('#app').replaceChildren(...nodesToRender)
         }

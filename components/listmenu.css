@@ -1,13 +1,42 @@
 .context-menu {
-    width: 100px;
-    aspect-ratio: 1/2;
-    background-color: red;
+    background-color: var(--context-menu-surface);
+    min-width: 200px;
+    border-radius: 5px;
+    color: var(--context-menu-text);
+    font-size: .9rem;
     
     position: absolute;
     display: none;
     z-index: 10;
+    padding: .4em;
+
+    .context-menu__watchlists {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+
+        .context-menu__list {
+            display: flex;
+            gap: .4em;
+            align-items: center;
+            border-radius: 5px;
+            padding: .8em .5em;
+
+            & * {
+                pointer-events: none;
+            }
+
+            &:hover {
+                background-color: var(--context-menu-hover);
+            }
+
+            &:active {
+                filter: brightness(.9)
+            }
+        }
+    }
 }
 
 .block {
     display: block;
-}
+}   

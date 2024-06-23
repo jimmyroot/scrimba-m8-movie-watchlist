@@ -57,6 +57,10 @@
                     background-color: var(--primary-darker);
                 }
             }
+
+            .nav__item--active {
+                color: var(--primary);
+            }
         }
     }
 

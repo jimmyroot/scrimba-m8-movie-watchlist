@@ -1,0 +1,93 @@
+@import '../pages/signup.css';
+@import '../pages/mylists.css';
+@import '../pages/findmovies.css';
+
+.page__header {
+    padding: .7em 1em;
+    border-bottom: 1px solid var(--ui-black-10);
+}
+
+.page__results {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    padding: 1em;
+    gap: 2em;
+
+    .movie__card {
+        display: flex;
+        height: 180px;
+        overflow: hidden;
+        gap: 1em;
+
+        .movie__info,
+        .movie__header,
+        .movie__details,
+        .movie__buttons {
+            display: flex;
+        }
+
+        .movie__thumbnail {
+            height: 180px;
+            width: 120px;
+            border-radius: 7px;
+        }
+
+        .movie__header {
+            flex-direction: row;
+            align-items: center;
+            gap: 2em;
+
+            h3 {
+                font-size: 1.125rem;
+                font-family: Inter, sans-serif;
+                font-weight: 500;
+                line-height: 1.2;
+            }
+        }
+
+        .movie__info {
+            display: flex;
+            flex-direction: column;
+            gap: .6em;
+            font-size: .75rem;            
+        }
+
+        .movie__details {
+            gap: 2em;
+        }
+
+        .movie__plot {
+            color: var(--ui-black-60);
+            font-size: .875rem;
+            font-weight: 400;
+            width: 100%;
+        }
+
+        .movie__buttons {
+            margin: auto 0 1em 0;
+        }
+
+        .movie__add-btn {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            
+            span {
+                padding-left: .3em;
+                display: block;
+            }
+
+            &:hover {
+                color: var(--primary);
+            }
+
+            &:active {
+                transform: scale(0.95);
+            }
+        }
+
+        .movie__add-btn--active {
+            color: var(--primary);
+        }
+    }
+}

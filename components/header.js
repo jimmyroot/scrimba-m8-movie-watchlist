@@ -24,7 +24,7 @@ const Header = () => {
         if (execute[type]) execute[type]()
     }
 
-    const render = (page, user) => {
+    const render = (route, user) => {
         const nav = Boolean(user) ? 
             `
                 <li>
@@ -64,12 +64,15 @@ const Header = () => {
         return html
     }
 
-    const refresh = (page, user) => {
-        node.innerHTML = render(page, user)
+    const refresh = (route, user) => {
+        node.innerHTML = render(route, user)        
+        const navLinkForCurrentPage = node.querySelector(`[href="${route}"]`)
+        // Use if because for some pages this action won't be valid, easier than coding each case
+        if (navLinkForCurrentPage) navLinkForCurrentPage.classList.add('nav__item--active')
     }
 
-    const get = (page, user) => {
-        refresh(page, user)
+    const get = (route, user) => {
+        refresh(route, user)
         return node
     }
 

@@ -12,4 +12,8 @@
     --ui-black-40: #00000068;
     --ui-black-60: #00000099;
     --spinner-main: #FFFFFF66;
+    --context-menu-surface: #282828;
+    --context-menu-text: #EAE9E9;
+    --context-menu-hover: #3E3D3D;
+    --context-menu-active: #323131;
 }

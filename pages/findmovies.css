@@ -1,8 +1,4 @@
 .page__header {
-    /* background-color: pink; */
-    padding: .7em 1em;
-    border-bottom: 1px solid var(--ui-black-10);
-
     .header__search {
         position: relative;
         display: flex;
@@ -45,5 +41,5 @@
                 color: var(--ui-black-60);
             }
         }
-    }   
+    }
 }
