@@ -151,6 +151,18 @@ const Db = async () => {
         })
     }
 
+    const toggleMovieWatched = async (docPath, movieid) => {
+        // try {
+        //     await runTransaction(db, async transaction => {
+        //         const moviesFromList = await transaction.get(doc(db, docPath).movies)
+        //         console.log(moviesFromList)
+        //     } )
+        // }
+        // catch (e) {
+        //     console.error(e)
+        // }
+    }
+
     const removeListAtPath = async path => {
         await deleteDoc(doc(db, path))
     }
@@ -304,6 +316,7 @@ const Db = async () => {
         addMovieToDB,
         addMovieToList,
         removeMovieFromList,
+        toggleMovieWatched,
         collection,
         onSnapshot,
         query,

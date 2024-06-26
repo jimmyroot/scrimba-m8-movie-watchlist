@@ -27,7 +27,7 @@ const MyLists = async () => {
             new: async () => {
                 const params = {
                     uid: auth.getUser().uid,
-                    title: document.getElementById('new-list-title').value
+                    title: document.getElementById('input-list-title').value
                 }
                 await db.createList(params)
             }
@@ -39,10 +39,18 @@ const MyLists = async () => {
 
     const render = (lists) => {
         const html = `
-            ${renderNewListForm()}
-            <h1>My Watchlists</h1>
-            <section>
-                ${renderLists(lists)}
+            <header class="page__header">
+                <div class="header__new-watchlist-input">
+                    <label for="input-watchlistlist-title">New Watchlist Title</label>
+                    <input class="new-watchlist__input" type="text" id="input-watchlist-title" placeholder="New watchlist name">
+                    <button class="new-watchlist__btn" id="btn-new-watchlist" data-type="new"><i class='bx bx-plus bx-sm'></i></button>
+                </div>
+            </header>
+            
+            <section class="page__section watchlists__container">
+                <ul class="watchlists__list">
+                    ${renderLists(lists)}
+                </ul>
             </section>
         `
 
@@ -55,14 +63,16 @@ const MyLists = async () => {
         if (lists) {
             html = lists.map(list => {
                 const { data, docPath } = list
+                const moviesCount = data.movies.length
 
                 return `
-                <div data-path="${docPath}">
-                    <h3><a href="#" data-type="navigate">${data.title}</a></h3>
-                    <button id="remove-list-btn" data-type="remove">Remove</button>
-                </div>
+                <li class="watchlist__item" data-path="${docPath}">
+                    <h3 class="item__title"><a class="item__link" href="#" data-type="navigate">${data.title}</a></h3>
+                    <button class="item__btn-remove" id="remove-list-btn" data-type="remove"><i class='bx bx-trash bx-sm'></i></button>
+                    <p class="item__details">🎬 Movies: ${moviesCount} 🍿 Watched: </p>
+                </li>
                 `
-            })
+            }).join('')
         }
 
         return html
@@ -70,10 +80,7 @@ const MyLists = async () => {
 
     const renderNewListForm = () => {
         let html = `
-            <form id="mylists-new-list-form">
-                <input type="text" id="new-list-title">
-                <button id="new-list-btn" data-type="new">New list</button>
-            </form>
+            
         `
         return html
     }
@@ -99,7 +106,6 @@ const MyLists = async () => {
     }
 
     const get = async () => {
-        // node.innerHTML = ``
         // We don't need to refresh as the listener is doing this for us
         return node
     }

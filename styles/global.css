@@ -9,7 +9,7 @@ html {
   font-family: Inter, sans-serif;
 }
 
-button * {
+button *, a * {
   pointer-events: none;
 }
 

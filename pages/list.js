@@ -14,11 +14,17 @@ const List = async () => {
                 router.navigate('/mylists')
             },
             removemovie: async () => {
-                const { list } = e.target.closest('ul').dataset
+                const { listPath } = e.target.closest('ul').dataset
                 const { movieid } = e.target.dataset
-                if ( list && movieid) await db.removeMovieFromList(list, movieid)
+                if ( listPath && movieid) await db.removeMovieFromList(listPath, movieid)
+            },
+            togglewatched: async () => {
+                const { listPath } = e.target.closest('ul').dataset
+                const { movieid } = e.target.dataset
+                // await db.toggleMovieWatched(listPath, movieid) 
             }
         }
+        e.preventDefault()
         const { type } = e.target.dataset
         if (execute[type]) execute[type]()
     }
@@ -26,8 +32,13 @@ const List = async () => {
     const render = async (listPath, title, arrMovieIDs) => {
 
         let html = `
-            <a href="#" data-type="back">Back</a>
-            <h1>${title}</h1>
+            <header class="page__header">
+                <div class="header__list">
+                    <a class="header__btn-back" href="#" data-type="back"><i class='bx bx-arrow-back bx-sm'></i></a>
+                    <h2 class="header__list-title">${title}</h2>
+                </div>
+            </header>
+            
             <ul data-list="${listPath}">
         `
 
@@ -42,8 +53,8 @@ const List = async () => {
                         <p>${movie.imdbRating}</p>
                         <p>${movie.Plot}</p>
                         <button data-type="removemovie" data-movieid="${movie.imdbID}">Remove</button>
+                        <button data-type="togglewatched" data-movieid="${movie.imdbID}">Watched</button>
                     </li>
-
                 `
             }).join('')
     
