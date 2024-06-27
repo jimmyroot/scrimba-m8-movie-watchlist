@@ -19,9 +19,10 @@ const List = async () => {
                 if ( listPath && movieid) await db.removeMovieFromList(listPath, movieid)
             },
             togglewatched: async () => {
-                const { listPath } = e.target.closest('ul').dataset
+                const { listpath } = e.target.closest('ul').dataset
                 const { movieid } = e.target.dataset
-                // await db.toggleMovieWatched(listPath, movieid) 
+                console.log(listpath, movieid)
+                await db.toggleMovieWatched(listpath, movieid)
             }
         }
         e.preventDefault()
@@ -30,6 +31,8 @@ const List = async () => {
     }
 
     const render = async (listPath, title, arrMovieIDs) => {
+        // Get the movies from the list we're rendering, this contains 'watched' status
+        const moviesFromList = await db.getMoviesFromList(listPath)
 
         let html = `
             <header class="page__header">
@@ -39,7 +42,7 @@ const List = async () => {
                 </div>
             </header>
             
-            <ul data-list="${listPath}">
+            <ul data-listpath="${listPath}">
         `
 
         // refactor -> 'if (moviesArray.length > 0) { do stuff }
@@ -47,13 +50,15 @@ const List = async () => {
             const movieData = await db.getMovies(arrMovieIDs)
 
             const moviesHtml = movieData.map(movie => {
+                const currentMovieFromUsersList = moviesFromList.find(movieFromList => movieFromList.imdbID === movie.imdbID)
+                const watched = currentMovieFromUsersList.watched ? 'Watched' : 'Not Watched'
                 return `
                     <li>
                         <h4>${movie.Title}</h4>
                         <p>${movie.imdbRating}</p>
                         <p>${movie.Plot}</p>
                         <button data-type="removemovie" data-movieid="${movie.imdbID}">Remove</button>
-                        <button data-type="togglewatched" data-movieid="${movie.imdbID}">Watched</button>
+                        <button data-type="togglewatched" data-movieid="${movie.imdbID}">${watched}</button>
                     </li>
                 `
             }).join('')
@@ -75,8 +80,9 @@ const List = async () => {
         node.innerHTML = html
     }
 
-    const listenForChangesAndRefreshList = async (listPath) => {
+    const listenForChangesAndRefreshList = async listPath => {
         const listDoc = db.doc(db.db, listPath)
+
         unsubscribeFromListListener = db.onSnapshot(listDoc, docSnapshot => {
             if (!docSnapshot.empty) {
                 const { title, movies } = docSnapshot.data()

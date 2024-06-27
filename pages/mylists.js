@@ -1,5 +1,6 @@
 import { auth } from '../data/auth'
 import { router } from '../pages/router'
+import { percentageOfTrue } from '../utils/utils'
 
 const db = await (async () => {
     const { db } = await import('../data/db')
@@ -17,11 +18,12 @@ const MyLists = async () => {
     const handleClick = e => {
         const execute = {
             navigate: () => {
-                const { path } = e.target.closest('div').dataset
+                const { path } = e.target.closest('li').dataset
+
                 router.navigate('/list', path)
             },
             remove: async () => {
-                const { path } = e.target.closest('div').dataset
+                const { path } = e.target.closest('li').dataset
                 await db.removeListAtPath(path)
             },
             new: async () => {
@@ -37,7 +39,7 @@ const MyLists = async () => {
         if (execute[type]) execute[type]()
     }
 
-    const render = (lists) => {
+    const render = async (lists) => {
         const html = `
             <header class="page__header">
                 <div class="header__new-watchlist-input">
@@ -58,18 +60,27 @@ const MyLists = async () => {
     }
 
     const renderLists = lists => {
+        
         let html = ``
 
         if (lists) {
             html = lists.map(list => {
                 const { data, docPath } = list
                 const moviesCount = data.movies.length
+                const watchedBoolArr = data.movies.reduce((watchedArr, movie) => {
+                    watchedArr.push(movie.watched)
+                    return watchedArr
+                }, [])
+                const percentComplete = percentageOfTrue(watchedBoolArr)
 
                 return `
                 <li class="watchlist__item" data-path="${docPath}">
                     <h3 class="item__title"><a class="item__link" href="#" data-type="navigate">${data.title}</a></h3>
                     <button class="item__btn-remove" id="remove-list-btn" data-type="remove"><i class='bx bx-trash bx-sm'></i></button>
-                    <p class="item__details">🎬 Movies: ${moviesCount} 🍿 Watched: </p>
+                    <p class="item__details">🎬 Movies: ${moviesCount} 🍿 Watched: ${percentComplete}% </p>
+                    <div class="item__progbar">
+                        <div class="item__progbar-prog" style="width: ${percentComplete}%"></div>
+                    <div>
                 </li>
                 `
             }).join('')
@@ -102,7 +113,7 @@ const MyLists = async () => {
     }
 
     const refresh = async (lists) => {
-        node.innerHTML = render(lists)
+        node.innerHTML = await render(lists)
     }
 
     const get = async () => {

@@ -151,16 +151,28 @@ const Db = async () => {
         })
     }
 
-    const toggleMovieWatched = async (docPath, movieid) => {
-        // try {
-        //     await runTransaction(db, async transaction => {
-        //         const moviesFromList = await transaction.get(doc(db, docPath).movies)
-        //         console.log(moviesFromList)
-        //     } )
-        // }
-        // catch (e) {
-        //     console.error(e)
-        // }
+    const toggleMovieWatched = async (listPath, movieID) => {
+        try {
+            await runTransaction(db, async transaction => {
+                const listRef = doc(db, listPath)
+
+                // Not bothering to check if the movie exists, we know it does otherwise there would be
+                // no button to click and call this function...it will fail gracefully with 'catch' anyway
+                const targetMoviesArr = (await transaction.get(listRef)).data().movies
+                const targetMovie = targetMoviesArr.find(movie => movie.imdbID === movieID)
+                targetMovie.watched = !targetMovie.watched
+                console.log(targetMoviesArr.find(movie => movie.imdbID === movieID).watched)
+                await transaction.update(listRef, {movies: targetMoviesArr})
+            } )
+        }
+        catch (e) {
+            console.error(e)
+        }
+    }
+
+    const getMoviesFromList = async (listPath) => {
+        const movies = await getDoc(doc(db, listPath))
+        if (movies.exists()) return movies.data().movies
     }
 
     const removeListAtPath = async path => {
@@ -310,6 +322,7 @@ const Db = async () => {
         getListsForUser,
         getListByPath,
         getMovies,
+        getMoviesFromList,
         createAccount,
         createList,
         removeListAtPath,

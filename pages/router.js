@@ -117,6 +117,7 @@ const Router = () => {
     }
 
     const navigate = (route, listPath) => {
+        
         history.pushState({}, "", route)
         render(route, listPath)
     }

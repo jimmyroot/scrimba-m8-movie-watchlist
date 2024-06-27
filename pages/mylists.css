@@ -46,7 +46,7 @@
 
 .page__section {
     .watchlists__list {
-        border: 1px solid red;
+        /* border: 1px solid red; */
         list-style-type: none;
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -77,6 +77,20 @@
 
             .item__btn-remove {
                 display: none;
+            }
+
+            .item__progbar {
+                background-color: lightgrey;
+                width: 100%;
+                height: 5px;
+                border-radius: 3px;
+            }
+
+            .item__progbar-prog {
+                background-color: green;
+                width: 0%;
+                height: 5px;
+                border-radius: 3px;
             }
 
         }
