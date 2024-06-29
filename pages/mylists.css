@@ -98,22 +98,26 @@
             }
 
             .item__btn-remove {
+                opacity: .35;
                 pointer-events: all;
                 position: absolute;
                 top: 8px;
                 right: 8px;
-                display: block;
+                display: none;
+
+                &:hover {
+                    opacity: 1;
+                }
+
+                &:active {
+                    opacity: 1;
+                    transform: scale(0.9);
+                }
             }
 
             &:hover > .item__btn-remove {
-                border: 1px solid red;
-                /* display: block; */
+                display: block;
             }
-
-            /* &:hover > .item__title {
-                border: 3px solid blue;
-                /* display: block; 
-            } */
 
             .item__progbar {
                 background-color: lightgrey;

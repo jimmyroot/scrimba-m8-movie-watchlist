@@ -27,9 +27,10 @@ const MyLists = async () => {
                 await db.removeListAtPath(path)
             },
             new: async () => {
+                console.log('making new list')
                 const params = {
                     uid: auth.getUser().uid,
-                    title: document.getElementById('input-list-title').value
+                    title: document.getElementById('input-watchlist-title').value
                 }
                 await db.createList(params)
             }
@@ -44,7 +45,7 @@ const MyLists = async () => {
             <header class="page__header">
                 <div class="header__new-watchlist-input">
                     <label for="input-watchlistlist-title">New Watchlist Title</label>
-                    <input class="new-watchlist__input" type="text" id="input-watchlist-title" placeholder="New watchlist name">
+                    <input class="new-watchlist__input" id="input-watchlist-title" type="text" placeholder="New watchlist name">
                     <button class="new-watchlist__btn" id="btn-new-watchlist" data-type="new"><i class='bx bx-plus bx-sm'></i></button>
                 </div>
             </header>
@@ -82,7 +83,7 @@ const MyLists = async () => {
                     </div>
                     <div class="item__progbar">
                         <div class="item__progbar-prog" style="width: ${percentComplete}%"></div>
-                    <div>
+                    </div>
                     <button class="item__btn-remove" id="remove-list-btn" data-type="remove">
                         <i class='bx bx-trash'></i>
                     </button>
