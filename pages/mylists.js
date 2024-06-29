@@ -18,7 +18,7 @@ const MyLists = async () => {
     const handleClick = e => {
         const execute = {
             navigate: () => {
-                const { path } = e.target.closest('li').dataset
+                const { path } = e.target.dataset
 
                 router.navigate('/list', path)
             },
@@ -74,13 +74,18 @@ const MyLists = async () => {
                 const percentComplete = percentageOfTrue(watchedBoolArr)
 
                 return `
-                <li class="watchlist__item" data-path="${docPath}">
-                    <h3 class="item__title"><a class="item__link" href="#" data-type="navigate">${data.title}</a></h3>
-                    <button class="item__btn-remove" id="remove-list-btn" data-type="remove"><i class='bx bx-trash bx-sm'></i></button>
-                    <p class="item__details">🎬 Movies: ${moviesCount} 🍿 Watched: ${percentComplete}% </p>
+                <li class="watchlist__item" data-type="navigate" data-path="${docPath}">
+                    <h3 class="item__title"><a class="item__link" href="#">${data.title}</a></h3>
+                    <div class="item__details">
+                    <p>🎬 Movies: ${moviesCount}</p>
+                    <p>🍿 Watched: ${percentComplete}%</p>
+                    </div>
                     <div class="item__progbar">
                         <div class="item__progbar-prog" style="width: ${percentComplete}%"></div>
                     <div>
+                    <button class="item__btn-remove" id="remove-list-btn" data-type="remove">
+                        <i class='bx bx-trash'></i>
+                    </button>
                 </li>
                 `
             }).join('')
