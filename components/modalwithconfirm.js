@@ -1,4 +1,4 @@
-const Modal = () => {
+const ModalWithConfirm = () => {
 
     const registerEventListeners = () => {
         node.addEventListener('click', e => {
@@ -10,6 +10,12 @@ const Modal = () => {
         const execute = {
             'hide': () => {
                 hide()
+            },
+            'yes': () => {
+                hide('yes')
+            },
+            'no': () => {
+                hide('no')
             }
         }
 
@@ -28,7 +34,10 @@ const Modal = () => {
             <div id="modal__inner" class="modal__inner">
                 <p><i class='bx bxs-error-circle bx-md'></i></p>
                 <p class="modal__p">${msg}</p>
-                <button class="modal__btn-close" data-type="hide">Close</button>
+                <div class="modal__btn-container">
+                    <button class="modal__btn" data-type="yes">Yes</button>
+                    <button class="modal__btn" data-type="no">No</button>
+                </div>
             </div>
         `
         return html
@@ -38,14 +47,20 @@ const Modal = () => {
         node.innerHTML = render(msg)
     }
 
-    const show = msg => {
+    const show = async msg => {
         refresh(msg)
         node.showModal()
         document.addEventListener('click', handleClick)
+
+        return new Promise((resolve, reject) => {
+            node.addEventListener('close', () => {
+                resolve(node.returnValue)
+            }, { once: true })
+        })
     }
 
-    const hide = () => {
-        node.close()
+    const hide = confirmed => {
+        node.close(confirmed)
     }
 
     const get = () => {
@@ -55,7 +70,7 @@ const Modal = () => {
 
     const node = document.createElement('dialog')
     node.classList.add('modal')
-    node.id = 'modal'
+    node.id = 'modal-confirm'
     registerEventListeners()
 
     return {
@@ -64,4 +79,4 @@ const Modal = () => {
     }
 }
 
-export const modal = Modal()
+export const modalWithConfirm = ModalWithConfirm()

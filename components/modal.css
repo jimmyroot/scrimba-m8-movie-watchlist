@@ -20,7 +20,12 @@
             margin: 0 0 .8em 0;
         }
 
-        .modal__btn-close {
+        .modal__btn-container {
+            display: flex;
+            gap: 1em;   
+        }
+
+        .modal__btn {
             align-self: center;
             padding: 1em;
             background-color: var(--primary);

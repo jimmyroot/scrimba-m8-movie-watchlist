@@ -23,6 +23,9 @@ import {
     getAuth, 
     onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js'
 
+import { 
+    splitName } from '../utils/utils'
+
 const omdb = await (async () => {
     const { omdb } = await import('../data/omdb')
     return omdb
@@ -47,8 +50,7 @@ const Db = async () => {
 
     // Get account data 
     const getAccount = async id => {
-        const profileDocRef = doc(db, 'accounts', id)
-        const profileDocSnapshot = await getDoc(profileDocRef)
+        const profileDocSnapshot = await getDoc(doc(db, 'accounts', id))
 
         if (profileDocSnapshot.exists()) {
             return profileDocSnapshot.data()
@@ -61,7 +63,6 @@ const Db = async () => {
     // Get movie data for a single movie in our local movies collection
     const getMovie = async id => {
         const movieDocRef = doc(db, 'movies', id)
-
         const movieDocSnapshot = await getDoc(movieDocRef)
 
         if (movieDocSnapshot.exists()) {
@@ -117,26 +118,32 @@ const Db = async () => {
         }
     }
 
-    // Create the account data for our user in the db
+    // Create the account data for our user in the db, function needs a better name as it's 
+    // a little misleading (we are actually checking and THEN creating account only if 
+    // it doesn't exist)
     const createAccount = async user => {
         try {
             await runTransaction(db, async transaction => {
                 const accountDocRef = doc(db, 'accounts', user.uid)
                 const accountDoc = await transaction.get(accountDocRef)
+                const { givenName, familyName } = splitName(user.displayName)
+                
                 if (!accountDoc.exists()) {
                     const newAccount = {
                         displayName: user.displayName,
-                        givenName: null,
-                        familyName: null,
-                        photoURL: user.photoURL,
+                        givenName: givenName,
+                        familyName: familyName,
+                        photoURL: user.photoURL || '/assets/blank.png',
                         favoriteGenres: []
                     }
                     await transaction.set(accountDocRef, newAccount)
+                } else {
+                    // Do nothing, the user already exists
                 }
             })
         }
         catch (e) {
-            console.error(`Something went wrong during user creation. The error was ${e}`)
+            console.log(`Something went wrong during user creation. The error was ${e}`)
         }
     }
 
@@ -161,7 +168,6 @@ const Db = async () => {
                 const targetMoviesArr = (await transaction.get(listRef)).data().movies
                 const targetMovie = targetMoviesArr.find(movie => movie.imdbID === movieID)
                 targetMovie.watched = !targetMovie.watched
-                console.log(targetMoviesArr.find(movie => movie.imdbID === movieID).watched)
                 await transaction.update(listRef, {movies: targetMoviesArr})
             } )
         }
@@ -302,19 +308,6 @@ const Db = async () => {
     const app = await initDB()
     const db = await getFirestore(app)
     const auth = getAuth(app)
-
-    // TEST CODE
-    // const unsub = onAuthStateChanged(auth, async user => {
-    //     const params = {
-    //         uid: user.uid,
-    //         title: 'Top ten car chase films'
-    //     }
-    //     createList(params)
-    //     // const uid = user.uid
-
-
-    //     // await getListsForUser(uid)
-    // })
 
     return {
         get,

@@ -59,6 +59,12 @@
             border: 1px solid transparent;
             border-radius: var(--br);
             padding: 1em;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
 
             & * {
                 pointer-events: none;
@@ -70,6 +76,10 @@
 
             &:active {
                 border-color: var(--ui-black-40);
+            }
+
+            &:has(#remove-list-btn:active) {
+                border-color: var(--ui-black-20);
             }
 
             .item__title {

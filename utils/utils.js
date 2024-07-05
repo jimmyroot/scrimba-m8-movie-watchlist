@@ -28,9 +28,44 @@ function percentageOfTrue(arr) {
     return percentage
 }
 
+function splitName(name) {
+    if (name) {
+        // Regular expression to match names with possible prefixes
+        const regex = /^(van(?: de| der)?\s)?(.+)$/i;
+
+        const [givenName, familyName] = name.split(' ');
+
+        // Handle cases where surname might include "van", "van de", or "van der"
+        const match = familyName ? familyName.match(regex) : givenName.match(regex);
+        if (match) {
+        const prefix = match[1] || '';
+        const surname = match[2];
+        return {
+            givenName: familyName ? givenName : '',
+            familyName: prefix + surname
+        };
+        } else {
+        // If there's no family name, return the name as givenName
+        return {
+            givenName: givenName || '',
+            familyName: ''
+        };
+        }
+    }
+    else {
+        console.error('No name was specified')
+        return {
+            givenName: '',
+            familyName: ''
+        }
+    }
+  }
+  
+
 export {
     validateEmail,
     validatePlainText,
     validatePassword,
-    percentageOfTrue
+    percentageOfTrue,
+    splitName
 }

@@ -1,5 +1,6 @@
 import { auth } from '../data/auth'
 import { router } from '../pages/router'
+import { modalWithConfirm } from '../components/modalwithconfirm'
 
 const db = await (async () => {
     const { db } = await import('../data/db')
@@ -11,28 +12,33 @@ const List = async () => {
     const handleClick = e => {
         const execute = {
             back: () => {
+                e.preventDefault()
                 router.navigate('/mylists')
             },
             removemovie: async () => {
                 const { listPath } = e.target.closest('ul').dataset
-                const { movieid } = e.target.dataset
-                if ( listPath && movieid) await db.removeMovieFromList(listPath, movieid)
+                const { movieId, movieTitle } = e.target.dataset
+
+                if (listPath && movieId) {
+                    const result = (await modalWithConfirm.show(`Really remove '${movieTitle}'?`)) === 'yes' ? true : false
+                    if (result) await db.removeMovieFromList(listPath, movieId)
+                }
             },
             togglewatched: async () => {
-                const { listpath } = e.target.closest('ul').dataset
-                const { movieid } = e.target.dataset
-                console.log(listpath, movieid)
-                await db.toggleMovieWatched(listpath, movieid)
+                const { listPath } = e.target.closest('ul').dataset
+                const { movieId } = e.target.dataset
+                console.log(listPath, movieId)
+                await db.toggleMovieWatched(listPath, movieId)
             }
         }
-        e.preventDefault()
+        
         const { type } = e.target.dataset
         if (execute[type]) execute[type]()
     }
 
     const render = async (listPath, title, arrMovieIDs) => {
         // Get the movies from the list we're rendering, this contains 'watched' status
-        const moviesFromList = await db.getMoviesFromList(listPath)
+        const moviesHtml = await renderMoviesForList(arrMovieIDs, listPath)
 
         let html = `
             <header class="page__header">
@@ -41,32 +47,80 @@ const List = async () => {
                     <h2 class="header__list-title">${title}</h2>
                 </div>
             </header>
-            
-            <ul data-listpath="${listPath}">
+            <section class="page__results">
+                <ul class="movie__list" data-list-path="${listPath}">
+                    ${moviesHtml}
+                </ul>
+            </section>
         `
+        
+        return html
+    }
 
-        // refactor -> 'if (moviesArray.length > 0) { do stuff }
+    const renderMoviesForList = async (arrMovieIDs, listPath) => {
+        const moviesFromList = await db.getMoviesFromList(listPath)
+        
+        let html = ``
+
         try {
             const movieData = await db.getMovies(arrMovieIDs)
 
-            const moviesHtml = movieData.map(movie => {
+            html = movieData.map(movie => {
+                const { Title, Runtime, Genre, Plot, Poster, imdbID } = movie
                 const currentMovieFromUsersList = moviesFromList.find(movieFromList => movieFromList.imdbID === movie.imdbID)
-                const watched = currentMovieFromUsersList.watched ? 'Watched' : 'Not Watched'
-                return `
-                    <li>
-                        <h4>${movie.Title}</h4>
-                        <p>${movie.imdbRating}</p>
-                        <p>${movie.Plot}</p>
-                        <button data-type="removemovie" data-movieid="${movie.imdbID}">Remove</button>
-                        <button data-type="togglewatched" data-movieid="${movie.imdbID}">${watched}</button>
-                    </li>
+                
+                // Set the rating
+                let Rating = 'N/A'
+                if (movie.Ratings[0]) {
+                    Rating = movie.Ratings[0].Value
+                }
+
+                // Set up the Watched / Unwatched toggle btn
+                const watched = currentMovieFromUsersList.watched
+                const watchedBtn = `
+                    <button class="movie__btn ${watched ? 'movie__btn--active' : ''}" data-type="togglewatched" data-movie-id="${imdbID}">
+                            ${watched ? `<i class='bx bxs-checkbox-checked'></i>` : `<i class='bx bx-checkbox'></i>`}
+                            <span>Watched</span>
+                    </button>
                 `
-            }).join('')
-    
-            html += `
-                ${moviesHtml}
-                </ul>
-            `
+
+                const removeBtn = `
+                    <button class="movie__btn movie__remove-btn" data-type="removemovie" data-movie-id="${imdbID}" data-movie-title="${Title}">
+                        <i class='bx bx-x' ></i>
+                        <span>Remove</span>
+                    </button>
+                `
+
+                const imdbLink = `
+                    <a class="movie__btn movie__btn-a" href="https://www.imdb.com/title/${movie.imdbID}/" target="_blank">
+                        <i class='bx bx-link-external'></i>
+                        <span>IMDb</span>
+                    </a>
+                `
+
+                return `    
+                        <li class="movie__card">
+                            <img class="movie__thumbnail" src="${Poster}" alt="Poster for the movie ${Title}">
+                            <div class="movie__info">
+                                <div class="movie__header">
+                                    <h3 class="movie__title">${Title}</h3>
+                                    <p><img class="movie__star" src="/assets/goldstar.svg"><span>${Rating}</span></p>
+                                </div>
+                                <div class="movie__details">
+                                    <p>${Runtime}</p>       
+                                    <p>${Genre}</p>
+                                </div>
+                                <p class="movie__plot">${Plot}</p>
+                                <div class="movie__btns">
+                                    ${watchedBtn}
+                                    ${removeBtn}
+                                    ${imdbLink}
+                                </div>
+                            </div>
+                        </li>
+                `
+            })
+            .join('')
         }
         catch {
             html += `<p>You didn't add anything to this list yet!</p>`
@@ -78,6 +132,7 @@ const List = async () => {
     const refresh = async (listPath, title, arrMovieIDs) => {
         const html = await render(listPath, title, arrMovieIDs)
         node.innerHTML = html
+        node.appendChild(modalWithConfirm.get())
     }
 
     const listenForChangesAndRefreshList = async listPath => {
@@ -90,8 +145,16 @@ const List = async () => {
                     return movie.imdbID
                 })
                 refresh(listPath, title, arrMovieIDs)
+                shaveEls()
             }
         })
+    }
+
+    const shaveEls = () => {
+        const title = node.querySelectorAll('.movie__title')
+        const plot = node.querySelectorAll('.movie__plot')
+        shave(title, 50)
+        shave(plot, 80)
     }
 
     const get = async (user, listPath) => {
@@ -114,6 +177,12 @@ const List = async () => {
     node.classList.add('list')
     node.addEventListener('click', handleClick)
     let unsubscribeFromListListener = null
+
+    const resizeObserver = new ResizeObserver(entries => {
+        shaveEls()
+    })
+
+    resizeObserver.observe(node)
 
     return {
         get

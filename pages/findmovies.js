@@ -53,6 +53,8 @@ const Findmovies = () => {
     }
 
     const render = async () => {
+        const resultsList = await renderResults(currentSearch)
+
         const html = `
             <header class="page__header">
                 <div class="header__search">
@@ -63,48 +65,12 @@ const Findmovies = () => {
                 </div>
             </header>
             <section class="page__results">
-                ${await renderResults(currentSearch)}
+                <ul class="movie__list">
+                    ${resultsList}
+                </ul>
             </section>
         `
         return html
-    }
-
-    const refresh = async () => {
-        node.innerHTML = await render()
-        shavePlotPs()
-        node.appendChild(listMenu.get())
-        node.appendChild(modal.get())
-    }
-
-    const get = async user => {
-        uid = user.uid
-        lists = await db.getListsForUser(uid)
-        currentSearch = null
-        await refresh()
-        return node
-    }
-
-    const shaveTitles = () => {
-        const elsToShave = node.querySelectorAll('.movie__title')
-        shave(elsToShave, 50)
-    }
-
-    const shavePlotPs = () => {
-        console.log('firing')
-        const elsToShave = node.querySelectorAll('.is__truncated')
-        shave(elsToShave, 80)
-    }
-
-    const getResults = async value => {
-        try {
-            if (!value) throw 'No search term supplied'
-            const results = await omdb.searchMovies(value)
-            currentSearch = results.Search
-            refresh()
-        }
-        catch(e) {
-            console.error(`Unable to get results because: ${e}`)
-        }
     }
 
     const renderResults = async currentSearch => {
@@ -124,7 +90,7 @@ const Findmovies = () => {
                     }
                     
                     return `
-                        <div class="movie__card">
+                        <li class="movie__card">
                             <img class="movie__thumbnail" src="${Poster}" alt="Poster for the movie ${Title}">
                             <div class="movie__info">
                                 <div class="movie__header">
@@ -136,11 +102,11 @@ const Findmovies = () => {
                                     <p>${Genre}</p>
                                 </div>
                                 <p class="movie__plot is__truncated">${Plot}</p>
-                                <div class="movie__buttons">
-                                    <button class="movie__add-btn" data-type="add" data-movieid="${imdbID}" data-movietitle="${Title}"><i class='bx bx-add-to-queue bx-sm'></i> <span>Add to list</span></button>
+                                <div class="movie__btns">
+                                    <button class="movie__btn" data-type="add" data-movieid="${imdbID}" data-movietitle="${Title}"><i class='bx bx-add-to-queue bx-sm'></i> <span>Add to list</span></button>
                                 </div>
                             </div>
-                        </div>
+                        </li>
                     `
                 }
             )
@@ -150,6 +116,43 @@ const Findmovies = () => {
         }
         
         return [...html].join('')
+    }
+
+    const getResults = async value => {
+        try {
+            if (!value) throw 'No search term supplied'
+            const results = await omdb.searchMovies(value)
+            currentSearch = results.Search
+            refresh()
+        }
+        catch(e) {
+            console.error(`Unable to get results because: ${e}`)
+        }
+    }
+
+    const shaveTitles = () => {
+        const elsToShave = node.querySelectorAll('.movie__title')
+        shave(elsToShave, 50)
+    }
+
+    const shavePlotPs = () => {
+        const elsToShave = node.querySelectorAll('.is__truncated')
+        shave(elsToShave, 80)
+    }
+    
+    const refresh = async () => {
+        node.innerHTML = await render()
+        shavePlotPs()
+        node.appendChild(listMenu.get())
+        node.appendChild(modal.get())
+    }
+
+    const get = async user => {
+        uid = user.uid
+        lists = await db.getListsForUser(uid)
+        currentSearch = null
+        await refresh()
+        return node
     }
 
     let uid = null

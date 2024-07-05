@@ -9,10 +9,14 @@
 }
 
 .page__results {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: 2em;
-    padding: 1em;
+
+    .movie__list {
+        list-style-type: none;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 2em;
+        padding: 1em;
+    }
 
     .movie__card {
         display: flex;
@@ -34,9 +38,11 @@
         }
 
         .movie__header {
+            width: 100%;
             flex-direction: row;
+            justify-content: start;
             align-items: center;
-            gap: 2em;
+            gap: 1em;
 
             h3 {
                 font-size: 1.125rem;
@@ -44,12 +50,23 @@
                 font-weight: 500;
                 line-height: 1.2;
             }
+
+            p {
+                display: flex;
+                align-items: center;
+                gap: .4em;
+                min-width: fit-content;
+
+                span {
+                    padding-top: .1em;
+                }
+            }
         }
 
         .movie__info {
             display: flex;
             flex-direction: column;
-            gap: .6em;
+            gap: .7em;
             font-size: .75rem;            
         }
 
@@ -57,24 +74,38 @@
             gap: 2em;
         }
 
+        .movie__star {
+            display: block;
+            width: 18px;
+            aspect-ratio: 1/1;
+        }
+
         .movie__plot {
             color: var(--ui-black-60);
             font-size: .875rem;
             font-weight: 400;
             width: 100%;
+            max-height: 80px;
         }
 
-        .movie__buttons {
-            margin: auto 0 1em 0;
+        .movie__btns {
+            display: flex;
+            gap: .7em;
+            margin-top: auto;
         }
 
-        .movie__add-btn {
+        .movie__btn {
             display: flex;
             align-items: center;
+            color: var(--txt-dark);
+            font-size: .8rem;
+            font-weight: 400;
             cursor: pointer;
+            border-radius: 5px;
+            padding: 0 .5em 0 .2em;
+            text-decoration: none;
             
             span {
-                padding-left: .3em;
                 display: block;
             }
 
@@ -85,10 +116,29 @@
             &:active {
                 transform: scale(0.95);
             }
+
+            i {
+                font-size: 1.5rem;
+            }
         }
 
+        .movie__btn-a {
+            gap: .5em;
+            /* gap: 1em; */
+            /* border: 1px solid black; */
+
+            i {
+                font-size: 1.1rem;
+                font-weight: 600;
+            }
+        }
+    
         .movie__add-btn--active {
             color: var(--primary);
+        }
+
+        .movie__btn--active {
+            background-color: var(--ui-black-10);
         }
     }
 }

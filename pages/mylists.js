@@ -7,6 +7,8 @@ const db = await (async () => {
     return db
 })()
 
+import { modalWithConfirm } from '../components/modalwithconfirm'
+
 const MyLists = async () => {
 
     const registerEventListeners = () => {
@@ -18,15 +20,15 @@ const MyLists = async () => {
     const handleClick = e => {
         const execute = {
             navigate: () => {
-                const { path } = e.target.dataset
-
-                router.navigate('/list', path)
+                const path = (e.target.dataset.path.split('/'))[1]
+                router.navigate(`/list/${path}`)        
             },
             remove: async () => {
-                const { path } = e.target.closest('li').dataset
-                await db.removeListAtPath(path)
+                const { path, title } = e.target.closest('li').dataset
+                const result = (await modalWithConfirm.show(`Are you sure you want to delete your '${title}' watchlist?`)) === 'yes' ? true : false
+                if (result) await db.removeListAtPath(path)
             },
-            new: async () => {
+            new: async () => {      
                 console.log('making new list')
                 const params = {
                     uid: auth.getUser().uid,
@@ -75,7 +77,7 @@ const MyLists = async () => {
                 const percentComplete = percentageOfTrue(watchedBoolArr)
 
                 return `
-                <li class="watchlist__item" data-type="navigate" data-path="${docPath}">
+                <li class="watchlist__item" data-type="navigate" data-path="${docPath}" data-title="${data.title}">
                     <h3 class="item__title"><a class="item__link" href="#">${data.title}</a></h3>
                     <div class="item__details">
                     <p>🎬 Movies: ${moviesCount}</p>
@@ -92,13 +94,6 @@ const MyLists = async () => {
             }).join('')
         }
 
-        return html
-    }
-
-    const renderNewListForm = () => {
-        let html = `
-            
-        `
         return html
     }
 
@@ -120,6 +115,7 @@ const MyLists = async () => {
 
     const refresh = async (lists) => {
         node.innerHTML = await render(lists)
+        node.appendChild(modalWithConfirm.get())
     }
 
     const get = async () => {

@@ -33,26 +33,28 @@ const Auth = () => {
     }
 
     const fbSignIn = async ( email, password ) => {
-        const user = await signInWithEmailAndPassword(auth, email, password)
+        const credential = await signInWithEmailAndPassword(auth, email, password)
+        // do anything we need with credential here in future 
     }
 
     const signInWithGoogle = async () => {
         try {
-            const result = await signInWithPopup(auth, google)
-            const user = result.user
+            const credential = await signInWithPopup(auth, google)
+            const user = credential.user
             const profile = await db.getAccount(user.uid)
             if (!Boolean(profile)) db.createAccount(user)
         }
         catch (e) {
             if (e.code === 'auth/account-exists-with-different-credential') {
-                console.error(`An account is already registered using either an alternate provider, or email & password.`)            }
+                console.error(`An account is already registered using either an alternate provider, or email & password.`)            
+            }
         }
     }
 
     const signInWithGithub = async () => {
         try {
-            const result = await signInWithPopup(auth, github)
-            const user = result.user
+            const credential = await signInWithPopup(auth, github)
+            const user = credential.user
             const profile = await db.getAccount(user.uid)
             if (!Boolean(profile)) db.createAccount(user)
         }

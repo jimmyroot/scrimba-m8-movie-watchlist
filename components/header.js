@@ -1,6 +1,11 @@
 import { auth } from '../data/auth'
 import { router } from '../pages/router'
 
+const db = await (async () => {
+    const { db } = await import('../data/db')
+    return db
+})()
+
 const Header = () => {
 
     const registerEventListeners = () => {
@@ -24,9 +29,13 @@ const Header = () => {
         if (execute[type]) execute[type]()
     }
 
-    const render = (route, user) => {
-        const nav = Boolean(user) ? 
-            `
+    const render = async (route, user) => {
+
+        let nav = ``
+
+        if (Boolean(user)) {
+            const { photoURL } = await db.getAccount(user.uid)
+            nav = `
                 <li>
                     <a href="/findmovies" data-type="navigate">Find Movies</a>
                 </li>
@@ -34,10 +43,13 @@ const Header = () => {
                     <a href="/mylists" data-type="navigate">My Lists</a>
                 </li>
                 <li>
-                    <a href="#" class="sign-in" data-type="signout">Sign out</a>
+                    <a href="#" data-type="signout">Sign out</a>
                 </li>
+                <img src="${photoURL}" class="header__avatar" alt="User avatar image">
             ` 
-        :   `
+        }
+        else {
+            nav = `
                 <li>
                     <a href="/signup" data-type="navigate">Sign up</a>
                 </li>
@@ -45,6 +57,7 @@ const Header = () => {
                     <a href="/signin" class="sign-in" data-type="navigate">Sign in</a>
                 </li>
             `
+        }
 
         const html = `
                 <div>
@@ -64,15 +77,15 @@ const Header = () => {
         return html
     }
 
-    const refresh = (route, user) => {
-        node.innerHTML = render(route, user)        
+    const refresh = async (route, user) => {
+        node.innerHTML = await render(route, user)        
         const navLinkForCurrentPage = node.querySelector(`[href="${route}"]`)
-        // Use if because for some pages this action won't be valid, easier than coding each case
+        // Use if, because for some pages this action won't be valid, so this is easier than coding each case
         if (navLinkForCurrentPage) navLinkForCurrentPage.classList.add('nav__item--active')
     }
 
-    const get = (route, user) => {
-        refresh(route, user)
+    const get = async (route, user) => {
+        await refresh(route, user)
         return node
     }
 

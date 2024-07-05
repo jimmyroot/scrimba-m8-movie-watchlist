@@ -80,7 +80,7 @@ const Router = () => {
     const compilePage = async (page, user, route, listPath) => {
         try {
             const nodes = [
-                header.get(route, user),
+                await header.get(route, user),
                 await page.get(user, listPath),
                 footer.get()
             ]
@@ -116,19 +116,26 @@ const Router = () => {
         })
     }
 
-    const navigate = (route, listPath) => {
+    const navigate = (route) => {
         
         history.pushState({}, "", route)
-        render(route, listPath)
+        render(route)
     }
 
-    const render = async (route, listPath) => {
+    const render = async (route) => {
         
         // Remove any trailing slash (unless route is homepage)
         if (route != '/') route = route.replace(/\/$/, "")
 
-        // Split the requested path in case we want to query it
-        // const path = route.split('/')
+        const path = route.split('/')
+        let listPath = ``
+
+        // Handle the case where we are navigating to a list
+        if (path[1] === 'list') {
+            route = '/'.concat(path[1])
+            listPath = 'lists/'.concat(path[2])
+            console.log(route)
+        }
         
         // Try to render the given path, if anything goes wrong set route to unknown and go...
         try {

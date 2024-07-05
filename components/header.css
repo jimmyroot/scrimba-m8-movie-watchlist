@@ -26,6 +26,15 @@
         aspect-ratio: 1/1;
         cursor: pointer;
     }
+
+    .header__avatar {
+        display: block;
+        border-radius: 50%;
+        border: 1px solid var(--ui-black-20);
+        padding: .2em;
+        height: 40px;
+        aspect-ratio: 1/1;
+    }
     
     .header-menu {
         list-style-type: none;
