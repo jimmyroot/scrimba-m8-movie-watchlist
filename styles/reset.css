@@ -47,6 +47,7 @@ button {
 #app {
   background-color: transparent;
   height: 100vh;
+  min-height: 400px;
   display: flex;
   flex-direction: column;
   min-width: 320px; 

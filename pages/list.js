@@ -62,7 +62,7 @@ const List = async () => {
         
         let html = ``
 
-        try {
+        if (arrMovieIDs.length > 0) {
             const movieData = await db.getMovies(arrMovieIDs)
 
             html = movieData.map(movie => {
@@ -75,15 +75,16 @@ const List = async () => {
                     Rating = movie.Ratings[0].Value
                 }
 
-                // Set up the Watched / Unwatched toggle btn
+                // Set up the buttons
                 const watched = currentMovieFromUsersList.watched
+
                 const watchedBtn = `
                     <button class="movie__btn ${watched ? 'movie__btn--active' : ''}" data-type="togglewatched" data-movie-id="${imdbID}">
                             ${watched ? `<i class='bx bxs-checkbox-checked'></i>` : `<i class='bx bx-checkbox'></i>`}
                             <span>Watched</span>
                     </button>
                 `
-
+                
                 const removeBtn = `
                     <button class="movie__btn movie__remove-btn" data-type="removemovie" data-movie-id="${imdbID}" data-movie-title="${Title}">
                         <i class='bx bx-x' ></i>
@@ -122,8 +123,14 @@ const List = async () => {
             })
             .join('')
         }
-        catch {
-            html += `<p>You didn't add anything to this list yet!</p>`
+        else {
+            html += `
+                <li class="page__empty">
+                    <p><i class='bx bx-confused bx-lg'></i></p>
+                    <p>
+                       This list needs movies! Head over to 'Find Movies' to add one, or ten!
+                    </p>
+                </li>`
         }
 
         return html
@@ -138,13 +145,13 @@ const List = async () => {
     const listenForChangesAndRefreshList = async listPath => {
         const listDoc = db.doc(db.db, listPath)
 
-        unsubscribeFromListListener = db.onSnapshot(listDoc, docSnapshot => {
+        unsubscribeFromListListener = db.onSnapshot(listDoc, async docSnapshot => {
             if (!docSnapshot.empty) {
                 const { title, movies } = docSnapshot.data()
                 const arrMovieIDs = Object.values(movies).map(movie => {
                     return movie.imdbID
                 })
-                refresh(listPath, title, arrMovieIDs)
+                await refresh(listPath, title, arrMovieIDs)
                 shaveEls()
             }
         })
@@ -174,7 +181,7 @@ const List = async () => {
     }
 
     const node = document.createElement('main')
-    node.classList.add('list')
+    node.classList.add('main')
     node.addEventListener('click', handleClick)
     let unsubscribeFromListListener = null
 

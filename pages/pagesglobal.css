@@ -19,6 +19,8 @@
     }
 
     .movie__card {
+        max-width: 600px;
+        position: relative;
         display: flex;
         height: 180px;
         overflow: hidden;
@@ -140,5 +142,28 @@
         .movie__btn--active {
             background-color: var(--ui-black-10);
         }
+    }
+
+    .movie__card--dimmed {
+        & * {
+            opacity: .2;
+        }
+    }
+}
+
+.page__empty {
+    display: flex;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    opacity: .3;
+
+    p {
+        text-align: center;
     }
 }
