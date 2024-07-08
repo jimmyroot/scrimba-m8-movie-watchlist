@@ -29,12 +29,30 @@ const Header = () => {
         if (execute[type]) execute[type]()
     }
 
+    // Use a promise to create a delay in code execution
+    const timer = ms => new Promise(res => setTimeout(res, ms))
+
     const render = async (route, user) => {
 
         let nav = ``
 
         if (Boolean(user)) {
-            const { photoURL } = await db.getAccount(user.uid)
+
+            // This is a cheap hack to get around the fact that theres a slight delay
+            // between creating the account and when the auth listener in the router
+            // triggers a page reload. If account doesn't exist it's because its 
+            // still being created, so wait 500ms and try again. keep doing this 
+            // until the account has been created
+            let account = null
+
+            do {
+                account = await db.getAccount(user.uid)
+                await timer(500)
+            } while (!account)
+            
+            console.log(account)
+            const photoURL = account.photoURL
+
             nav = `
                 <li>
                     <a href="/findmovies" data-type="navigate">Find Movies</a>
@@ -80,6 +98,7 @@ const Header = () => {
     const refresh = async (route, user) => {
         node.innerHTML = await render(route, user)        
         const navLinkForCurrentPage = node.querySelector(`[href="${route}"]`)
+
         // Use if, because for some pages this action won't be valid, so this is easier than coding each case
         if (navLinkForCurrentPage) navLinkForCurrentPage.classList.add('nav__item--active')
     }
