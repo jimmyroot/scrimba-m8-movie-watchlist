@@ -3,8 +3,9 @@ const validateEmail = email => {
         return regex.test(email)
 }
 
-const validatePlainText = string => {
-    const regex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/
+const validateName = string => {
+    // const regex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/
+    const regex = /^[A-Za-zÀ-ÖØ-öø-ÿ]([A-Za-zÀ-ÖØ-öø-ÿ '’-]*[A-Za-zÀ-ÖØ-öø-ÿ])?$/
     return regex.test(string)
 }
 
@@ -31,25 +32,25 @@ function percentageOfTrue(arr) {
 function splitName(name) {
     if (name) {
         // Regular expression to match names with possible prefixes
-        const regex = /^(van(?: de| der)?\s)?(.+)$/i;
+        const regex = /^(van(?: de| der)?\s)?(.+)$/i
 
-        const [givenName, familyName] = name.split(' ');
+        const [givenName, familyName] = name.split(' ')
 
         // Handle cases where surname might include "van", "van de", or "van der"
-        const match = familyName ? familyName.match(regex) : givenName.match(regex);
+        const match = familyName ? familyName.match(regex) : givenName.match(regex)
         if (match) {
-        const prefix = match[1] || '';
-        const surname = match[2];
+        const prefix = match[1] || ''
+        const surname = match[2]
         return {
             givenName: familyName ? givenName : '',
             familyName: prefix + surname
-        };
+        }
         } else {
         // If there's no family name, return the name as givenName
-        return {
-            givenName: givenName || '',
-            familyName: ''
-        };
+            return {
+                givenName: givenName || '',
+                familyName: ''
+            }
         }
     }
     else {
@@ -64,7 +65,7 @@ function splitName(name) {
 
 export {
     validateEmail,
-    validatePlainText,
+    validateName,
     validatePassword,
     percentageOfTrue,
     splitName

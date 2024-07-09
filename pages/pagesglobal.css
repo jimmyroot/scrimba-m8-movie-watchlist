@@ -113,7 +113,6 @@
 
         .movie__btns {
             display: flex;
-            gap: .7em;
             margin-top: auto;
         }
 
@@ -142,17 +141,19 @@
 
             i {
                 font-size: 1.5rem;
+                /* padding: .3em; */
             }
         }
 
         .movie__btn-a {
-            gap: .5em;
-            /* gap: 1em; */
-            /* border: 1px solid black; */
-
             i {
                 font-size: 1.1rem;
                 font-weight: 600;
+                padding: .2em;
+            }
+
+            span {
+                line-height: 0;
             }
         }
     

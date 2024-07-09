@@ -7,7 +7,7 @@ const SignUp = () => {
         node.addEventListener('click', e => {
             handleClick(e)
         })
-        node.querySelector('#signup-form').addEventListener('keyup', e => {
+        node.querySelector('#signup-form').addEventListener('input', e => {
             validateInput(e.target)
             // validateSignUpForm(e.target.closest())
         })
@@ -46,19 +46,47 @@ const SignUp = () => {
     const validateInput = input => {
         const validate = {
             'given-name': () => {
-                state = givenName && utils.validatePlainText(givenName) ? true : false
+                valid = givenName && utils.validateName(givenName) ? true : false
+                if (!valid) {
+                    if (!givenName) {
+                        msg = 'First name is required'
+                    }
+                    else {
+                        msg = `Can only contain letters; should start and end with a letter`
+                    }
+                }
             },
             'family-name': () => {
-                state = familyName && utils.validatePlainText(familyName) ? true : false
+                if (!familyName) {
+                    resetState = true
+                } else {
+                    valid = utils.validateName(familyName) ? true : false
+                    if (!valid) {
+                       msg = `Can only contain letters; should start and end with a letter`
+                    }
+                }
             },
             'email': () => {
-                state = email && utils.validateEmail(email) ? true : false
+                valid = email && utils.validateEmail(email) ? true : false
+                if (!valid) {
+                    msg = !email ? 'Email is required' : 'Email address not valid'
+                }
             },
             'password': () => {
-                state = password.length >= 6 ? true : false
+                valid = password.length >= 6 ? true : false
+                if (!valid) {
+                    msg = 'Password must be at least 6 characters'
+                }
+                validateInput(node.querySelector('#password-confirm'))
             },
             'password-confirm': () => {
-                state = passwordConfirm.length >= 6 && passwordConfirm === password ? true : false
+                valid = passwordConfirm === password ? true : false
+                if (!valid) {
+                    msg = 'Passwords do not match'
+                } else if (!passwordConfirm) {
+                    resetState = true
+                }
+
             }
         }
 
@@ -66,22 +94,64 @@ const SignUp = () => {
         const form = input.closest('form')
         const formData = Object.fromEntries(Object.values(form).map(el => [el.name, el.value]))
         const el = node.querySelector(`#${id}`)
-        let state = null
-        const { 
+        let valid = null
+        let msg = null
+        let resetState = false
+
+        const {
             'given-name': givenName,
             'family-name': familyName,
             email,
             password,
             'password-confirm': passwordConfirm
         } = formData
+
         if (validate[id]) validate[id]()
-        setInputState(el, state)
+        let errPayload = {
+            resetState: resetState,
+            valid: valid,
+            msg: msg,
+        }
+        setInputState(el, errPayload)
     }
 
-    const setInputState = (el, valid) => {
-        const stateClass = valid ? 'valid' : 'warning'
-        el.classList.remove('valid', 'warning')
-        el.classList.add(stateClass)
+    const setInputState = (el, errPayload) => {
+        const { resetState, valid, msg } = errPayload
+
+        if (resetState) {
+            if (el.classList.contains('warning')) el.classList.remove('warning')
+            if (el.classList.contains('valid')) el.classList.remove('valid')
+            const msgEl = el.closest('.form__input-container').querySelector('.form__warning-msg')
+            if (msgEl) msgEl.remove()
+        } else {
+            const currInputContainer = el.closest('.form__input-container')
+            const msgEl = currInputContainer.querySelector('.form__warning-msg')
+            
+            const stateClass = valid ? 'valid' : 'warning'
+            el.classList.remove('valid', 'warning')
+            el.classList.add(stateClass)
+    
+            const p = document.createElement('p')
+            p.classList.add('form__warning-msg')
+            p.innerHTML = `
+                <i class='bx bx-x-circle'></i>
+                <span>${msg}</span<
+            `
+            
+            if (!valid) {
+                if (!msgEl) { 
+                    el.after(p)
+                } else {
+                    msgEl.replaceWith(p)
+                }
+            }
+            else {
+                if (msgEl) msgEl.remove()
+            }
+    
+        }
+        
+        
     }
 
     // Could probably tidy this up a bit, lots of selectors that could be consolidated
