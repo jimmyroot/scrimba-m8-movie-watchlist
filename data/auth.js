@@ -32,8 +32,20 @@ const Auth = () => {
         }
     }
 
-    const fbSignIn = async ( email, password ) => {
-        const credential = await signInWithEmailAndPassword(auth, email, password)
+    const fbSignIn = async ( email, password, appendError ) => {
+        try {
+            const credential = await signInWithEmailAndPassword(auth, email, password)
+        } catch (e) {
+            const el = document.querySelector('#signin-form')
+            // console.log(el)
+            if (e.code === 'auth/invalid-credential') {
+                appendError(el, 'Credentials invalid')
+            }
+            else if (e.code === 'auth/too-many-requests') {
+                appendError(el, 'Account locked! Try again later...')
+            }
+            // if e.code === 'auth/too-many-requests    '
+        }
         // do anything we need with credential here in future 
     }
 

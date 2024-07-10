@@ -7,7 +7,7 @@ const SignIn = () => {
         node.addEventListener('click', e => {
             handleClick(e)
         })
-        node.querySelector('#signin-form').addEventListener('input', e => {
+        node.addEventListener('input', e => {
             validateInput(e.target)
         })
     }
@@ -20,7 +20,7 @@ const SignIn = () => {
                 if (validateForm(form)) {
                     const email = document.getElementById('login-email').value
                     const password = document.getElementById('login-password').value
-                    await auth.fbSignIn(email, password)
+                    await auth.fbSignIn(email, password, appendError)
                 }
             },
             'signinwithgoogle': () => {
@@ -48,14 +48,23 @@ const SignIn = () => {
                         <label class="form__label" for="login-password">Password</label>
                         <input class="form__input" type="password" name="login-password" id="login-password" />
                     </div>
-                        
-                        <button class="form__btn" type="submit" data-type="signin">Sign in</button>
-                
+                    <button class="form__btn" type="submit" data-type="signin">Sign in</button>
                 </form>
-                <div>
-                    <button data-type="signinwithgoogle">Continue with Google</button>
-                    <button data-type="signinwithgithub">Continue with Github</button>
+                <div class="page__divider-container">
+                    <span class="page__divider"></span>
+                    <span>or</span>
+                    <span class="page__divider"></span>
                 </div>
+                <div class="page__btn-container">
+                    <button class="signin__alt-provider-btn" data-type="signinwithgoogle">
+                        <i class='bx bxl-google bx-sm'></i>
+                        Continue with Google
+                    </button>
+                    <button class="signin__alt-provider-btn" data-type="signinwithgithub">
+                        <i class='bx bxl-github bx-sm' ></i>
+                        Continue with Github
+                    </button>
+               </div>
             </section>
         `
         return html
@@ -97,6 +106,19 @@ const SignIn = () => {
         setInputState(el, errPayload)
     }
 
+    const appendError = (el, msg) => {
+        const p = document.createElement('p')
+        p.classList.add('form__warning-msg')
+        p.innerHTML = `
+            <i class='bx bx-x-circle'></i>
+            <span>${msg}</span<
+        `
+        el.after(p)
+        setTimeout(() => {
+            p.remove()
+        }, 10000)
+    }
+
     const setInputState = (el, errPayload) => {
         const { resetState, valid, msg } = errPayload
 
@@ -133,7 +155,6 @@ const SignIn = () => {
     
         }
         
-        
     }
 
     const validateForm = form => {
@@ -156,11 +177,11 @@ const SignIn = () => {
 
     const get = () => {
         refresh()
-        registerEventListeners()
         return node
     }
 
     const node = document.createElement('main')
+    registerEventListeners()
     node.classList.add('main')
 
     return {

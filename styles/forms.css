@@ -41,28 +41,14 @@
             justify-content: center;
             border-radius: var(--br);
             width: 100%;
-            padding: 1.7em;
+            height: 60px;
 
             &:hover {
-                background-color: var(--primary-darker);
+                background-color: var(--primary-lighter);
             }
 
             &:active {
-                background-color: var(--primary-darkest);
-            }
-        }
-
-        .form__warning-msg {
-            font-size: .9rem;
-            display: flex;
-            align-items: center;
-            gap: .2em;
-            color: red;
-            margin: 0;
-            padding: .1em 0 0 0;
-
-            i {
-                padding-top: .05em;
+                background-color: var(--primary);
             }
         }
 
@@ -72,6 +58,20 @@
 
         .valid {
             border: 1px solid green;
+        }
+    }
+
+    .form__warning-msg {
+        font-size: .9rem;
+        display: flex;
+        align-items: center;
+        gap: .2em;
+        color: red;
+        margin: 0;
+        padding: .1em 0 0 0;
+
+        i {
+            padding-top: .05em;
         }
     }
 }
