@@ -117,7 +117,7 @@ const Router = () => {
     }
 
     const navigate = (route) => {
-        
+        console.log('navigating')
         history.pushState({}, "", route)
         render(route)
     }

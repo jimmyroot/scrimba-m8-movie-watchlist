@@ -1,13 +1,31 @@
 import { omdb } from "../data/omdb"
 
 const Home = () => {
-    
-    const registerEventListeners = () => {
 
+    const handleClick = () => {
+        const execute = {
+            'navigate': () => {
+                const { pathname } = e.target
+                router.navigate(pathname)
+            }
+        }
+        e.preventDefault()
+        const { type } = e.target.dataset
+        if (execute[type]) execute[type]()
     }
-
+    
     const render = () => {
-        const html = `<h1>Home</h1>`
+        const html = `
+        <section class="page__container page__container-large">
+            <h1 class="home__tagline">Discover. Curate. Watch.</h1>
+            <p class="home__cta">Your movie watchlists, sorted. Click below to get started.</p>
+            <a class="home__signup-btn" href="/signup" data-type="navigate">
+                Get started
+                <i class='bx bxs-chevron-right bx-md'></i>
+            </button>
+        </section>
+        `
+        
         return html
     }
 
@@ -21,7 +39,8 @@ const Home = () => {
     }
 
     const node = document.createElement('main')
-    node.classList.add('home')
+    node.addEventListener('click', handleClick)
+    node.classList.add('main')
 
     return {
         get,

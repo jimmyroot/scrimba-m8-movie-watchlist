@@ -17,7 +17,7 @@ const Header = () => {
     const handleClick = e => {
         const execute = {
             'navigate': () => {
-                const { pathname } = e.target
+                const pathname = e.target.pathname || '/'
                 router.navigate(pathname)
             },
             'signout': () => {
@@ -78,9 +78,9 @@ const Header = () => {
         }
 
         const html = `
-                <div>
-                    <img class="header-logo-img" src="/assets/logo.png" data-type="refresh" alt="Reel Talk logo">
-                    <h1 class="header-logo" data-type="refresh">Reel Talk</h1>
+                <div class="header__logo-div" data-type="navigate">
+                    <img class="header-logo-img" src="/assets/logo.png" alt="Reel Talk logo">
+                    <h1 class="header-logo" data-type="refresh">Reel Time</h1>
                 </div>
                 <ul class="header-menu" id="menu">
                    ${nav}

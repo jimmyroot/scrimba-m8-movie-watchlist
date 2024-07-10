@@ -9,7 +9,6 @@ const SignUp = () => {
         })
         node.querySelector('#signup-form').addEventListener('input', e => {
             validateInput(e.target)
-            // validateSignUpForm(e.target.closest())
         })
     }
 
@@ -171,7 +170,7 @@ const SignUp = () => {
 
     const render = () => {
         const html = `
-            <section class="page__container-small">
+            <section class="page__container page__container-small">
                 <h1>We just need a few details to create your membership</h1>
                 <p>Don't worry, this won't take long (and it's free!). We'll have you 
                 signed up in no time 🙃</p>
