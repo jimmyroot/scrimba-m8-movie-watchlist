@@ -112,7 +112,14 @@ const Findmovies = () => {
             )
         )}
         else {
-            console.log('Nothing to do, currentSearch is empty')
+            html = [`
+                <li class="page__empty">
+                    <p><i class='bx bx-movie-play bx-lg'></i></p>
+                    <p>
+                        Enter a movie title and hit search to get started!
+                    </p>
+                </li>
+            `]
         }
         
         return [...html].join('')
@@ -160,7 +167,7 @@ const Findmovies = () => {
     let lists = null
     
     const node = document.createElement('main')
-    node.classList.add('findmovies')
+    node.classList.add('main')
 
     registerEventListeners()
 

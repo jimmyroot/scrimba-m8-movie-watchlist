@@ -28,7 +28,7 @@ const Modal = () => {
             <div id="modal__inner" class="modal__inner">
                 <p><i class='bx bxs-error-circle bx-md'></i></p>
                 <p class="modal__p">${msg}</p>
-                <button class="modal__btn-close" data-type="hide">Close</button>
+                <button class="modal__btn" data-type="hide">Close</button>
             </div>
         `
         return html

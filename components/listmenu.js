@@ -8,6 +8,7 @@ import { modal } from '../components/modal'
 const ListMenu = () => {
 
     let btnThatOpenedTheMenu = null
+    let movieCardEl = null
 
     const registerEventListeners = () => {
         node.addEventListener('click', e => {
@@ -21,7 +22,11 @@ const ListMenu = () => {
                 const { list, movieid } = e.target.dataset
                 const { movietitle } = e.target.closest('ul').dataset
                 closeMenu()
-                if (list) await db.addMovieToList(list, movieid, modal, movietitle)
+                if (list) {
+                    movieCardEl.classList.add('spinner','movie__card--dimmed')
+                    await db.addMovieToList(list, movieid, modal, movietitle)
+                    movieCardEl.classList.remove('spinner','movie__card--dimmed')
+                }
             }
         }
         e.preventDefault()
@@ -60,16 +65,14 @@ const ListMenu = () => {
         }
     }
 
-    const refresh = (lists, movieid, movietitle) => {   
-        node.innerHTML = render(lists, movieid, movietitle)
-    }
-
     const handleOpenMenu = (lists, target) => {
 
         // Set this value in the module scope so the close function can access it
         // when the context menu is closed
         btnThatOpenedTheMenu = target
         btnThatOpenedTheMenu.classList.add('movie__add-btn--active')
+        movieCardEl = target.closest('li')
+        
         const { movieid, movietitle } = target.dataset
         refresh(lists, movieid, movietitle)
         if (menuState != 1) {
@@ -147,6 +150,10 @@ const ListMenu = () => {
         else {
             node.style.top = posClickY + "px"
         }
+    }
+
+    const refresh = (lists, movieid, movietitle) => {   
+        node.innerHTML = render(lists, movieid, movietitle)
     }
 
     const get = args => {

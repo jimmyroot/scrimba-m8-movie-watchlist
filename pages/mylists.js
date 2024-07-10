@@ -25,7 +25,12 @@ const MyLists = async () => {
             },
             remove: async () => {
                 const { path, title } = e.target.closest('li').dataset
-                const result = (await modalWithConfirm.show(`Are you sure you want to delete your '${title}' watchlist?`)) === 'yes' ? true : false
+                let result = null
+                if (!document.getElementById('modal-confirm')) {
+                    node.appendChild(modalWithConfirm.get())
+                } else {
+                    result = (await modalWithConfirm.show(`Are you sure you want to delete your '${title}' watchlist?`)) === 'yes' ? true : false
+                }
                 if (result) await db.removeListAtPath(path)
             },
             new: async () => {      
@@ -66,7 +71,7 @@ const MyLists = async () => {
         
         let html = ``
 
-        if (lists) {
+        if (lists.length > 0) {
             html = lists.map(list => {
                 const { data, docPath } = list
                 const moviesCount = data.movies.length
@@ -93,6 +98,16 @@ const MyLists = async () => {
                 `
             }).join('')
         }
+        else {
+            html = `
+                <li class="page__empty">
+                    <p><i class='bx bx-list-ul bx-lg'></i></p>
+                    <p>
+                        Looks like you haven't added any lists yet! Enter a list name and click + to add your first list.
+                    </p>
+                </li>
+            `
+        }
 
         return html
     }
@@ -115,6 +130,7 @@ const MyLists = async () => {
 
     const refresh = async (lists) => {
         node.innerHTML = await render(lists)
+        console.log('fired')
         node.appendChild(modalWithConfirm.get())
     }
 
@@ -124,7 +140,7 @@ const MyLists = async () => {
     }
 
     const node = document.createElement('main')
-    node.classList.add('mylists')
+    node.classList.add('main')
     let unsubscribeFromListsListener = null
 
     // for any content that will use the user id, we need to use
