@@ -30,12 +30,20 @@ const SignIn = () => {
     const render = () => {
         const html = `
             <section class="page__container page__container-small">
-                <h1>Sign in</h1>
-                <div>
-                    <input type="text" id="login-email" />
-                    <input type="password" id="login-password" />
-                    <button type="submit" data-type="signin">Sign in</button>
-                </div>
+                <!--<h1>Sign in</h1>-->
+                <form id="signin__form">
+                    <div class="form__input-container">
+                        <label class="form__label" for="login-email">Email</label>
+                        <input class="form__input" type="text" id="login-email" />
+                    </div>
+                    <div class="form__input-container">
+                        <label class="form__label" for="login-password">Password</label>
+                        <input class="form__input" type="password" id="login-password" />
+                    </div>
+                        
+                        <button class="form__btn" type="submit" data-type="signin">Sign in</button>
+                
+                </form>
                 <div>
                     <button data-type="signinwithgoogle">Continue with Google</button>
                     <button data-type="signinwithgithub">Continue with Github</button>
@@ -43,6 +51,131 @@ const SignIn = () => {
             </section>
         `
         return html
+    }
+
+    const validateInput = input => {
+        const validate = {
+            'given-name': () => {
+                valid = givenName && utils.validateName(givenName) ? true : false
+                if (!valid) {
+                    if (!givenName) {
+                        msg = 'First name is required'
+                    }
+                    else {
+                        msg = `Can only contain letters; should start and end with a letter`
+                    }
+                }
+            },
+            'family-name': () => {
+                if (!familyName) {
+                    resetState = true
+                } else {
+                    valid = utils.validateName(familyName) ? true : false
+                    if (!valid) {
+                       msg = `Can only contain letters; should start and end with a letter`
+                    }
+                }
+            },
+            'login-email': () => {
+                valid = email && utils.validateEmail(email) ? true : false
+                if (!valid) {
+                    msg = !email ? 'Email is required' : 'Email address not valid'
+                }
+            },
+            'password': () => {
+                valid = password.length >= 6 ? true : false
+                if (!valid) {
+                    msg = 'Password must be at least 6 characters'
+                }
+                validateInput(node.querySelector('#password-confirm'))
+            },
+            'password-confirm': () => {
+                valid = passwordConfirm === password ? true : false
+                if (!valid) {
+                    msg = 'Passwords do not match'
+                } else if (!passwordConfirm) {
+                    resetState = true
+                }
+
+            }
+        }
+
+        const { id } = input
+        const form = input.closest('form')
+        const formData = Object.fromEntries(Object.values(form).map(el => [el.name, el.value]))
+        const el = node.querySelector(`#${id}`)
+        let valid = null
+        let msg = null
+        let resetState = false
+
+        const {
+            'given-name': givenName,
+            'family-name': familyName,
+            email,
+            password,
+            'password-confirm': passwordConfirm
+        } = formData
+
+        if (validate[id]) validate[id]()
+        let errPayload = {
+            resetState: resetState,
+            valid: valid,
+            msg: msg,
+        }
+        setInputState(el, errPayload)
+    }
+
+    const setInputState = (el, errPayload) => {
+        const { resetState, valid, msg } = errPayload
+
+        if (resetState) {
+            if (el.classList.contains('warning')) el.classList.remove('warning')
+            if (el.classList.contains('valid')) el.classList.remove('valid')
+            const msgEl = el.closest('.form__input-container').querySelector('.form__warning-msg')
+            if (msgEl) msgEl.remove()
+        } else {
+            const currInputContainer = el.closest('.form__input-container')
+            const msgEl = currInputContainer.querySelector('.form__warning-msg')
+            
+            const stateClass = valid ? 'valid' : 'warning'
+            el.classList.remove('valid', 'warning')
+            el.classList.add(stateClass)
+    
+            const p = document.createElement('p')
+            p.classList.add('form__warning-msg')
+            p.innerHTML = `
+                <i class='bx bx-x-circle'></i>
+                <span>${msg}</span<
+            `
+            
+            if (!valid) {
+                if (!msgEl) { 
+                    el.after(p)
+                } else {
+                    msgEl.replaceWith(p)
+                }
+            }
+            else {
+                if (msgEl) msgEl.remove()
+            }
+    
+        }
+        
+        
+    }
+
+    const validateSignUpForm = form => {
+        const formEls = [...form.elements]
+
+        formEls.forEach(input => {
+            if (input.type !== 'submit') validateInput(input)
+        })
+
+        for (const el of formEls) {
+            if (el.classList.contains('warning')) return false
+        }
+
+        return true
     }
 
     const refresh = () => {
