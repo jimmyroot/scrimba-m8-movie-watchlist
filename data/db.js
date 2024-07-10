@@ -50,6 +50,7 @@ const Db = async () => {
 
     // Get account data 
     const getAccount = async id => {
+        // this is working
         const profileDocSnapshot = await getDoc(doc(db, 'accounts', id))
 
         if (profileDocSnapshot.exists()) {

@@ -93,7 +93,7 @@ const Router = () => {
     // This will run every time the user manually refreshes, makes sure that the current
     // location in the address bar is always loaded
     const initialize = () => {
-        auth.onAuthStateChanged(auth.get(), user => {
+        auth.onAuthStateChanged(auth.get(), async user => {
             const destination = location.pathname
             const routeExists = Boolean(routes[destination])
             if (routeExists) {
@@ -117,7 +117,7 @@ const Router = () => {
     }
 
     const navigate = (route) => {
-        
+        console.log('navigating')
         history.pushState({}, "", route)
         render(route)
     }

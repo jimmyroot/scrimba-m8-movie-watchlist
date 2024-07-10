@@ -1,0 +1,43 @@
+.page__container-large {
+
+    padding-top: 1em;
+    
+    .home__tagline {
+        font-size: 2.2rem;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .home__cta {
+        font-size: 1.2rem;
+        margin: 1em 0 1.4em 0;
+    }
+
+    .home__signup-btn {
+        display: block;
+        font-size: 1.8rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        position: relative;
+        border-radius: var(--br);
+        padding: .5em 3em;
+        background-color: var(--primary);
+        color: var(--txt-light);
+        text-decoration: none;
+        gap: 1em;
+
+        &:hover {
+            background-color: var(--primary-lighter);
+        }
+
+        &:active {
+            background-color: var(--primary);
+        }
+
+        i {
+            right: 20px;
+            position: absolute;
+        }
+    }
+}

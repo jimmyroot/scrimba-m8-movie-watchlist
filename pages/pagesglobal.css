@@ -1,3 +1,4 @@
+@import '../pages/home.css';
 @import '../pages/signup.css';
 @import '../pages/mylists.css';
 @import '../pages/list.css';
@@ -8,8 +9,37 @@
     border-bottom: 1px solid var(--ui-black-10);
 }
 
-.page__results {
+.main {
+    .page__container {
+        margin: 3em auto 0 auto;
+    }
 
+    .page__container-large {
+        max-width: 960px;
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        align-items: center;
+        height: 100%;
+    }
+
+    .page__container-small {
+        width: 450px;
+    }
+
+    h1 {
+        font-size: 1.9rem;
+        font-weight: 600;
+        line-height: 1.3;
+    }
+
+    p {
+        font-weight: 400;
+        margin: 1.5em 0 .5em 0;
+    }
+}
+
+.page__results {
     .movie__list {
         list-style-type: none;
         display: grid;
@@ -92,7 +122,6 @@
 
         .movie__btns {
             display: flex;
-            gap: .7em;
             margin-top: auto;
         }
 
@@ -121,17 +150,19 @@
 
             i {
                 font-size: 1.5rem;
+                /* padding: .3em; */
             }
         }
 
         .movie__btn-a {
-            gap: .5em;
-            /* gap: 1em; */
-            /* border: 1px solid black; */
-
             i {
                 font-size: 1.1rem;
                 font-weight: 600;
+                padding: .2em;
+            }
+
+            span {
+                line-height: 0;
             }
         }
     
@@ -143,7 +174,7 @@
             background-color: var(--ui-black-10);
         }
     }
-
+  
     .movie__card--dimmed {
         & * {
             opacity: .2;

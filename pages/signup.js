@@ -7,31 +7,33 @@ const SignUp = () => {
         node.addEventListener('click', e => {
             handleClick(e)
         })
-        node.querySelector('#signup-form').addEventListener('change', e => {
-            if (e.target.classList.contains('warning')) e.target.classList.remove('warning')
+        node.querySelector('#signup-form').addEventListener('input', e => {
+            validateInput(e.target)
         })
     }
 
     const handleClick = e => {
-
         const execute = {
-            'signup': () => {
+            'signup': async () => {
                 const form = e.target.closest('form')
                 if (validateSignUpForm(form)) {
                     const formData = Object.fromEntries(Object.values(form).map(el => [el.name, el.value]))
-                    const { givenname, familyname, email, password } = formData
+                    const { 
+                        'given-name': givenName,
+                        'family-name': familyName,
+                        email,
+                        password
+                    } = formData
+
                     const newUser = {
-                        'givenName': givenname,
-                        'familyName': familyname,
+                        'givenName': givenName,
+                        'familyName': familyName,
                         'email': email,
                         'password': password
                     }
-                    auth.fbCreateUserAndSignIn(newUser)
-                } 
 
-                // const form = e.target.closest('form')
-                // const formData = Object.fromEntries(Object.values(form).map(el => [el.name, el.value]))
-                // const { givenname, familyname, email, password, passwordconfirm } = formData
+                    await auth.fbCreateUserAndSignIn(newUser)
+                }
             }
         }
 
@@ -40,30 +42,126 @@ const SignUp = () => {
         if (execute[type]) execute[type]()
     }
 
-    // Could probably tidy this up a bit, lots of selectors that could be consolidated
-    const validateSignUpForm = form => {
-        const formData = Object.fromEntries(Object.values(form).map(el => [el.name, el.value]))
-        const { givenname, familyname, email, password, passwordconfirm } = formData
-
-        if (!givenname || !utils.validatePlainText(givenname)) node.querySelector('#givenname').classList.add('warning')
-        if (!familyname || !utils.validatePlainText(familyname)) node.querySelector('#familyname').classList.add('warning')
-        if (!utils.validateEmail(email)) node.querySelector('#email').classList.add('warning')
-
-        if (password.length >= 6 && passwordconfirm.length >= 6) {
-            if (!utils.validatePassword(password, passwordconfirm)) {
-                node.querySelector('#passwordconfirm').classList.add('warning')
-            } else {
-                node.querySelector('#passwordconfirm').classList.remove('warning')
-            }
-        } else {
-            node.querySelectorAll('[id^=password]').forEach(el => {
-                if (el.value.length < 6) {
-                    el.classList.add('warning')
+    const validateInput = input => {
+        const validate = {
+            'given-name': () => {
+                valid = givenName && utils.validateName(givenName) ? true : false
+                if (!valid) {
+                    if (!givenName) {
+                        msg = 'First name is required'
+                    }
+                    else {
+                        msg = `Can only contain letters; should start and end with a letter`
+                    }
                 }
-            })
+            },
+            'family-name': () => {
+                if (!familyName) {
+                    resetState = true
+                } else {
+                    valid = utils.validateName(familyName) ? true : false
+                    if (!valid) {
+                       msg = `Can only contain letters; should start and end with a letter`
+                    }
+                }
+            },
+            'email': () => {
+                valid = email && utils.validateEmail(email) ? true : false
+                if (!valid) {
+                    msg = !email ? 'Email is required' : 'Email address not valid'
+                }
+            },
+            'password': () => {
+                valid = password.length >= 6 ? true : false
+                if (!valid) {
+                    msg = 'Password must be at least 6 characters'
+                }
+                validateInput(node.querySelector('#password-confirm'))
+            },
+            'password-confirm': () => {
+                valid = passwordConfirm === password ? true : false
+                if (!valid) {
+                    msg = 'Passwords do not match'
+                } else if (!passwordConfirm) {
+                    resetState = true
+                }
+
+            }
         }
 
-        for (const el of [...form.elements]) {
+        const { id } = input
+        const form = input.closest('form')
+        const formData = Object.fromEntries(Object.values(form).map(el => [el.name, el.value]))
+        const el = node.querySelector(`#${id}`)
+        let valid = null
+        let msg = null
+        let resetState = false
+
+        const {
+            'given-name': givenName,
+            'family-name': familyName,
+            email,
+            password,
+            'password-confirm': passwordConfirm
+        } = formData
+
+        if (validate[id]) validate[id]()
+        let errPayload = {
+            resetState: resetState,
+            valid: valid,
+            msg: msg,
+        }
+        setInputState(el, errPayload)
+    }
+
+    const setInputState = (el, errPayload) => {
+        const { resetState, valid, msg } = errPayload
+
+        if (resetState) {
+            if (el.classList.contains('warning')) el.classList.remove('warning')
+            if (el.classList.contains('valid')) el.classList.remove('valid')
+            const msgEl = el.closest('.form__input-container').querySelector('.form__warning-msg')
+            if (msgEl) msgEl.remove()
+        } else {
+            const currInputContainer = el.closest('.form__input-container')
+            const msgEl = currInputContainer.querySelector('.form__warning-msg')
+            
+            const stateClass = valid ? 'valid' : 'warning'
+            el.classList.remove('valid', 'warning')
+            el.classList.add(stateClass)
+    
+            const p = document.createElement('p')
+            p.classList.add('form__warning-msg')
+            p.innerHTML = `
+                <i class='bx bx-x-circle'></i>
+                <span>${msg}</span<
+            `
+            
+            if (!valid) {
+                if (!msgEl) { 
+                    el.after(p)
+                } else {
+                    msgEl.replaceWith(p)
+                }
+            }
+            else {
+                if (msgEl) msgEl.remove()
+            }
+    
+        }
+        
+        
+    }
+
+    // Could probably tidy this up a bit, lots of selectors that could be consolidated
+    const validateSignUpForm = form => {
+        const formEls = [...form.elements]
+
+        formEls.forEach(input => {
+            if (input.type !== 'submit') validateInput(input)
+        })
+
+        for (const el of formEls) {
             if (el.classList.contains('warning')) return false
         }
 
@@ -72,25 +170,34 @@ const SignUp = () => {
 
     const render = () => {
         const html = `
-            <h1>Sign up</h1>
-            <form id="signup-form">
-                <label for="givenname">First name
-                    <input type="text" name="givenname" id="givenname" />
-                </label>
-                <label for="familyname">Last name
-                    <input type="text" name="familyname" id="familyname" />
-                </label>
-                <label for="email">Email
-                    <input type="text" name="email" id="email" />
-                </label>
-                <label for="password">Password
-                    <input type="password" name="password" id="password" />
-                </label>
-                <label for="passwordconfirm">Confirm password
-                    <input type="password" name="passwordconfirm" id="passwordconfirm" />
-                </label>
-                <button data-type="signup">Sign Up</button>
-            </form>
+            <section class="page__container page__container-small">
+                <h1>We just need a few details to create your membership</h1>
+                <p>Don't worry, this won't take long (and it's free!). We'll have you 
+                signed up in no time 🙃</p>
+                <form id="signup-form">
+                    <div class="form__input-container">
+                        <label class="form__label" for="given-name">First name</label>
+                        <input class="form__input" type="text" name="given-name" id="given-name" />
+                    </div>
+                    <div class="form__input-container">
+                        <label class="form__label" for="family-name">Last name</label>
+                        <input class="form__input" type="text" name="family-name" id="family-name" />
+                    </div>
+                    <div class="form__input-container">
+                        <label class="form__label" for="email">Email</label>
+                        <input class="form__input" type="text" name="email" id="email" />
+                    </div>
+                    <div class="form__input-container">
+                        <label class="form__label" for="password">Password</label>
+                        <input class="form__input" type="password" name="password" id="password" />
+                    </div>
+                    <div class="form__input-container">
+                        <label class="form__label" for="password-confirm">Confirm password</label>
+                        <input class="form__input" type="password" name="password-confirm" id="password-confirm" />
+                    </div>
+                    <button class="form__btn" data-type="signup">Sign Up</button>
+                </form>
+            </section>
         `
         return html
     }

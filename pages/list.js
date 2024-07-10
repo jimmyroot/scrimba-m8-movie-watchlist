@@ -95,7 +95,7 @@ const List = async () => {
                 const imdbLink = `
                     <a class="movie__btn movie__btn-a" href="https://www.imdb.com/title/${movie.imdbID}/" target="_blank">
                         <i class='bx bx-link-external'></i>
-                        <span>IMDb</span>
+                        <span>View at IMDb</span>
                     </a>
                 `
 

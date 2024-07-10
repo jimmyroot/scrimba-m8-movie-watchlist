@@ -25,7 +25,7 @@ const Auth = () => {
             await updateProfile(credential.user, {
                 displayName: `${newUser.givenName} ${newUser.familyName}`
             })
-            db.createAccount(credential.user)
+            await db.createAccount(credential.user)
         }
         catch (e) {
             console.error(`User could not be created. Error code and message were: ${e.code}, ${e.message}`)

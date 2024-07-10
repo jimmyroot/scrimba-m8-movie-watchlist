@@ -29,15 +29,18 @@ const SignIn = () => {
 
     const render = () => {
         const html = `
-            <h1>Sign in</h1>
-            <div>
-            <input type="text" id="login-email" />
-            <input type="password" id="login-password" />
-            <button type="submit" data-type="signin">Sign in</button>
-            </div>
-            <div>
-            <button data-type="signinwithgoogle">Continue with Google</button>
-            <button data-type="signinwithgithub">Continue with Github</button>
+            <section class="page__container page__container-small">
+                <h1>Sign in</h1>
+                <div>
+                    <input type="text" id="login-email" />
+                    <input type="password" id="login-password" />
+                    <button type="submit" data-type="signin">Sign in</button>
+                </div>
+                <div>
+                    <button data-type="signinwithgoogle">Continue with Google</button>
+                    <button data-type="signinwithgithub">Continue with Github</button>
+                </div>
+            </section>
         `
         return html
     }

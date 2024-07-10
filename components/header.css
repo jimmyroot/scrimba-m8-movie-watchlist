@@ -6,10 +6,15 @@
     border-bottom: 1px solid var(--ui-black-10);
     padding: .4em 1em;
 
-    div:first-child {
+    .header__logo-div {
         display: flex;
         gap: 1em;
         align-items: center;
+        cursor: pointer;
+        
+        & * {
+            pointer-events: none;
+        }
     }
 
     .header-logo {
@@ -64,6 +69,10 @@
     
                 &:hover {
                     background-color: var(--primary-darker);
+                }
+
+                &:active {
+                    background-color: var(--primary-darkest);
                 }
             }
 
