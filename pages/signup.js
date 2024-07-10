@@ -72,7 +72,7 @@ const SignUp = () => {
                 }
             },
             'password': () => {
-                valid = password.length >= 6 ? true : false
+                valid = password.length >= 6
                 if (!valid) {
                     msg = 'Password must be at least 6 characters'
                 }

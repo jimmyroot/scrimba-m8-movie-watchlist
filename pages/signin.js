@@ -1,4 +1,5 @@
 import { auth } from '../data/auth'
+import * as utils from '../utils/utils'
 
 const SignIn = () => {
 
@@ -6,14 +7,21 @@ const SignIn = () => {
         node.addEventListener('click', e => {
             handleClick(e)
         })
+        node.querySelector('#signin-form').addEventListener('input', e => {
+            validateInput(e.target)
+        })
     }
 
     const handleClick = e => {
         const execute = {
-            'signin': () => {
-                const email = document.getElementById('login-email').value
-                const password = document.getElementById('login-password').value
-                auth.fbSignIn(email, password)
+            'signin': async () => {
+                e.preventDefault()
+                const form = e.target.closest('form')
+                if (validateForm(form)) {
+                    const email = document.getElementById('login-email').value
+                    const password = document.getElementById('login-password').value
+                    await auth.fbSignIn(email, password)
+                }
             },
             'signinwithgoogle': () => {
                 auth.signInWithGoogle()
@@ -30,15 +38,15 @@ const SignIn = () => {
     const render = () => {
         const html = `
             <section class="page__container page__container-small">
-                <!--<h1>Sign in</h1>-->
-                <form id="signin__form">
+                <h1>Sign in</h1>
+                <form id="signin-form">
                     <div class="form__input-container">
                         <label class="form__label" for="login-email">Email</label>
-                        <input class="form__input" type="text" id="login-email" />
+                        <input class="form__input" type="text" name="login-email" id="login-email" />
                     </div>
                     <div class="form__input-container">
                         <label class="form__label" for="login-password">Password</label>
-                        <input class="form__input" type="password" id="login-password" />
+                        <input class="form__input" type="password" name="login-password" id="login-password" />
                     </div>
                         
                         <button class="form__btn" type="submit" data-type="signin">Sign in</button>
@@ -55,48 +63,17 @@ const SignIn = () => {
 
     const validateInput = input => {
         const validate = {
-            'given-name': () => {
-                valid = givenName && utils.validateName(givenName) ? true : false
-                if (!valid) {
-                    if (!givenName) {
-                        msg = 'First name is required'
-                    }
-                    else {
-                        msg = `Can only contain letters; should start and end with a letter`
-                    }
-                }
-            },
-            'family-name': () => {
-                if (!familyName) {
-                    resetState = true
-                } else {
-                    valid = utils.validateName(familyName) ? true : false
-                    if (!valid) {
-                       msg = `Can only contain letters; should start and end with a letter`
-                    }
-                }
-            },
             'login-email': () => {
-                valid = email && utils.validateEmail(email) ? true : false
+                valid = loginEmail && utils.validateEmail(loginEmail) ? true : false
                 if (!valid) {
-                    msg = !email ? 'Email is required' : 'Email address not valid'
+                    msg = !loginEmail ? 'Email is required' : 'Email address not valid'
                 }
             },
-            'password': () => {
-                valid = password.length >= 6 ? true : false
+            'login-password': () => {
+                valid = Boolean(loginPassword)
                 if (!valid) {
-                    msg = 'Password must be at least 6 characters'
+                    msg = 'Password field should not be empty'
                 }
-                validateInput(node.querySelector('#password-confirm'))
-            },
-            'password-confirm': () => {
-                valid = passwordConfirm === password ? true : false
-                if (!valid) {
-                    msg = 'Passwords do not match'
-                } else if (!passwordConfirm) {
-                    resetState = true
-                }
-
             }
         }
 
@@ -108,15 +85,10 @@ const SignIn = () => {
         let msg = null
         let resetState = false
 
-        const {
-            'given-name': givenName,
-            'family-name': familyName,
-            email,
-            password,
-            'password-confirm': passwordConfirm
-        } = formData
+        const { 'login-email': loginEmail, 'login-password': loginPassword } = formData
 
         if (validate[id]) validate[id]()
+
         let errPayload = {
             resetState: resetState,
             valid: valid,
@@ -164,7 +136,7 @@ const SignIn = () => {
         
     }
 
-    const validateSignUpForm = form => {
+    const validateForm = form => {
         const formEls = [...form.elements]
 
         formEls.forEach(input => {
@@ -184,12 +156,12 @@ const SignIn = () => {
 
     const get = () => {
         refresh()
+        registerEventListeners()
         return node
     }
 
     const node = document.createElement('main')
     node.classList.add('main')
-    registerEventListeners()
 
     return {
         get

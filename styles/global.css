@@ -1,6 +1,7 @@
 @import './reset.css';
 @import './theme.css';
 @import './components.css';
+@import './forms.css';
 @import '../components/listmenu.css';
 @import '../components/modal.css';
 @import '../pages/pagesglobal.css';
