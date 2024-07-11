@@ -21,7 +21,7 @@ import { getAuth } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-aut
 import { omdb } from '../data/omdb'
 import { splitName } from '../utils/utils'
 
-const { FB_API_KEY } = process.env
+const { FB_API_KEY } = `$env/static/public`
 
 const firebaseConfig = {
     // apiKey: "AIzaSyCwbb7PceRaS4TpHA422uRqU3f7aHKLB38",
