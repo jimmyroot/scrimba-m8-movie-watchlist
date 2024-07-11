@@ -63,7 +63,6 @@ function splitName(name) {
 }
 
 const timer = ms => new Promise(res => setTimeout(res, ms))
-  
 
 export {
     validateEmail,

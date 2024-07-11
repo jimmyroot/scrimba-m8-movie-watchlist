@@ -2,11 +2,6 @@ import { auth } from '../data/auth'
 import { router } from '../pages/router'
 import { timer } from '../utils/utils'
 
-// const db = await (async () => {
-//     const { db } = await import('../data/db')
-//     return db
-// })()
-
 import { db } from '../data/db'
 
 const Header = () => {
