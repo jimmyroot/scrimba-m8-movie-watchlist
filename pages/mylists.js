@@ -1,13 +1,13 @@
 import { auth } from '../data/auth'
 import { router } from '../pages/router'
 import { percentageOfTrue } from '../utils/utils'
+import { modalWithConfirm } from '../components/modalwithconfirm'
 
 const db = await (async () => {
     const { db } = await import('../data/db')
     return db
 })()
 
-import { modalWithConfirm } from '../components/modalwithconfirm'
 
 const MyLists = async () => {
 
@@ -25,12 +25,7 @@ const MyLists = async () => {
             },
             remove: async () => {
                 const { path, title } = e.target.closest('li').dataset
-                let result = null
-                if (!document.getElementById('modal-confirm')) {
-                    node.appendChild(modalWithConfirm.get())
-                } else {
-                    result = (await modalWithConfirm.show(`Are you sure you want to delete your '${title}' watchlist?`)) === 'yes' ? true : false
-                }
+                const result = (await modalWithConfirm.show(`Are you sure you want to delete your '${title}' watchlist?`)) === 'yes' ? true : false
                 if (result) await db.removeListAtPath(path)
             },
             new: async () => {      
@@ -57,7 +52,7 @@ const MyLists = async () => {
                 </div>
             </header>
             
-            <section class="page__section watchlists__container">
+            <section id="page-section" class="page__section watchlists__container">
                 <ul class="watchlists__list">
                     ${renderLists(lists)}
                 </ul>
@@ -82,19 +77,19 @@ const MyLists = async () => {
                 const percentComplete = percentageOfTrue(watchedBoolArr)
 
                 return `
-                <li class="watchlist__item" data-type="navigate" data-path="${docPath}" data-title="${data.title}">
-                    <h3 class="item__title"><a class="item__link" href="#">${data.title}</a></h3>
-                    <div class="item__details">
-                    <p>🎬 Movies: ${moviesCount}</p>
-                    <p>🍿 Watched: ${percentComplete}%</p>
-                    </div>
-                    <div class="item__progbar">
-                        <div class="item__progbar-prog" style="width: ${percentComplete}%"></div>
-                    </div>
-                    <button class="item__btn-remove" id="remove-list-btn" data-type="remove">
-                        <i class='bx bx-trash'></i>
-                    </button>
-                </li>
+                    <li class="watchlist__item" data-type="navigate" data-path="${docPath}" data-title="${data.title}">
+                        <h3 class="item__title"><a class="item__link" href="#">${data.title}</a></h3>
+                        <div class="item__details">
+                        <p>🎬 Movies: ${moviesCount}</p>
+                        <p>🍿 Watched: ${percentComplete}%</p>
+                        </div>
+                        <div class="item__progbar">
+                            <div class="item__progbar-prog" style="width: ${percentComplete}%"></div>
+                        </div>
+                        <button class="item__btn-remove" id="remove-list-btn" data-type="remove">
+                            <i class='bx bx-trash'></i>
+                        </button>
+                    </li>
                 `
             }).join('')
         }
@@ -130,8 +125,9 @@ const MyLists = async () => {
 
     const refresh = async (lists) => {
         node.innerHTML = await render(lists)
-        console.log('fired')
-        node.appendChild(modalWithConfirm.get())
+
+        // Insert modal
+        node.append(modalWithConfirm.get())
     }
 
     const get = async () => {

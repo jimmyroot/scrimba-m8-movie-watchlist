@@ -5,11 +5,12 @@ const Home = () => {
     const handleClick = () => {
         const execute = {
             'navigate': () => {
+                e.preventDefault()
                 const { pathname } = e.target
                 router.navigate(pathname)
             }
         }
-        e.preventDefault()
+        
         const { type } = e.target.dataset
         if (execute[type]) execute[type]()
     }

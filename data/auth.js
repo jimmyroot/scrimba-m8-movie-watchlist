@@ -11,6 +11,8 @@ import {
     onAuthStateChanged,
     updateProfile } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js'
 
+import { showError } from '../utils/forms'
+
 const db = await (async () => {
     const { db } = await import('./db')
     return db
@@ -28,28 +30,41 @@ const Auth = () => {
             await db.createAccount(credential.user)
         }
         catch (e) {
-            console.error(`User could not be created. Error code and message were: ${e.code}, ${e.message}`)
+            if (e.code === 'auth/email-already-in-use') {
+                const el = document.querySelector('#email')
+                showError(el, 'Email address already in use')
+            } else {
+                if (e.code === 'auth/email-already-in-use') {
+                    const el = document.querySelector('#signup-form')
+                    const msg = e.code
+                    showError(el, msg)
+                }
+            }
+            // console.error(`User could not be created. Error code and message were: ${e.code}, ${e.message}`)
         }
     }
 
-    const fbSignIn = async ( email, password, appendError ) => {
+    const fbSignIn = async ( email, password ) => {
         try {
             const credential = await signInWithEmailAndPassword(auth, email, password)
         } catch (e) {
             const el = document.querySelector('#signin-form')
-            // console.log(el)
+            
             if (e.code === 'auth/invalid-credential') {
-                appendError(el, 'Credentials invalid')
+                showError(el, 'Email address and password not recognized')
             }
             else if (e.code === 'auth/too-many-requests') {
-                appendError(el, 'Account locked! Try again later...')
+                const msg = 'Account locked! Try again later...'
+                showError(el, msg)
+            } else {
+                const msg = e.code
+                showError(el, msg)
             }
-            // if e.code === 'auth/too-many-requests    '
         }
         // do anything we need with credential here in future 
     }
 
-    const signInWithGoogle = async () => {
+    const signInWithGoogle =  async showError  => {
         try {
             const credential = await signInWithPopup(auth, google)
             const user = credential.user
@@ -57,8 +72,15 @@ const Auth = () => {
             if (!Boolean(profile)) db.createAccount(user)
         }
         catch (e) {
+            const el = document.querySelector('#signin-alt-btn-container')
+
             if (e.code === 'auth/account-exists-with-different-credential') {
-                console.error(`An account is already registered using either an alternate provider, or email & password.`)            
+                const msg = 'Email address already in use with an alternate provider.'
+                showError(el, msg)
+                // console.error(`An account is already registered using either an alternate provider, or email & password.`)            
+            } else {
+                const msg = e.code
+                showError(el, msg)
             }
         }
     }
@@ -71,9 +93,15 @@ const Auth = () => {
             if (!Boolean(profile)) db.createAccount(user)
         }
         catch (e) {
-            console.error(e)
+            const el = document.querySelector('#signin-alt-btn-container')
+
             if (e.code === 'auth/account-exists-with-different-credential') {
-                console.error(`An account is already registered using either an alternate provider, or email & password.`)
+                const msg = 'Email address already in use with an alternate provider.'
+                showError(el, msg)
+                // console.error(`An account is already registered using either an alternate provider, or email & password.`)            
+            } else {
+                const msg = e.code
+                showError(el, msg)
             }
         }
     }

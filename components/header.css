@@ -58,6 +58,10 @@
                 &:hover {
                     color: var(--primary);
                 }
+
+                &:active {
+                    color: var(--primary-lighter);
+                }
             }
     
             a.sign-in {
@@ -68,11 +72,11 @@
                 padding: .75em 1.5em;
     
                 &:hover {
-                    background-color: var(--primary-darker);
+                    background-color: var(--primary-lighter);
                 }
 
                 &:active {
-                    background-color: var(--primary-darkest);
+                    background-color: var(--primary);
                 }
             }
 

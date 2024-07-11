@@ -1,4 +1,5 @@
 import { auth } from '../data/auth'
+// import { showError } from '../utils/forms'
 import * as utils from '../utils/utils'
 
 const SignUp = () => {
@@ -172,7 +173,7 @@ const SignUp = () => {
         const html = `
             <section class="page__container page__container-small">
                 <h1>We just need a few details to create your membership</h1>
-                <p>Don't worry, this won't take long (and it's free!). We'll have you 
+                <p class="signup__p">Don't worry, this won't take long (and it's free!). We'll have you 
                 signed up in no time 🙃</p>
                 <form id="signup-form">
                     <div class="form__input-container">

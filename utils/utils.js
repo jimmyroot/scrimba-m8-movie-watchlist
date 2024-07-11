@@ -60,7 +60,9 @@ function splitName(name) {
             familyName: ''
         }
     }
-  }
+}
+
+const timer = ms => new Promise(res => setTimeout(res, ms))
   
 
 export {
@@ -68,5 +70,6 @@ export {
     validateName,
     validatePassword,
     percentageOfTrue,
-    splitName
+    splitName,
+    timer
 }

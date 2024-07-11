@@ -1,5 +1,6 @@
 import { auth } from '../data/auth'
 import { router } from '../pages/router'
+import { timer } from '../utils/utils'
 
 const db = await (async () => {
     const { db } = await import('../data/db')
@@ -17,7 +18,8 @@ const Header = () => {
     const handleClick = e => {
         const execute = {
             'navigate': () => {
-                const pathname = e.target.pathname || '/'
+                const catchAllRoute = Boolean(currUser) ? '/mylists' : '/'
+                const pathname = e.target.pathname || catchAllRoute
                 router.navigate(pathname)
             },
             'signout': () => {
@@ -27,30 +29,27 @@ const Header = () => {
         e.preventDefault()
         const { type } = e.target.dataset
         if (execute[type]) execute[type]()
-    }
+    }    
 
-    // Use a promise to create a delay in code execution
-    const timer = ms => new Promise(res => setTimeout(res, ms))
-
-    const render = async (route, user) => {
+    const render = async route => {
 
         let nav = ``
 
-        if (Boolean(user)) {
+        if (Boolean(currUser)) {
 
             // This is a cheap hack to get around the fact that theres a slight delay
             // between creating the account and when the auth listener in the router
             // triggers a page reload. If account doesn't exist it's because its 
             // still being created, so wait 500ms and try again. keep doing this 
-            // until the account has been created
+            // until the account has been created. Only relevant when creating a user on first
+            // sign up/sign in
             let account = null
 
             do {
-                account = await db.getAccount(user.uid)
+                account = await db.getAccount(currUser.uid)
                 await timer(500)
             } while (!account)
             
-            console.log(account)
             const photoURL = account.photoURL
 
             nav = `
@@ -95,8 +94,9 @@ const Header = () => {
         return html
     }
 
-    const refresh = async (route, user) => {
-        node.innerHTML = await render(route, user)        
+    // route is used to highlight the appropriate nav item
+    const refresh = async route => {
+        node.innerHTML = await render(route)        
         const navLinkForCurrentPage = node.querySelector(`[href="${route}"]`)
 
         // Use if, because for some pages this action won't be valid, so this is easier than coding each case
@@ -104,12 +104,14 @@ const Header = () => {
     }
 
     const get = async (route, user) => {
-        await refresh(route, user)
+        currUser = user
+        await refresh(route)
         return node
     }
 
     const node = document.createElement('header')
     node.classList.add('header')
+    let currUser = null
     registerEventListeners()
 
     return {

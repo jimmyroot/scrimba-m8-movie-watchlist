@@ -13,24 +13,10 @@ import { modal } from '../components/modal'
 
 const Findmovies = () => {
 
-    const registerEventListeners = () => {
-        node.addEventListener('click', e => {
-            handleClick(e)
-        })
-
-        const resizeObserver = new ResizeObserver(entries => {
-
-            // REFACTOR TO DO THE SHAVING HERE
-            shavePlotPs()
-            shaveTitles()
-        })
-
-        resizeObserver.observe(node)
-    }
-
     const handleClick = e => {
         const execute = {
             submit: () => {
+                node.querySelector('#page-results').classList.add('spinner', 'page__results--dimmed')
                 const { value } = document.querySelector('#find-movies-input')
                 getResults(value)
             },
@@ -64,7 +50,7 @@ const Findmovies = () => {
                     </button>
                 </div>
             </header>
-            <section class="page__results">
+            <section id="page-results" class="page__results">
                 <ul class="movie__list">
                     ${resultsList}
                 </ul>
@@ -103,7 +89,7 @@ const Findmovies = () => {
                                 </div>
                                 <p class="movie__plot is__truncated">${Plot}</p>
                                 <div class="movie__btns">
-                                    <button class="movie__btn" data-type="add" data-movieid="${imdbID}" data-movietitle="${Title}"><i class='bx bx-add-to-queue bx-sm'></i> <span>Add to list</span></button>
+                                    <button class="movie__btn movie__add-btn" data-type="add" data-movieid="${imdbID}" data-movietitle="${Title}"><i class='bx bx-add-to-queue bx-sm'></i> <span>Add to list</span></button>
                                 </div>
                             </div>
                         </li>
@@ -130,26 +116,23 @@ const Findmovies = () => {
             if (!value) throw 'No search term supplied'
             const results = await omdb.searchMovies(value)
             currentSearch = results.Search
-            refresh()
+            await refresh()
         }
         catch(e) {
             console.error(`Unable to get results because: ${e}`)
         }
     }
 
-    const shaveTitles = () => {
-        const elsToShave = node.querySelectorAll('.movie__title')
-        shave(elsToShave, 50)
-    }
-
-    const shavePlotPs = () => {
-        const elsToShave = node.querySelectorAll('.is__truncated')
-        shave(elsToShave, 80)
+    const shaveEls = () => {
+        const title = node.querySelectorAll('.movie__title')
+        const plot = node.querySelectorAll('.movie__plot')
+        shave(title, 50)
+        shave(plot, 80)
     }
     
     const refresh = async () => {
         node.innerHTML = await render()
-        shavePlotPs()
+        shaveEls()
         node.appendChild(listMenu.get())
         node.appendChild(modal.get())
     }
@@ -169,7 +152,9 @@ const Findmovies = () => {
     const node = document.createElement('main')
     node.classList.add('main')
 
-    registerEventListeners()
+    node.addEventListener('click', handleClick)
+    const resizeObserver = new ResizeObserver(entries => shaveEls())
+    resizeObserver.observe(node)
 
     return {
         get

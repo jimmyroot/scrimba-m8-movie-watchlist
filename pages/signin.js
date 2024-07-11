@@ -20,7 +20,7 @@ const SignIn = () => {
                 if (validateForm(form)) {
                     const email = document.getElementById('login-email').value
                     const password = document.getElementById('login-password').value
-                    await auth.fbSignIn(email, password, appendError)
+                    await auth.fbSignIn(email, password)
                 }
             },
             'signinwithgoogle': () => {
@@ -55,7 +55,7 @@ const SignIn = () => {
                     <span>or</span>
                     <span class="page__divider"></span>
                 </div>
-                <div class="page__btn-container">
+                <div id="signin-alt-btn-container" class="page__btn-container">
                     <button class="signin__alt-provider-btn" data-type="signinwithgoogle">
                         <i class='bx bxl-google bx-sm'></i>
                         Continue with Google
@@ -104,19 +104,6 @@ const SignIn = () => {
             msg: msg,
         }
         setInputState(el, errPayload)
-    }
-
-    const appendError = (el, msg) => {
-        const p = document.createElement('p')
-        p.classList.add('form__warning-msg')
-        p.innerHTML = `
-            <i class='bx bx-x-circle'></i>
-            <span>${msg}</span<
-        `
-        el.after(p)
-        setTimeout(() => {
-            p.remove()
-        }, 10000)
     }
 
     const setInputState = (el, errPayload) => {

@@ -100,7 +100,7 @@ const Router = () => {
                 const { requiresLogin } = routes[destination]
                 const go = {
                     loggedIn: () => {
-                        (destination === '/signin' || destination === "/signup") ?
+                        (destination === '/signin' ||  destination === "/signup" || destination === "/") ?
                             navigate('/mylists') : 
                             navigate(destination)
                     },

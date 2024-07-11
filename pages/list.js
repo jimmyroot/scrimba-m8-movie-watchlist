@@ -47,7 +47,7 @@ const List = async () => {
                     <h2 class="header__list-title">${title}</h2>
                 </div>
             </header>
-            <section class="page__results">
+            <section id="page-section" class="page__results">
                 <ul class="movie__list" data-list-path="${listPath}">
                     ${moviesHtml}
                 </ul>
@@ -135,11 +135,12 @@ const List = async () => {
 
         return html
     }
-
-    const refresh = async (listPath, title, arrMovieIDs) => {
-        const html = await render(listPath, title, arrMovieIDs)
-        node.innerHTML = html
-        node.appendChild(modalWithConfirm.get())
+    
+    const shaveEls = () => {
+        const title = node.querySelectorAll('.movie__title')
+        const plot = node.querySelectorAll('.movie__plot')
+        shave(title, 50)
+        shave(plot, 80)
     }
 
     const listenForChangesAndRefreshList = async listPath => {
@@ -157,11 +158,11 @@ const List = async () => {
         })
     }
 
-    const shaveEls = () => {
-        const title = node.querySelectorAll('.movie__title')
-        const plot = node.querySelectorAll('.movie__plot')
-        shave(title, 50)
-        shave(plot, 80)
+    const refresh = async (listPath, title, arrMovieIDs) => {
+        const html = await render(listPath, title, arrMovieIDs)
+        node.innerHTML = html
+        node.querySelector('#page-section').after(modalWithConfirm.get())
+        
     }
 
     const get = async (user, listPath) => {
@@ -180,15 +181,13 @@ const List = async () => {
         return node
     }
 
+    // Init module
+    let unsubscribeFromListListener = null
+    
     const node = document.createElement('main')
     node.classList.add('main')
     node.addEventListener('click', handleClick)
-    let unsubscribeFromListListener = null
-
-    const resizeObserver = new ResizeObserver(entries => {
-        shaveEls()
-    })
-
+    const resizeObserver = new ResizeObserver(entries => shaveEls())
     resizeObserver.observe(node)
 
     return {

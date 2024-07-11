@@ -125,6 +125,10 @@
                     opacity: 1;
                     transform: scale(0.9);
                 }
+
+                & * {
+                    pointer-events: none;
+                }
             }
 
             &:hover > .item__btn-remove {
