@@ -1,6 +1,6 @@
 const OMDB_API_KEY = 'a84e34ea'
-const OMDB_BASE_PATH = `http://www.omdbapi.com/?apikey=${OMDB_API_KEY}&`
-const OMDB_BASE_IMG_PATH = `http://img.omdbapi.com/?apikey=${OMDB_API_KEY}&`
+const OMDB_BASE_PATH = `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&`
+const OMDB_BASE_IMG_PATH = `https://img.omdbapi.com/?apikey=${OMDB_API_KEY}&`
 
 const Omdb = async () => {
 
