@@ -1,15 +1,16 @@
 import { auth } from '../data/auth'
 import { router } from '../pages/router'
 import { timer } from '../utils/utils'
-
 import { db } from '../data/db'
+
+import logoUrl from '../assets/logo.png'
 
 const Header = () => {
 
     const registerEventListeners = () => {
         node.addEventListener('click', e => {
             handleClick(e)
-        }) 
+        })
     }
 
     const handleClick = e => {
@@ -75,7 +76,7 @@ const Header = () => {
 
         const html = `
                 <div class="header__logo-div" data-type="navigate">
-                    <img class="header-logo-img" src="/assets/logo.png" alt="Reel Talk logo">
+                    <img class="header-logo-img" src="${logoUrl}" alt="Reel Talk logo">
                     <h1 class="header-logo" data-type="refresh">Reel Time</h1>
                 </div>
                 <ul class="header-menu" id="menu">
