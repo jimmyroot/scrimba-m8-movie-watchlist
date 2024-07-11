@@ -18,13 +18,12 @@ import {
     where } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js'
 
 import { getAuth } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js'
-
 import { omdb } from '../data/omdb'
-
 import { splitName } from '../utils/utils'
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCwbb7PceRaS4TpHA422uRqU3f7aHKLB38",
+    // apiKey: "AIzaSyCwbb7PceRaS4TpHA422uRqU3f7aHKLB38",
+    apiKey: process.env.FB_API_KEY,
     authDomain: "reel-talk-28ac2.firebaseapp.com",
     projectId: "reel-talk-28ac2",
     storageBucket: "reel-talk-28ac2.appspot.com",
