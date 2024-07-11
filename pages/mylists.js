@@ -1,13 +1,8 @@
+import { db } from '../data/db'
 import { auth } from '../data/auth'
 import { router } from '../pages/router'
 import { percentageOfTrue } from '../utils/utils'
 import { modalWithConfirm } from '../components/modalwithconfirm'
-
-const db = await (async () => {
-    const { db } = await import('../data/db')
-    return db
-})()
-
 
 const MyLists = async () => {
 

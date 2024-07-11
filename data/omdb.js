@@ -43,4 +43,4 @@ const Omdb = async () => {
     }
 }
 
-export const omdb = Omdb()
+export const omdb = await Omdb()

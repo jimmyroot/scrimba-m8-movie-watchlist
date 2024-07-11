@@ -1,5 +1,4 @@
 import { auth } from '../data/auth'
-// import { showError } from '../utils/forms'
 import * as utils from '../utils/utils'
 
 const SignUp = () => {

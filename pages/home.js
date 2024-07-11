@@ -1,4 +1,4 @@
-import { omdb } from "../data/omdb"
+import { router } from './router'
 
 const Home = () => {
 

@@ -1,13 +1,5 @@
-const db = await (async () => {
-    const { db } = await import('../data/db')
-    return db
-})()
-
-const omdb = await (async () => {
-    const { omdb } = await import('../data/omdb')
-    return omdb
-})()
-
+import { omdb } from '../data/omdb'
+import { db } from '../data/db'
 import { listMenu } from '../components/listmenu'
 import { modal } from '../components/modal'
 

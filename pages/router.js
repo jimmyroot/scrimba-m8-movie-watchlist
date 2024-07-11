@@ -1,10 +1,3 @@
-/*
-
-Routes are configured at the bottom of the module (has to be down there 
-as it uses an arrow function that has to be declard first, of course this 
-wouldn't be an issue if I was using the function keyword but...well, I'm not!
-
-*/
 import { auth } from '../data/auth'
 import { home } from '../pages/home'
 import { findmovies } from '../pages/findmovies'

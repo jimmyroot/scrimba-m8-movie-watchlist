@@ -1,8 +1,4 @@
-const db = await (async () => {
-    const { db } = await import('../data/db')
-    return db
-})()
-
+import { db } from '../data/db'
 import { modal } from '../components/modal'
 
 const ListMenu = () => {

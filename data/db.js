@@ -1,5 +1,4 @@
-import { 
-    initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js'
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js'
 
 import { 
     getFirestore, 
@@ -16,20 +15,13 @@ import {
     Timestamp, 
     runTransaction, 
     query, 
-    where, 
-    orderBy } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js'
+    where } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js'
 
-import {   
-    getAuth, 
-    onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js'
+import { getAuth } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js'
 
-import { 
-    splitName } from '../utils/utils'
+import { omdb } from '../data/omdb'
 
-const omdb = await (async () => {
-    const { omdb } = await import('../data/omdb')
-    return omdb
-})()
+import { splitName } from '../utils/utils'
 
 const firebaseConfig = {
     apiKey: "AIzaSyCwbb7PceRaS4TpHA422uRqU3f7aHKLB38",
@@ -333,4 +325,4 @@ const Db = async () => {
     }
 }
 
-export const db = Db()
+export const db = await Db()

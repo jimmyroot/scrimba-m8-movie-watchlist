@@ -11,12 +11,8 @@ import {
     onAuthStateChanged,
     updateProfile } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js'
 
+import { db } from './db'
 import { showError } from '../utils/forms'
-
-const db = await (async () => {
-    const { db } = await import('./db')
-    return db
-})()
 
 const Auth = () => {
 
