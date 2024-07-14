@@ -2,6 +2,7 @@ import { omdb } from '../data/omdb'
 import { db } from '../data/db'
 import { listMenu } from '../components/listmenu'
 import { modal } from '../components/modal'
+import blankPosterUrl from '../assets/poster-placeholder.png'
 
 const Findmovies = () => {
 
@@ -61,15 +62,18 @@ const Findmovies = () => {
                     const fullMovieData = await omdb.getMovieByIMDBId(movie.imdbID)
                     const { Title, Runtime, Genre, Plot, Poster, imdbID } = fullMovieData
 
-                    let Rating = ''
+                    // Catch blank poster
+                    const posterUrl = Poster === 'N/A' ? blankPosterUrl : Poster
 
+                    // Set rating
+                    let Rating = ''
                     if (fullMovieData.Ratings[0]) {
                         Rating = fullMovieData.Ratings[0].Value
                     }
                     
                     return `
                         <li class="movie__card">
-                            <img class="movie__thumbnail" src="${Poster}" alt="Poster for the movie ${Title}">
+                            <img class="movie__thumbnail" src="${posterUrl}" alt="Poster for the movie ${Title}">
                             <div class="movie__info">
                                 <div class="movie__header">
                                     <h3 class="movie__title">${Title}</h3>

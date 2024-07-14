@@ -2,6 +2,7 @@ import { db } from '../data/db'
 import { router } from '../pages/router'
 import { modalWithConfirm } from '../components/modalwithconfirm'
 import imgStarURL from '../assets/goldstar.svg'
+import blankPosterUrl from '../assets/poster-placeholder.png'
 
 const List = async () => {
 
@@ -64,7 +65,10 @@ const List = async () => {
             html = movieData.map(movie => {
                 const { Title, Runtime, Genre, Plot, Poster, imdbID } = movie
                 const currentMovieFromUsersList = moviesFromList.find(movieFromList => movieFromList.imdbID === movie.imdbID)
-                
+
+                // Catch blank poster
+                const posterUrl = Poster === 'N/A' ? blankPosterUrl : Poster
+
                 // Set the rating
                 let Rating = 'N/A'
                 if (movie.Ratings[0]) {
@@ -97,7 +101,7 @@ const List = async () => {
 
                 return `    
                         <li class="movie__card">
-                            <img class="movie__thumbnail" src="${Poster}" alt="Poster for the movie ${Title}">
+                            <img class="movie__thumbnail" src="${posterUrl}" alt="Poster for the movie ${Title}">
                             <div class="movie__info">
                                 <div class="movie__header">
                                     <h3 class="movie__title">${Title}</h3>
