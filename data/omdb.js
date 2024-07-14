@@ -1,4 +1,5 @@
-const OMDB_API_KEY = 'a84e34ea'
+import { OMDB_API_KEY } from './keys'
+
 const OMDB_BASE_PATH = `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&`
 const OMDB_BASE_IMG_PATH = `https://img.omdbapi.com/?apikey=${OMDB_API_KEY}&`
 
@@ -27,15 +28,6 @@ const Omdb = async () => {
 
         return result
     }
-
-    // const getPosterByIMDBId = async id => {
-    //     const path = `${OMDB_BASE_IMG_PATH}`
-    // }
-    
-    // const movies = await searchMovies('star wars')
-    // console.log(movies.Search[0])
-
-    // console.log(await getMovieByIMDBId('tt0076759'))
 
     return {
         searchMovies,
