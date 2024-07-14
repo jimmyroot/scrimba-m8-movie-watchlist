@@ -109,6 +109,7 @@ const Findmovies = () => {
             const results = await omdb.searchMovies(value)
             currentSearch = results.Search
             await refresh()
+            shaveEls()
         }
         catch(e) {
             console.error(`Unable to get results because: ${e}`)
@@ -124,7 +125,6 @@ const Findmovies = () => {
     
     const refresh = async () => {
         node.innerHTML = await render()
-        shaveEls()
         node.appendChild(listMenu.get())
         node.appendChild(modal.get())
     }

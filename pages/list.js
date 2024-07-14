@@ -1,6 +1,7 @@
 import { db } from '../data/db'
 import { router } from '../pages/router'
 import { modalWithConfirm } from '../components/modalwithconfirm'
+import { imgStarURL } from '../assets/goldstar.svg'
 
 const List = async () => {
 
@@ -100,7 +101,7 @@ const List = async () => {
                             <div class="movie__info">
                                 <div class="movie__header">
                                     <h3 class="movie__title">${Title}</h3>
-                                    <p><img class="movie__star" src="/assets/goldstar.svg"><span>${Rating}</span></p>
+                                    <p><img class="movie__star" src="${imgStarURL}"><span>${Rating}</span></p>
                                 </div>
                                 <div class="movie__details">
                                     <p>${Runtime}</p>       
