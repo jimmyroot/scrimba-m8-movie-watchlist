@@ -1,7 +1,7 @@
 import { db } from '../data/db'
 import { router } from '../pages/router'
 import { modalWithConfirm } from '../components/modalwithconfirm'
-import { imgStarURL } from '../assets/goldstar.svg'
+import imgStarURL from '../assets/goldstar.svg'
 
 const List = async () => {
 
