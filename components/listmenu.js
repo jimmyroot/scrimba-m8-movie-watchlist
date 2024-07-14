@@ -33,7 +33,7 @@ const ListMenu = () => {
     const render = (lists, movieid, movietitle) => {
         let html = `
             <ul class="context-menu__watchlists" data-movietitle="${movietitle}">
-            ${renderLists(lists, movieid)}
+                ${renderLists(lists, movieid)}
             </ul>
         `
         
