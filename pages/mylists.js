@@ -124,7 +124,7 @@ const MyLists = async () => {
         // Insert modal
         do {
             node.append(modalWithConfirm.get())
-        } while (node.querySelector('.modal') === undefined)
+        } while (node.querySelector('.modal') === null)
     }
 
     const get = async () => {
