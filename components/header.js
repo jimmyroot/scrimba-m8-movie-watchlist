@@ -4,6 +4,7 @@ import { timer } from '../utils/utils'
 import { db } from '../data/db'
 
 import logoUrl from '../assets/logo.png'
+import blank from '../assets/blank.png'
 
 const Header = () => {
 
