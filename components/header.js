@@ -49,7 +49,7 @@ const Header = () => {
                 await timer(500)
             } while (!account)
             
-            const avatarUrl = account.photoURL !== './assets/blank.png' ? account.photoURL : blankProfImgUrl
+            const avatarUrl = account.photoURL !== '/assets/blank.png' ? account.photoURL : blankProfImgUrl
             
             nav = `
                 <li>
