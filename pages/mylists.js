@@ -122,9 +122,7 @@ const MyLists = async () => {
         node.innerHTML = await render(lists)
 
         // Insert modal
-        do {
-            node.append(modalWithConfirm.get())
-        } while (node.querySelector('.modal') === null)
+        setTimeout(node.append(modalWithConfirm.get()), 100)
     }
 
     const get = async () => {
