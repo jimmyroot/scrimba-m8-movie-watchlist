@@ -157,7 +157,7 @@ const Findmovies = () => {
     const mutationObserver = new MutationObserver((mutationList, observer) => {
         for (const mutation of mutationList) {
             if (mutation.type === 'childList') {
-                setTimeout(shaveEls, 60)
+                setTimeout(shaveEls, 100)
             }
         }
     })
