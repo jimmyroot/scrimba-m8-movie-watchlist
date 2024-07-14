@@ -149,7 +149,6 @@ const List = async () => {
                     return movie.imdbID
                 })
                 await refresh(listPath, title, arrMovieIDs)
-                shaveEls()
             }
         })
     }
@@ -158,7 +157,6 @@ const List = async () => {
         const html = await render(listPath, title, arrMovieIDs)
         node.innerHTML = html
         node.querySelector('#page-section').after(modalWithConfirm.get())
-        
     }
 
     const get = async (user, listPath) => {
@@ -183,8 +181,21 @@ const List = async () => {
     const node = document.createElement('main')
     node.classList.add('main')
     node.addEventListener('click', handleClick)
+
+    // Fire the shave function whenever the node changes size
     const resizeObserver = new ResizeObserver(entries => shaveEls())
     resizeObserver.observe(node)
+
+    // Fire the shave function when node is modified (i.e. a list is loaded)
+    const mutationObserver = new MutationObserver((mutationList, observer) => {
+        for (const mutation of mutationList) {
+            if (mutation.type === 'childList') {
+                setTimeout(shaveEls, 60)
+            }
+        }
+    })
+
+    mutationObserver.observe(node, {attributes: false, childList: true, subtree: false})
 
     return {
         get

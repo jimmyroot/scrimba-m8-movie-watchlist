@@ -77,9 +77,9 @@ const Findmovies = () => {
                                 </div>
                                 <div class="movie__details">
                                     <p>${Runtime}</p>       
-                                    <p>${Genre}</p>
+                                    <p class="movie__genre">${Genre}</p>
                                 </div>
-                                <p class="movie__plot is__truncated">${Plot}</p>
+                                <p class="movie__plot">${Plot}</p>
                                 <div class="movie__btns">
                                     <button class="movie__btn movie__add-btn" data-type="add" data-movieid="${imdbID}" data-movietitle="${Title}"><i class='bx bx-add-to-queue bx-sm'></i> <span>Add to list</span></button>
                                 </div>
@@ -109,7 +109,6 @@ const Findmovies = () => {
             const results = await omdb.searchMovies(value)
             currentSearch = results.Search
             await refresh()
-            shaveEls()
         }
         catch(e) {
             console.error(`Unable to get results because: ${e}`)
@@ -117,10 +116,15 @@ const Findmovies = () => {
     }
 
     const shaveEls = () => {
-        const title = node.querySelectorAll('.movie__title')
-        const plot = node.querySelectorAll('.movie__plot')
-        shave(title, 50)
-        shave(plot, 80)
+        const titles = document.querySelectorAll('.movie__title')
+        const plots = document.querySelectorAll('.movie__plot')
+        const genres = document.querySelectorAll('.movie__genre')
+        
+        if (titles.length > 0 && plots.length > 0 && genres.length > 0) {
+            shave(titles, 50)
+            shave(plots, 70)
+            shave(genres, 20)
+        }
     }
     
     const refresh = async () => {
@@ -143,10 +147,22 @@ const Findmovies = () => {
     
     const node = document.createElement('main')
     node.classList.add('main')
-
     node.addEventListener('click', handleClick)
+
+    // Shave on node resize
     const resizeObserver = new ResizeObserver(entries => shaveEls())
     resizeObserver.observe(node)
+
+    // Shave on node update
+    const mutationObserver = new MutationObserver((mutationList, observer) => {
+        for (const mutation of mutationList) {
+            if (mutation.type === 'childList') {
+                setTimeout(shaveEls, 60)
+            }
+        }
+    })
+
+    mutationObserver.observe(node, {attributes: false, childList: true, subtree: false})
 
     return {
         get
