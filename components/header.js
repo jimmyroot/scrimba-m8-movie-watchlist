@@ -4,7 +4,7 @@ import { timer } from '../utils/utils'
 import { db } from '../data/db'
 
 import logoUrl from '../assets/logo.png'
-import blank from '../assets/blank.png'
+import blankProfImgUrl from '../assets/blank.png'
 
 const Header = () => {
 
@@ -49,8 +49,8 @@ const Header = () => {
                 await timer(500)
             } while (!account)
             
-            const photoURL = account.photoURL
-
+            const avatarUrl = account.photoURL !== './assets/blank.png' ? account.photoURL : blankProfImgUrl
+            
             nav = `
                 <li>
                     <a href="/findmovies" data-type="navigate">Find Movies</a>
@@ -61,8 +61,8 @@ const Header = () => {
                 <li>
                     <a href="#" data-type="signout">Sign out</a>
                 </li>
-                <img src="${photoURL}" class="header__avatar" alt="User avatar image">
-            ` 
+                <img src="${avatarUrl}" class="header__avatar" alt="User avatar image">
+            `
         }
         else {
             nav = `
