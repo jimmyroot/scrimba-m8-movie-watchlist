@@ -23,7 +23,6 @@ import { splitName } from '../utils/utils'
 import { FB_API_KEY } from './keys'
 
 const firebaseConfig = {
-    // apiKey: "AIzaSyCwbb7PceRaS4TpHA422uRqU3f7aHKLB38",
     apiKey: FB_API_KEY,
     authDomain: "reel-talk-28ac2.firebaseapp.com",
     projectId: "reel-talk-28ac2",
