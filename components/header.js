@@ -18,7 +18,7 @@ const Header = () => {
             if (!e.target.closest('.header__menu')
                 && menu.classList.contains('open')
                 && e.target.id != 'hamburger')  { 
-                    toggleHamburger() 
+                    toggleHamburger()
             }
         })
     }
@@ -26,13 +26,15 @@ const Header = () => {
     const handleClick = e => {
         const execute = {
             'hamburger': () => {
-                console.log('building the burger')
                 toggleHamburger()
             },
             'navigate': () => {
                 const catchAllRoute = Boolean(currUser) ? '/mylists' : '/'
                 const pathname = e.target.pathname || catchAllRoute
                 router.navigate(pathname)
+                const hamburger = document.querySelector('#hamburger')
+                if (hamburger.classList.contains('is-active')) toggleHamburger()
+                
             },
             'signout': () => {
                 auth.fbSignOut()
@@ -107,6 +109,7 @@ const Header = () => {
     }
 
     const toggleHamburger = () => {
+        console.log('toggling')
         document.querySelector('#hamburger').classList.toggle('is-active')
         document.querySelector('.main').classList.toggle('has-no-events')
         node.querySelector('.header__menu').classList.toggle('open')
