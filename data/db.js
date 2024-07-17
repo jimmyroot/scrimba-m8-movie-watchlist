@@ -118,14 +118,17 @@ const Db = async () => {
             await runTransaction(db, async transaction => {
                 const accountDocRef = doc(db, 'accounts', user.uid)
                 const accountDoc = await transaction.get(accountDocRef)
+
                 const { givenName, familyName } = splitName(user.displayName)
+                let { photoURL } = user
+                if (!photoURL) photoURL = '/assets/blank.png'
                 
                 if (!accountDoc.exists()) {
                     const newAccount = {
                         displayName: user.displayName,
                         givenName: givenName,
                         familyName: familyName,
-                        photoURL: user.photoURL || '/assets/blank.png',
+                        photoURL: photoURL,
                         favoriteGenres: []
                     }
                     await transaction.set(accountDocRef, newAccount)

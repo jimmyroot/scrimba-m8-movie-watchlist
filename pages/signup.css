@@ -2,6 +2,16 @@
     .signup__p {
         font-weight: 400;
         padding: 1.5em 0 .5em 0;
+
+        a {
+            text-decoration: underline;
+            color: var(--primary);
+            text-decoration: none;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
     }
 }
 

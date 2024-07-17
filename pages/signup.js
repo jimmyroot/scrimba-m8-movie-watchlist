@@ -1,6 +1,7 @@
 import { auth } from '../data/auth'
 import * as utils from '../utils/utils'
 import { setInputState, validateForm } from '../utils/forms'
+import { router } from './router'
 
 const SignUp = () => {
 
@@ -8,7 +9,7 @@ const SignUp = () => {
         node.addEventListener('click', e => {
             handleClick(e)
         })
-        node.querySelector('#signup-form').addEventListener('input', e => {
+        node.addEventListener('input', e => {
             validateInput(e.target)
         })
     }
@@ -36,6 +37,10 @@ const SignUp = () => {
 
                     await auth.fbCreateUserAndSignIn(newUser)
                 }
+            },
+            'navigate': () => {
+                const { pathname } = e.target
+                router.navigate(pathname)
             }
         }
 
@@ -121,7 +126,7 @@ const SignUp = () => {
             <section class="page__container page__container-small">
                 <h1>We just need a few details to create your membership</h1>
                 <p class="signup__p">Don't worry, this won't take long (and it's free!). We'll have you 
-                signed up in no time 🙃</p>
+                signed up in no time 🙃. Or, you can <a href="/signin" data-type="navigate">sign in with Google or Github!</a></p>
                 <form id="signup-form">
                     <div class="form__input-container">
                         <label class="form__label" for="given-name">First name</label>
@@ -156,14 +161,14 @@ const SignUp = () => {
     }
 
     const get = () => {
-
         refresh()
-        registerEventListeners()
         return node
     }
 
     const node = document.createElement('main')
     node.classList.add('main')
+    refresh()
+    registerEventListeners()
 
     return {
         get

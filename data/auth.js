@@ -45,6 +45,7 @@ const Auth = () => {
             const credential = await signInWithEmailAndPassword(auth, email, password)
         } catch (e) {
             const el = document.querySelector('#signin-form')
+            document.querySelector('.main').classList.remove('spinner', 'dimmed')
             
             if (e.code === 'auth/invalid-credential') {
                 showError(el, 'Email address and password not recognized')

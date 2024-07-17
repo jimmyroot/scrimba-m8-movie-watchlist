@@ -10,7 +10,8 @@ const List = async () => {
         const execute = {
             back: () => {
                 e.preventDefault()
-                router.navigate('/mylists')
+                // router.navigate('/mylists')
+                history.go(-1)
             },
             removemovie: async () => {
                 const { listPath } = e.target.closest('ul').dataset
@@ -25,7 +26,7 @@ const List = async () => {
                 const { listPath } = e.target.closest('ul').dataset
                 const { movieId } = e.target.dataset
                 console.log(listPath, movieId)
-                await db.toggleMovieWatched(listPath, movieId)
+                await db.toggleMovieWatched(listPath, movieId)  
             }
         }
         
