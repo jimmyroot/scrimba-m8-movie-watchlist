@@ -9,9 +9,7 @@ const Findmovies = () => {
     const handleClick = e => {
         const execute = {
             submit: () => {
-                node.querySelector('#page-results').classList.add('spinner', 'page__results--dimmed')
-                const { value } = document.querySelector('#find-movies-input')
-                getResults(value)
+                validateInputAndSubmitSeach()
             },
             add: async () => {
                 if (lists.length > 0) {
@@ -29,6 +27,19 @@ const Findmovies = () => {
         e.preventDefault()
         const { type } = e.target.dataset
         if (execute[type]) execute[type]()
+    }
+
+    const validateInputAndSubmitSeach = () => {
+        const input = document.getElementById('find-movies-input')
+                const value = input.value
+                if (value) {
+                    node.querySelector('#page-results').classList.add('spinner', 'page__results--dimmed')
+                    const { value } = document.querySelector('#find-movies-input')
+                    getResults(value)
+                }
+                else {
+                    input.classList.add('warning')
+                }
     }
 
     const render = async () => {
@@ -130,6 +141,10 @@ const Findmovies = () => {
             shave(genres, 20)
         }
     }
+
+    const removeWarning = e => {
+        if (e.target.classList.contains('warning')) e.target.classList.remove('warning')
+    }
     
     const refresh = async () => {
         node.innerHTML = await render()
@@ -152,6 +167,12 @@ const Findmovies = () => {
     const node = document.createElement('main')
     node.classList.add('main')
     node.addEventListener('click', handleClick)
+    node.addEventListener('input', removeWarning)
+    node.addEventListener('keyup', e => {
+        if (e.code === 'Enter') {
+            validateInputAndSubmitSeach()
+        }
+    })
 
     // Shave on node resize
     const resizeObserver = new ResizeObserver(entries => shaveEls())
@@ -159,11 +180,7 @@ const Findmovies = () => {
 
     // Shave on node update
     const mutationObserver = new MutationObserver((mutationList, observer) => {
-        for (const mutation of mutationList) {
-            if (mutation.type === 'childList') {
-                setTimeout(shaveEls, 100)
-            }
-        }
+        setTimeout(shaveEls, 200)    
     })
 
     mutationObserver.observe(node, {attributes: false, childList: true, subtree: false})

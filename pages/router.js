@@ -16,37 +16,31 @@ const Router = () => {
         routes = {
             '/': {
                 module: home,
-                linkLabel: 'Home',
                 requiresLogin: false,
                 content: [] // imported module.get() ?
             },
             '/findmovies': {
                 module: findmovies,
-                linkLabel: 'Find Movie',
                 requiresLogin: true,
                 content: []
             },
             '/mylists': {
                 module: mylists,
-                linkLabel: 'My Lists',
                 requiresLogin: true,
                 content: []
             },
             '/list': {
                 module: list,
-                linkLabel: null,
                 requiresLogin: true,
                 content: []
             },
             '/signin': {
                 module: signIn,
-                linkLabel: 'Sign In',
                 requiresLogin: false,
                 content: []
             },
             '/signup': {
                 module: signUp,
-                linkLabel: 'Sign Up',
                 requiresLogin: false,
                 content: []
             },
@@ -110,7 +104,6 @@ const Router = () => {
     }
 
     const navigate = (route) => {
-        console.log('navigating')
         history.pushState({}, "", route)
         render(route)
     }
@@ -127,7 +120,6 @@ const Router = () => {
         if (path[1] === 'list') {
             route = '/'.concat(path[1])
             listPath = 'lists/'.concat(path[2])
-            console.log(route)
         }
         
         // Try to render the given path, if anything goes wrong set route to unknown and go...

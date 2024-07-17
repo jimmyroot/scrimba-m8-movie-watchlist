@@ -5,3 +5,31 @@
 @import '../components/listmenu.css';
 @import '../components/modal.css';
 @import '../pages/pagesglobal.css';
+
+#app {
+    background-color: transparent;
+    height: 100vh;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    min-width: 400px; 
+    overflow-y: scroll;
+    scrollbar-gutter: stable;
+}
+
+.main {
+    flex-grow: 1;
+}
+
+dialog {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.has-no-events {
+    & * {
+        pointer-events: none;
+    }
+}

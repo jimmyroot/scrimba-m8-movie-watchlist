@@ -40,5 +40,9 @@
                 color: var(--ui-black-60);
             }
         }
+
+        .warning {
+            border: 1px solid red;
+        }
     }
 }

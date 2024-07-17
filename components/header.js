@@ -12,10 +12,23 @@ const Header = () => {
         node.addEventListener('click', e => {
             handleClick(e)
         })
+
+        document.addEventListener('click', e => {  
+            const menu = document.querySelector('.header__menu')     
+            if (!e.target.closest('.header__menu') 
+                && menu.classList.contains('open') 
+                && e.target.id != 'hamburger')  { 
+                    toggleHamburger() 
+            }
+        })
     }
 
     const handleClick = e => {
         const execute = {
+            'hamburger': () => {
+                console.log('building the burger')
+                toggleHamburger()
+            },
             'navigate': () => {
                 const catchAllRoute = Boolean(currUser) ? '/mylists' : '/'
                 const pathname = e.target.pathname || catchAllRoute
@@ -28,7 +41,7 @@ const Header = () => {
         e.preventDefault()
         const { type } = e.target.dataset
         if (execute[type]) execute[type]()
-    }    
+    }
 
     const render = async route => {
 
@@ -77,10 +90,10 @@ const Header = () => {
 
         const html = `
                 <div class="header__logo-div" data-type="navigate">
-                    <img class="header-logo-img" src="${logoUrl}" alt="Reel Talk logo">
-                    <h1 class="header-logo" data-type="refresh">Reel Time</h1>
+                    <img class="header__logo-img" src="${logoUrl}" alt="Reel Talk logo">
+                    <h1 class="header__logo" data-type="refresh">Reel Time</h1>
                 </div>
-                <ul class="header-menu" id="menu">
+                <ul class="header__menu" id="menu">
                    ${nav}
                 </ul>
                 <button class="hamburger hamburger--3dy" id="hamburger" type="button" data-type="hamburger">
@@ -91,6 +104,12 @@ const Header = () => {
         `
         
         return html
+    }
+
+    const toggleHamburger = () => {
+        document.querySelector('#hamburger').classList.toggle('is-active')
+        document.querySelector('.main').classList.toggle('has-no-events')
+        node.querySelector('.header__menu').classList.toggle('open')
     }
 
     // route is used to highlight the appropriate nav item

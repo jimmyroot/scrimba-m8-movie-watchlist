@@ -1,7 +1,7 @@
 import { db } from '../data/db'
 import { auth } from '../data/auth'
 import { router } from '../pages/router'
-import { percentageOfTrue } from '../utils/utils'
+import { percentageOfTrue, validateEmail } from '../utils/utils'
 import { modalWithConfirm } from '../components/modalwithconfirm'
 
 const MyLists = async () => {
@@ -9,6 +9,14 @@ const MyLists = async () => {
     const registerEventListeners = () => {
         node.addEventListener('click', e => {
             handleClick(e)
+        })
+        node.addEventListener('input', e => {
+            if (e.target.classList.contains('warning')) e.target.classList.remove('warning')
+        })
+        node.addEventListener('keyup', e => {
+            if (e.code === 'Enter') {
+                validateInputAndCreateNewList()
+            }
         })
     }
 
@@ -23,13 +31,8 @@ const MyLists = async () => {
                 const result = (await modalWithConfirm.show(`Are you sure you want to delete your '${title}' watchlist?`)) === 'yes' ? true : false
                 if (result) await db.removeListAtPath(path)
             },
-            new: async () => {      
-                console.log('making new list')
-                const params = {
-                    uid: auth.getUser().uid,
-                    title: document.getElementById('input-watchlist-title').value
-                }
-                await db.createList(params)
+            new: async () => {    
+                await validateInputAndCreateNewList()
             }
         }
         e.preventDefault()
@@ -37,11 +40,26 @@ const MyLists = async () => {
         if (execute[type]) execute[type]()
     }
 
+    const validateInputAndCreateNewList = async () => {
+        const input = document.getElementById('input-watchlist-title')
+        const value = input.value
+        if (value) {
+            const params = {
+                uid: auth.getUser().uid,
+                title: document.getElementById('input-watchlist-title').value
+            }
+            await db.createList(params)
+        }
+        else {
+            input.classList.add('warning')
+        }
+    }
+
     const render = async (lists) => {
         const html = `
             <header class="page__header">
                 <div class="header__new-watchlist-input">
-                    <label for="input-watchlistlist-title">New Watchlist Title</label>
+                    <label for="input-watchlist-title">New Watchlist Title</label>
                     <input class="new-watchlist__input" id="input-watchlist-title" type="text" placeholder="New watchlist name">
                     <button class="new-watchlist__btn" id="btn-new-watchlist" data-type="new"><i class='bx bx-plus bx-sm'></i></button>
                 </div>
@@ -118,14 +136,21 @@ const MyLists = async () => {
         })
     }
 
+    const appendModal = () => {
+        const modal = modalWithConfirm.get()
+        node.append(modal)
+    }
+
     const refresh = async (lists) => {
         node.innerHTML = await render(lists)
 
         // Insert modal
-        setTimeout(node.append(modalWithConfirm.get()), 500)
+        appendModal()
     }
 
     const get = async () => {
+        appendModal()
+
         // We don't need to refresh as the listener is doing this for us
         return node
     }

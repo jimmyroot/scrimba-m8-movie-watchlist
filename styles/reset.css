@@ -44,24 +44,3 @@ button {
   line-height: 0;
 }
 
-#app {
-  background-color: transparent;
-  height: 100vh;
-  min-height: 400px;
-  display: flex;
-  flex-direction: column;
-  min-width: 320px; 
-  overflow-y: scroll;
-  scrollbar-gutter: stable;
-}
-
-.main {
-  flex-grow: 1;
-}
-
-dialog {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}

@@ -1,5 +1,6 @@
 import { auth } from '../data/auth'
 import * as utils from '../utils/utils'
+import { setInputState, validateForm } from '../utils/forms'
 
 const SignUp = () => {
 
@@ -16,7 +17,8 @@ const SignUp = () => {
         const execute = {
             'signup': async () => {
                 const form = e.target.closest('form')
-                if (validateSignUpForm(form)) {
+                if (validateForm(form, validateInput)) {
+                    node.classList.add('spinner', 'dimmed')
                     const formData = Object.fromEntries(Object.values(form).map(el => [el.name, el.value]))
                     const { 
                         'given-name': givenName,
@@ -114,60 +116,6 @@ const SignUp = () => {
         setInputState(el, errPayload)
     }
 
-    const setInputState = (el, errPayload) => {
-        const { resetState, valid, msg } = errPayload
-
-        if (resetState) {
-            if (el.classList.contains('warning')) el.classList.remove('warning')
-            if (el.classList.contains('valid')) el.classList.remove('valid')
-            const msgEl = el.closest('.form__input-container').querySelector('.form__warning-msg')
-            if (msgEl) msgEl.remove()
-        } else {
-            const currInputContainer = el.closest('.form__input-container')
-            const msgEl = currInputContainer.querySelector('.form__warning-msg')
-            
-            const stateClass = valid ? 'valid' : 'warning'
-            el.classList.remove('valid', 'warning')
-            el.classList.add(stateClass)
-    
-            const p = document.createElement('p')
-            p.classList.add('form__warning-msg')
-            p.innerHTML = `
-                <i class='bx bx-x-circle'></i>
-                <span>${msg}</span<
-            `
-            
-            if (!valid) {
-                if (!msgEl) { 
-                    el.after(p)
-                } else {
-                    msgEl.replaceWith(p)
-                }
-            }
-            else {
-                if (msgEl) msgEl.remove()
-            }
-    
-        }
-        
-        
-    }
-
-    // Could probably tidy this up a bit, lots of selectors that could be consolidated
-    const validateSignUpForm = form => {
-        const formEls = [...form.elements]
-
-        formEls.forEach(input => {
-            if (input.type !== 'submit') validateInput(input)
-        })
-
-        for (const el of formEls) {
-            if (el.classList.contains('warning')) return false
-        }
-
-        return true
-    }
-
     const render = () => {
         const html = `
             <section class="page__container page__container-small">
@@ -203,10 +151,12 @@ const SignUp = () => {
     }
 
     const refresh = () => {
+        if (node.classList.contains('spinner')) node.classList.remove('spinner', 'dimmed')
         node.innerHTML = render()
     }
 
     const get = () => {
+
         refresh()
         registerEventListeners()
         return node
