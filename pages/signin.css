@@ -20,6 +20,7 @@
 
         .page__btn-container {
             display: flex;
+            flex-direction: column;
             gap: 1em;
             justify-content: space-between;
             margin-bottom: 1em;
@@ -41,6 +42,12 @@
 
             &:active {
                 border-color: var(--ui-black-60);
+            }
+        }
+
+        @media (min-width: 640px) {
+            .page__btn-container {
+                flex-direction: row;
             }
         }
     }
