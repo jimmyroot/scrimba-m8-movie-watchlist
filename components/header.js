@@ -15,8 +15,8 @@ const Header = () => {
 
         document.addEventListener('click', e => {  
             const menu = document.querySelector('.header__menu')     
-            if (!e.target.closest('.header__menu') 
-                && menu.classList.contains('open') 
+            if (!e.target.closest('.header__menu')
+                && menu.classList.contains('open')
                 && e.target.id != 'hamburger')  { 
                     toggleHamburger() 
             }

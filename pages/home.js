@@ -19,7 +19,8 @@ const Home = () => {
         const html = `
         <section class="page__container page__container-large">
             <h1 class="home__tagline">Discover. Curate. Watch.</h1>
-            <p class="home__cta">Your movie watchlists, sorted. Click below to get started.</p>
+            <p class="home__cta">Your movie watchlists, sorted. Click below to get started, or <a href="/signin" data-type="navigate">sign in with Google or Github!</a></p>
+                <form id="signup-form"></p>
             <a class="home__signup-btn" href="/signup" data-type="navigate">
                 Get started
                 <i class='bx bxs-chevron-right bx-md'></i>

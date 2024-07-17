@@ -126,8 +126,7 @@ const SignUp = () => {
             <section class="page__container page__container-small">
                 <h1>We just need a few details to create your membership</h1>
                 <p class="signup__p">Don't worry, this won't take long (and it's free!). We'll have you 
-                signed up in no time 🙃. Or, you can <a href="/signin" data-type="navigate">sign in with Google or Github!</a></p>
-                <form id="signup-form">
+                signed up in no time 🙃
                     <div class="form__input-container">
                         <label class="form__label" for="given-name">First name</label>
                         <input class="form__input" type="text" name="given-name" id="given-name" />

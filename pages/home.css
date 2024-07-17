@@ -11,6 +11,16 @@
     .home__cta {
         font-size: 1.2rem;
         margin: 1.4em 0 2em 0;
+
+        a {
+            text-decoration: underline;
+            color: var(--primary);
+            text-decoration: none;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
     }
 
     .home__signup-btn {
