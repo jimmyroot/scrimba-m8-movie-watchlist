@@ -1,5 +1,6 @@
 .page__header {
     .header__list {
+        position: relative;
         display: flex;
         align-items: center;
         justify-content: start;
@@ -7,11 +8,12 @@
     }
 
     .header__btn-back {
+        position: absolute;
         color: var(--txt-light);
         background-color: var(--primary);
         border: none;
         border-radius: var(--br);
-        padding: .5em .4em .4em .4em;
+        padding: .4em .4em .4em .4em;
         line-height: 0;
 
         &:hover {
@@ -23,5 +25,12 @@
         font-size: 1.5rem;
         font-weight: 600;
         line-height: auto;
+        margin: 0 auto;
+    }
+
+    @media (min-width: 640px) {
+        .header__list-title {
+            margin-left: 50px;
+        }
     }
 }

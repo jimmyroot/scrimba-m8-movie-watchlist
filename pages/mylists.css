@@ -18,7 +18,7 @@
         }
     
         .new-watchlist__input {
-            width: 310px;
+            width: 100%;
             border: 1px solid var(--ui-black-10);
             border-radius: 7px;
             font-size: .9rem;
@@ -44,6 +44,14 @@
         overflow: hidden;
         padding: 0;
         position: absolute;
+    }
+
+    @media (min-width: 640px) {
+        .header__new-watchlist-input {
+            .new-watchlist__input {
+                width: 310px;
+            }
+        }
     }
 }
 

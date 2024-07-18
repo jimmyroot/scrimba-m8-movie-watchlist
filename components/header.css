@@ -46,7 +46,6 @@
         display: flex;
         align-items: center;
         gap: 2em;
-        margin: 0;
     
         li {
             a {
@@ -89,6 +88,7 @@
     .hamburger {
         display: none;
         transform: scale(0.8);
+        z-index: 50;
     }
     
     @media (max-width: 640px) {
@@ -118,6 +118,12 @@
                 a { 
                     font-size: 1.2em;
                 }
+                order: 2;
+            }
+
+            .header__avatar-li {
+                order: 1;
+                margin: 0 0 .6em 0;
             }
         }
 
@@ -130,5 +136,12 @@
             display: block;
         }
     }
+
+        /* @media (min-width: 440px) {
+            .open {
+                width: 100%;
+            }
+        } */
+
 }
 

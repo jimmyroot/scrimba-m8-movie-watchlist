@@ -96,7 +96,7 @@ const List = async () => {
                 const imdbLink = `
                     <a class="movie__btn movie__btn-a" href="https://www.imdb.com/title/${movie.imdbID}/" target="_blank">
                         <i class='bx bx-link-external'></i>
-                        <span>View at IMDb</span>
+                        <span>IMDb</span>
                     </a>
                 `
 
@@ -129,7 +129,7 @@ const List = async () => {
                 <li class="page__empty">
                     <p><i class='bx bx-confused bx-lg'></i></p>
                     <p>
-                       This list needs movies! Head over to 'Find Movies' to add one, or ten!
+                       This list needs movies! Head over to 'Find Movies' to add some.
                     </p>
                 </li>`
         }
@@ -195,7 +195,7 @@ const List = async () => {
     const mutationObserver = new MutationObserver((mutationList, observer) => {
         for (const mutation of mutationList) {
             if (mutation.type === 'childList') {
-                setTimeout(shaveEls, 10)
+                setTimeout(shaveEls, 40)
             }
         }
     })

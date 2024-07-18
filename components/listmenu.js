@@ -23,6 +23,9 @@ const ListMenu = () => {
                     await db.addMovieToList(list, movieid, modal, movietitle)
                     movieCardEl.classList.remove('spinner','movie__card--dimmed')
                 }
+            },
+            closelist: () => {
+                closeMenu()
             }
         }
         e.preventDefault()
@@ -35,6 +38,9 @@ const ListMenu = () => {
             <ul class="context-menu__watchlists" data-movietitle="${movietitle}">
                 ${renderLists(lists, movieid)}
             </ul>
+            <button class="context-menu__close-btn" data-type="closelist">
+                <i class='bx bx-x'></i>
+            </button>
         `
         
         return html
@@ -48,7 +54,7 @@ const ListMenu = () => {
 
                 return `
                     <li class="context-menu__list" data-type="addmovie" data-list="${docPath}" data-movieid="${movieid}">
-                        <i class='bx bx-list-plus bx-sm'></i>
+                        <i class='bx bx-list-plus'></i>
                         <span>${title}</span>
                     </li>
                 `

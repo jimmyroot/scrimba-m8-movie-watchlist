@@ -3,6 +3,7 @@ import { db } from '../data/db'
 import { listMenu } from '../components/listmenu'
 import { modal } from '../components/modal'
 import blankPosterUrl from '../assets/poster-placeholder.png'
+import imgStarURL from '../assets/goldstar.svg'
 
 const Findmovies = () => {
 
@@ -31,15 +32,15 @@ const Findmovies = () => {
 
     const validateInputAndSubmitSeach = () => {
         const input = document.getElementById('find-movies-input')
-                const value = input.value
-                if (value) {
-                    node.querySelector('#page-results').classList.add('spinner', 'page__results--dimmed')
-                    const { value } = document.querySelector('#find-movies-input')
-                    getResults(value)
-                }
-                else {
-                    input.classList.add('warning')
-                }
+        const value = input.value
+        if (value) {
+            node.querySelector('#page-results').classList.add('spinner', 'page__results--dimmed')
+            const { value } = document.querySelector('#find-movies-input')
+            getResults(value)
+        }
+        else {
+            input.classList.add('warning')
+        }
     }
 
     const render = async () => {
@@ -48,7 +49,7 @@ const Findmovies = () => {
         const html = `
             <header class="page__header">
                 <div class="header__search">
-                    <input class="search__input" type="text" id="find-movies-input" placeholder="e.g. 'The Matrix' or 'Keanu Reeves'"/>
+                    <input class="search__input" type="text" id="find-movies-input" placeholder="e.g. 'The Matrix' or 'Blade Runner'"/>
                     <button class="search__btn" id="find-movies-btn" data-type="submit">
                         <i class='bx bx-search'></i>
                     </button>
@@ -88,7 +89,7 @@ const Findmovies = () => {
                             <div class="movie__info">
                                 <div class="movie__header">
                                     <h3 class="movie__title">${Title}</h3>
-                                    <p>${Rating}</p>
+                                    <p><img class="movie__star" src="${imgStarURL}"><span>${Rating}</span></p>
                                 </div>
                                 <div class="movie__details">
                                     <p>${Runtime}</p>       

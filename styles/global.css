@@ -4,7 +4,7 @@
 @import './forms.css';
 @import '../components/listmenu.css';
 @import '../components/modal.css';
-@import '../pages/pagesglobal.css';
+@import '../pages/pagesshared.css';
 
 #app {
     background-color: transparent;
@@ -15,6 +15,7 @@
     min-width: 400px; 
     overflow-y: scroll;
     scrollbar-gutter: stable;
+    position: relative;
 }
 
 .main {

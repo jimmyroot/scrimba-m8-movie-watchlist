@@ -67,26 +67,32 @@ const Header = () => {
             const avatarUrl = account.photoURL !== '/assets/blank.png' ? account.photoURL : blankProfImgUrl
             
             nav = `
-                <li>
-                    <a href="/findmovies" data-type="navigate">Find Movies</a>
-                </li>
-                <li>
-                    <a href="/mylists" data-type="navigate">My Lists</a>
-                </li>
-                <li>
-                    <a href="#" data-type="signout">Sign out</a>
-                </li>
-                <img src="${avatarUrl}" class="header__avatar" alt="User avatar image">
+                <ul class="header__menu" id="menu">
+                    <li>
+                        <a href="/findmovies" data-type="navigate">Find Movies</a>
+                    </li>
+                    <li>
+                        <a href="/mylists" data-type="navigate">My Lists</a>
+                    </li>
+                    <li>
+                        <a href="#" data-type="signout">Sign out</a>
+                    </li>
+                    <li class="header__avatar-li">
+                        <img src="${avatarUrl}" class="header__avatar" alt="User avatar image">
+                    </li>
+                </ul>
             `
         }
         else {
             nav = `
-                <li>
-                    <a href="/signup" data-type="navigate">Sign up</a>
-                </li>
-                <li>
-                    <a href="/signin" class="sign-in" data-type="navigate">Sign in</a>
-                </li>
+                <ul class="header__menu" id="menu"> 
+                    <li>
+                        <a href="/signup" data-type="navigate">Sign up</a>
+                    </li>
+                    <li>
+                        <a href="/signin" class="sign-in" data-type="navigate">Sign in</a>
+                    </li>
+                </ul>
             `
         }
 
@@ -95,9 +101,9 @@ const Header = () => {
                     <img class="header__logo-img" src="${logoUrl}" alt="Reel Talk logo">
                     <h1 class="header__logo" data-type="refresh">Reel Time</h1>
                 </div>
-                <ul class="header__menu" id="menu">
+                
                    ${nav}
-                </ul>
+                
                 <button class="hamburger hamburger--3dy" id="hamburger" type="button" data-type="hamburger">
                     <span class="hamburger-box">
                         <span class="hamburger-inner"></span>
