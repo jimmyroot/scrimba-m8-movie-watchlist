@@ -7,7 +7,7 @@
 @import '../pages/pagesshared.css';
 
 #app {
-    background-color: transparent;
+    background-color: var(--background);
     height: 100vh;
     min-height: 400px;
     display: flex;
@@ -33,4 +33,8 @@ dialog {
     & * {
         pointer-events: none;
     }
+}
+
+h1, h2, h3, h4, h5, p {
+    color: var(--on-background);
 }

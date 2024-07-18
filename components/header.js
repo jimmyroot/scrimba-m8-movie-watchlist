@@ -104,7 +104,7 @@ const Header = () => {
                 
                    ${nav}
                 
-                <button class="hamburger hamburger--3dy" id="hamburger" type="button" data-type="hamburger">
+                <button class="hamburger hamburger--squeeze" id="hamburger" type="button" data-type="hamburger">
                     <span class="hamburger-box">
                         <span class="hamburger-inner"></span>
                     </span>

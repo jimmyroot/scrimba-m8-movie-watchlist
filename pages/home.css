@@ -3,6 +3,8 @@
     padding: 0 1em;
     
     .home__tagline {
+        color: var(--on-background);
+        filter: opacity(.8);
         font-size: 2.8rem;
         font-weight: 700;
         line-height: 1;
@@ -11,6 +13,7 @@
     }
 
     .home__cta {
+        color: var(--on-background);
         font-size: 1.1rem;
         margin: 1.4em 0 2em 0;
         text-align: center;
@@ -19,7 +22,7 @@
         width: 312px;
 
         a {
-            text-decoration: underline;
+            text-decoration: underline; 
             color: var(--primary);
             text-decoration: none;
 
@@ -39,16 +42,16 @@
         border-radius: var(--br);
         padding: .5em 3em;
         background-color: var(--primary);
-        color: var(--txt-light);
+        color: var(--on-primary);
         text-decoration: none;
         gap: 1em;
 
         &:hover {
-            background-color: var(--primary-lighter);
+            filter: brightness(1.1);
         }
 
         &:active {
-            background-color: var(--primary);
+            filter: brightness(1);
         }
 
         i {

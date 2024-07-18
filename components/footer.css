@@ -6,7 +6,8 @@
     width: 100%;
     padding: 1em 0;
     margin-top: auto;
-    border-top: 1px solid var(--divider);
+    border-top: 1px solid var(--surface);
+    color: var(--on-background);
 
     p {
         font-size: .8rem;
