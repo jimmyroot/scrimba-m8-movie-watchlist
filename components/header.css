@@ -3,7 +3,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--surface);
+    border-bottom: 1px solid var(--surface-highlight);
     padding: .4em 1em;
 
     .header__logo-div {
@@ -36,7 +36,7 @@
     .header__avatar {
         display: block;
         border-radius: 50%;
-        border: 1px solid var(--ui-black-20);
+        border: 1px solid var(--surface-highlight);
         padding: .2em;
         height: 40px;
         aspect-ratio: 1/1;
@@ -112,7 +112,7 @@
             padding: 2.5em 0 0 0;
             transition-duration: .2s;
             transition-timing-function:cubic-bezier(0.23, 1, 0.320, 1);
-            border-right: 1px solid var(--ui-black-20);
+            border-right: 1px solid var(--surface-highlight);
             z-index: 20;
             
             li {

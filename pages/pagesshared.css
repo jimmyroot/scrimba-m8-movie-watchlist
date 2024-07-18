@@ -7,7 +7,7 @@
 
 .page__header {
     padding: .7em 1em;
-    border-bottom: 1px solid var(--ui-black-10);
+    border-bottom: 1px solid var(--surface-highlight);
 }
 
 .main {
