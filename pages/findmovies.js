@@ -4,6 +4,7 @@ import { listMenu } from '../components/listmenu'
 import { modal } from '../components/modal'
 import blankPosterUrl from '../assets/poster-placeholder.png'
 import imgStarURL from '../assets/goldstar.svg'
+import { shaveEls } from '../utils/utils'
 
 const Findmovies = () => {
 
@@ -72,7 +73,7 @@ const Findmovies = () => {
                 async movie => {
 
                     const fullMovieData = await omdb.getMovieByIMDBId(movie.imdbID)
-                    const { Title, Runtime, Genre, Plot, Poster, imdbID } = fullMovieData
+                    const { Title, Year, Genre, Plot, Poster, imdbID } = fullMovieData
 
                     // Catch blank poster
                     const posterUrl = Poster === 'N/A' ? blankPosterUrl : Poster
@@ -92,8 +93,8 @@ const Findmovies = () => {
                                     <p><img class="movie__star" src="${imgStarURL}"><span>${Rating}</span></p>
                                 </div>
                                 <div class="movie__details">
-                                    <p>${Runtime}</p>       
-                                    <p class="movie__genre">${Genre}</p>
+                                    <span>${Year}</span>• 
+                                    <span class="movie__genre">${Genre}</span>
                                 </div>
                                 <p class="movie__plot">${Plot}</p>
                                 <div class="movie__btns">
@@ -131,18 +132,6 @@ const Findmovies = () => {
         }
     }
 
-    const shaveEls = () => {
-        const titles = document.querySelectorAll('.movie__title')
-        const plots = document.querySelectorAll('.movie__plot')
-        const genres = document.querySelectorAll('.movie__genre')
-        
-        if (titles.length > 0 && plots.length > 0 && genres.length > 0) {
-            shave(titles, 50)
-            shave(plots, 70)
-            shave(genres, 20)
-        }
-    }
-
     const removeWarning = e => {
         if (e.target.classList.contains('warning')) e.target.classList.remove('warning')
     }
@@ -176,12 +165,13 @@ const Findmovies = () => {
     })
 
     // Shave on node resize
-    const resizeObserver = new ResizeObserver(entries => shaveEls())
+    const resizeObserver = new ResizeObserver(entries => shaveEls(node))
     resizeObserver.observe(node)
 
     // Shave on node update
     const mutationObserver = new MutationObserver((mutationList, observer) => {
-        setTimeout(shaveEls, 200)    
+        console.log('mutated')
+        shaveEls(node)
     })
 
     mutationObserver.observe(node, {attributes: false, childList: true, subtree: false})

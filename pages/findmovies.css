@@ -3,10 +3,12 @@
         position: relative;
         display: flex;
         justify-content: end;
-        
+
         .search__input {
+            background-color: var(--surface);
+            color: var(--on-surface);
             width: 100%;
-            border: 1px solid var(--ui-black-10);
+            border: 1px solid transparent;
             border-radius: 7px;
             font-size: .9rem;
             font-weight: 500;
@@ -20,7 +22,8 @@
         .search__btn {
             position: absolute;
             background-color: transparent;
-            color: var(--ui-black-20);
+            color: var(--on-surface);
+            opacity: .3;
             border: none;
             z-index: 10;
             top: 6px;
@@ -32,17 +35,21 @@
             cursor: pointer;
 
             &:hover {
-                color: var(--ui-black-40);
+                opacity: .5;
             }
 
             &:active {
                 transform: scale(0.9);
-                color: var(--ui-black-60);
+                opacity: .3;
             }
         }
 
-        .warning {
-            border: 1px solid red;
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active {
+            -webkit-transition: "color 9999s ease-out, background-color 9999s ease-out";
+            -webkit-transition-delay: 9999s;
         }
 
         @media (min-width: 640px) {

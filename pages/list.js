@@ -1,5 +1,5 @@
 import { db } from '../data/db'
-import { router } from '../pages/router'
+import { shaveEls } from '../utils/utils'
 import { modalWithConfirm } from '../components/modalwithconfirm'
 import imgStarURL from '../assets/goldstar.svg'
 import blankPosterUrl from '../assets/poster-placeholder.png'
@@ -10,7 +10,6 @@ const List = async () => {
         const execute = {
             back: () => {
                 e.preventDefault()
-                // router.navigate('/mylists')
                 history.go(-1)
             },
             removemovie: async () => {
@@ -80,7 +79,7 @@ const List = async () => {
                 const watched = currentMovieFromUsersList.watched
 
                 const watchedBtn = `
-                    <button class="movie__btn ${watched ? 'movie__btn--active' : ''}" data-type="togglewatched" data-movie-id="${imdbID}">
+                    <button class="movie__btn movie__btn-watched ${watched ? 'movie__btn--active' : ''}" data-type="togglewatched" data-movie-id="${imdbID}">
                             ${watched ? `<i class='bx bxs-checkbox-checked'></i>` : `<i class='bx bx-checkbox'></i>`}
                             <span>Watched</span>
                     </button>
@@ -94,7 +93,7 @@ const List = async () => {
                 `
 
                 const imdbLink = `
-                    <a class="movie__btn movie__btn-a" href="https://www.imdb.com/title/${movie.imdbID}/" target="_blank">
+                    <a class="movie__btn movie__btn-a movie__btn-imdb" href="https://www.imdb.com/title/${movie.imdbID}/" target="_blank">
                         <i class='bx bx-link-external'></i>
                         <span>IMDb</span>
                     </a>
@@ -135,13 +134,6 @@ const List = async () => {
         }
 
         return html
-    }
-    
-    const shaveEls = () => {
-        const title = node.querySelectorAll('.movie__title')
-        const plot = node.querySelectorAll('.movie__plot')
-        shave(title, 50)
-        shave(plot, 80)
     }
 
     const listenForChangesAndRefreshList = async listPath => {
@@ -188,14 +180,14 @@ const List = async () => {
     node.addEventListener('click', handleClick)
 
     // Fire the shave function whenever the node changes size
-    const resizeObserver = new ResizeObserver(entries => shaveEls())
+    const resizeObserver = new ResizeObserver(entries => shaveEls(node))
     resizeObserver.observe(node)
 
     // Fire the shave function when node is modified (i.e. a list is loaded)
     const mutationObserver = new MutationObserver((mutationList, observer) => {
         for (const mutation of mutationList) {
             if (mutation.type === 'childList') {
-                setTimeout(shaveEls, 40)
+                shaveEls(node)
             }
         }
     })

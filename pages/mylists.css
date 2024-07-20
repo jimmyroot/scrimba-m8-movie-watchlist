@@ -6,20 +6,26 @@
         gap: .7em;
 
         .new-watchlist__btn {
-            color: var(--txt-light);
+            color: var(--on-primary);
             background-color: var(--primary);
             border-radius: var(--br);
             padding: .4em;
             line-height: 0;
     
             &:hover {
-                background-color: var(--primary-darker);
+                filter: brightness(1.1);
+            }
+
+            &:active {
+                filter: brightness(1);
             }
         }
     
         .new-watchlist__input {
+            background-color: var(--surface);
             width: 100%;
-            border: 1px solid var(--ui-black-10);
+            border: 1px solid transparent;
+            color: var(--on-surface);
             border-radius: 7px;
             font-size: .9rem;
             font-weight: 500;
@@ -31,7 +37,9 @@
         }
 
         .warning {
-            border: 1px solid red;
+            border: 1px solid var(--warning);
+            -webkit-box-shadow: inset 0px 0px 5px 3px rgba(207,102,121,0.12); 
+            box-shadow: inset 0px 0px 5px 3px rgba(207,102,121,0.12);
         }
     }
 
@@ -57,6 +65,7 @@
 
 .page__section {
     .watchlists__list {
+        position: relative;
         list-style-type: none;
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -64,6 +73,7 @@
         padding: 1em;
 
         .watchlist__item {
+            background-color: var(--surface);
             position: relative;
             display: flex;
             flex-direction: column;
@@ -84,23 +94,24 @@
             } 
 
             &:hover {
-                border-color: var(--ui-black-20);
+                border-color: var(--surface-highlight);
             }
 
             &:active {
-                border-color: var(--ui-black-40);
+                filter: brightness(1.2);
             }
 
             &:has(#remove-list-btn:active) {
-                border-color: var(--ui-black-20);
+                filter: brightness(1);
             }
 
             .item__title {
+                color: var(--on-surface);
                 font-weight: 500;
                 line-height: 1;
                 
                 a {
-                    color: black;
+                    /* color: black; */
                     text-decoration: none;
 
                     &:visited {
@@ -121,6 +132,7 @@
             }
 
             .item__btn-remove {
+                color: var(--on-surface);
                 opacity: .35;
                 pointer-events: all;
                 position: absolute;
@@ -148,7 +160,7 @@
             }
 
             .item__progbar {
-                background-color: lightgrey;
+                background-color: var(--surface-highlight);
                 width: 100%;
                 height: 5px;
                 border-radius: 3px;

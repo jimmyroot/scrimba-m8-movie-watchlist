@@ -91,7 +91,7 @@ const MyLists = async () => {
 
                 return `
                     <li class="watchlist__item" data-type="navigate" data-path="${docPath}" data-title="${data.title}">
-                        <h3 class="item__title"><a class="item__link" href="#">${data.title}</a></h3>
+                        <h3 class="item__title">${data.title}</h3>
                         <div class="item__details">
                         <p>🎬 Movies: ${moviesCount}</p>
                         <p>🍿 Watched: ${percentComplete}%</p>

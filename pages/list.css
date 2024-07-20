@@ -9,7 +9,7 @@
 
     .header__btn-back {
         position: absolute;
-        color: var(--txt-light);
+        color: var(--on-primary);
         background-color: var(--primary);
         border: none;
         border-radius: var(--br);
@@ -17,7 +17,11 @@
         line-height: 0;
 
         &:hover {
-            background-color: var(--primary-darker);
+            filter: brightness(1.1);
+        }
+
+        &:active {
+            filter: brightness(1);
         }
     }
 

@@ -1,4 +1,4 @@
-// import { router } from '../pages/router'
+// Auth module, contains all of our Firebase auth code & functions
 import { 
     getAuth,
     GoogleAuthProvider,
@@ -15,7 +15,6 @@ import { db } from './db'
 import { showError } from '../utils/forms'
 
 const Auth = () => {
-
     const fbCreateUserAndSignIn = async ( newUser ) => {
         try {
             if (!newUser) throw 'newUser object missing'

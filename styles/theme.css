@@ -1,54 +1,17 @@
-:root {
-    --primary-lighter: #2989ff;
-    --primary: #0275FF;
-    --primary-darker: #006aeb;
-    --primary-darkest: #003f8b;
-    --secondary: #011936;
-    --txt-light: #FFFFFF;
-    --txt-dark: #272932;
-    --btn-hover: #00000011;
-    --btn-active: #00000020;
-    --br: 7px;
-    --ui-black-10: #00000020;
-    --ui-black-20: #00000032;
-    --ui-black-40: #00000068;
-    --ui-black-60: #00000099;
-    --spinner-main: #FFFFFF66;
-    --context-menu-surface: #282828;
-    --context-menu-text: #EAE9E9;
-    --context-menu-hover: #3E3D3D;
-    --context-menu-active: #323131;
-}
+
 
 :root {
     --background: #121212;
     --surface: #1E1E1E;
-    --primary: #BC86FC;
-    --secondary: #06DBC6;
+    --primary: #AF85FF;
+    --secondary: #7DCFB6;
     --on-background: #D7D7D7;
     --on-surface: #E2E2E2;
     --on-primary: #0E0915;
     --on-secondary: #000000;
-    --surface-highlight: #3e3e3e;
-
-
-
-    --primary-lighter: #2989ff;
-    --primary-darker: #006aeb;
-    --primary-darkest: #003f8b;
-    --secondary: #011936;
-    --txt-light: #FFFFFF;
-    --txt-dark: #272932;
-    --btn-hover: #00000011;
-    --btn-active: #00000020;
-    --ui-black-10: #00000020;
-    --ui-black-20: #00000032;
-    --ui-black-40: #00000068;
-    --ui-black-60: #00000099;
+    --surface-highlight: #2E2E2E;
+    --warning: #FF8370;
+    --valid: #7DCFB6;
     --spinner-main: #FFFFFF66;
-    --context-menu-surface: #282828;
-    --context-menu-text: #EAE9E9;
-    --context-menu-hover: #3E3D3D;
-    --context-menu-active: #323131;
     --br: 7px;
 }

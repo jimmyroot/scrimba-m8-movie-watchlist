@@ -1,10 +1,10 @@
 @import './reset.css';
 @import './theme.css';
 @import './components.css';
-@import './forms.css';
 @import '../components/listmenu.css';
 @import '../components/modal.css';
 @import '../pages/pagesshared.css';
+@import './forms.css';
 
 #app {
     background-color: var(--background);
@@ -37,4 +37,12 @@ dialog {
 
 h1, h2, h3, h4, h5, p {
     color: var(--on-background);
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-transition: "color 9999s ease-out, background-color 9999s ease-out";
+    -webkit-transition-delay: 9999s;
 }

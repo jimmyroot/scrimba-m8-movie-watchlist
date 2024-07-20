@@ -58,7 +58,7 @@ const SignUp = () => {
                         msg = 'First name is required'
                     }
                     else {
-                        msg = `Must start, end with and only contain letters`
+                        msg = 'Must start, end with and only contain letters'
                     }
                 }
             },
@@ -68,7 +68,7 @@ const SignUp = () => {
                 } else {
                     valid = utils.validateName(familyName) ? true : false
                     if (!valid) {
-                       msg = `Must start, end with and only contain lettersr`
+                       msg = 'Must start, end with and only contain letters'
                     }
                 }
             },

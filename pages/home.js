@@ -2,7 +2,7 @@ import { router } from './router'
 
 const Home = () => {
 
-    const handleClick = () => {
+    const handleClick = e => {
         const execute = {
             'navigate': () => {
                 e.preventDefault()

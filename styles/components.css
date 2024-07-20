@@ -16,7 +16,7 @@
     left: 50%;
     width: 4em;
     height: 4em;
-    margin-left: -2.5em;
+    margin-left: -2em;
     margin-top: -2em;
     border-radius: 50%;
     border: 2px solid var(--spinner-main);

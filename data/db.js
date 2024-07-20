@@ -1,3 +1,6 @@
+// All code pertaining to the Firestore db instance excluding auth, which is in auth.js
+// Everything relating to creating, updating, and deleting records/documents is in here 
+
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js'
 
 import { 
@@ -39,16 +42,15 @@ const Db = async () => {
         return await initializeApp(firebaseConfig)  
     }
 
-    // Get account data 
+    // Get account data for the given user id from the db
     const getAccount = async id => {
-        // this is working
         const profileDocSnapshot = await getDoc(doc(db, 'accounts', id))
 
         if (profileDocSnapshot.exists()) {
             return profileDocSnapshot.data()
         }
         else {
-            console.log('User account does not exist')
+            // console.log('User account does not exist')
         }
     }
 
@@ -65,11 +67,15 @@ const Db = async () => {
         }
     }
 
+    // Retrieve all movies in the array of IDs from our local 'movies' collection
+    // and return as an array, using a firestore query
     const getMovies = async arrMovieIDs => {
         const movies = []
         const moviesRef = collection(db, 'movies')
+
         const q = query(moviesRef, where('imdbID', 'in', arrMovieIDs))
         const querySnapshot = await getDocs(q)
+
         if (!querySnapshot.empty) {
             querySnapshot.forEach(doc => {
                 movies.push(doc.data())
@@ -81,11 +87,11 @@ const Db = async () => {
         }        
     }
 
-    // Get all lists for a specific user id
+    // Get all lists for a specific user id and return them
     const getListsForUser = async id => {
         const listsRef = collection(db, 'lists')
-        const q = query(listsRef, where("uid", "==", id))
 
+        const q = query(listsRef, where("uid", "==", id))
         const querySnapshot = await getDocs(q)
         
         if (!querySnapshot.empty) {
@@ -103,6 +109,7 @@ const Db = async () => {
         }
     }
 
+    // Get watchlist data for a single list using the full Firestore path e.g. lists/listid
     const getListByPath = async path => {
         const listDoc = await getDoc(doc(db, path))
         if (listDoc.exists()) {
@@ -110,47 +117,24 @@ const Db = async () => {
         }
     }
 
-    // Create the account data for our user in the db, function needs a better name as it's 
-    // a little misleading (we are actually checking and THEN creating account only if 
-    // it doesn't exist)
-    const createAccount = async user => {
-        try {
-            await runTransaction(db, async transaction => {
-                const accountDocRef = doc(db, 'accounts', user.uid)
-                const accountDoc = await transaction.get(accountDocRef)
+    
 
-                const { givenName, familyName } = splitName(user.displayName)
-                let { photoURL } = user
-                if (!photoURL) photoURL = '/assets/blank.png'
-                
-                if (!accountDoc.exists()) {
-                    const newAccount = {
-                        displayName: user.displayName,
-                        givenName: givenName,
-                        familyName: familyName,
-                        photoURL: photoURL,
-                        favoriteGenres: []
-                    }
-                    await transaction.set(accountDocRef, newAccount)
-                } else {
-                    // Do nothing, the user already exists
-                }
+    // Create a new list with unique ID (addDoc() generates the ID)
+    const createList = async params => {
+        try {
+            const lists = collection(db, 'lists')
+            const listDocRef = await addDoc(lists, {
+                uid: params.uid,
+                title: params.title,
+                createdAt: serverTimestamp(),
+                movies: []
             })
+            // Potentially do something with listDocRef
         }
         catch (e) {
-            console.log(`Something went wrong during user creation. The error was ${e}`)
+            console.error(`Something went wrong, the error was: ${e}`)
         }
-    }
-
-    // Create a new list with unique ID — addDoc()
-    const createList = async params => {
-        const lists = collection(db, 'lists')
-        const listDocRef = await addDoc(lists, {
-            uid: params.uid,
-            title: params.title,
-            createdAt: serverTimestamp(),
-            movies: []
-        })
+        
     }
 
     const toggleMovieWatched = async (listPath, movieID) => {
@@ -296,13 +280,46 @@ const Db = async () => {
         }
     }
 
+    // Create the account data for our user in the db, function needs a better name as it's 
+    // a little misleading (we are actually checking and THEN creating account only if 
+    // it doesn't exist)
+    const createAccount = async user => {
+        try {
+            await runTransaction(db, async transaction => {
+                const accountDocRef = doc(db, 'accounts', user.uid)
+                const accountDoc = await transaction.get(accountDocRef)
+
+                const { givenName, familyName } = splitName(user.displayName)
+                let { photoURL } = user
+                if (!photoURL) photoURL = '/assets/blank.png'
+                
+                if (!accountDoc.exists()) {
+                    const newAccount = {
+                        displayName: user.displayName,
+                        givenName: givenName,
+                        familyName: familyName,
+                        photoURL: photoURL,
+                        favoriteGenres: []
+                    }
+                    await transaction.set(accountDocRef, newAccount)
+                } else {
+                    // Do nothing, the user already exists
+                }
+            })
+        }
+        catch (e) {
+            console.log(`Something went wrong during user creation. The error was ${e}`)
+        }
+    }
+
     const get = () => {
         return app
     }
 
+    // Initialize db
     const app = await initDB()
     const db = await getFirestore(app)
-    const auth = getAuth(app)
+    // const auth = getAuth(app)
 
     return {
         get,

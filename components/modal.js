@@ -1,11 +1,8 @@
+// A straightforward modal using the dialog tag
+
 const Modal = () => {
 
-    const registerEventListeners = () => {
-        node.addEventListener('click', e => {
-            handleClick(e)
-        })
-    }
-
+    // Generic click handler
     const handleClick = e => {
         const execute = {
             'hide': () => {
@@ -14,7 +11,9 @@ const Modal = () => {
         }
 
         const { type } = e.target.dataset
-
+        // If there's a method in our object literal 'execute' for 'type' then run that, 
+        // else check if the user clicked outside the message box and if so, close 
+        // the dialog
         if (execute[type]) {
             execute[type]()
         }
@@ -23,6 +22,7 @@ const Modal = () => {
         }
     }
 
+    // Render the dialog inner html with whatever message we passed in
     const render = msg => {
         let html = `
             <div id="modal__inner" class="modal__inner">
@@ -34,16 +34,18 @@ const Modal = () => {
         return html
     }
 
+    // Refresh the inner html of the dialog
     const refresh = msg => {
         node.innerHTML = render(msg)
     }
 
+    // Show the dialog as a modal
     const show = msg => {
         refresh(msg)
         node.showModal()
-        document.addEventListener('click', handleClick)
     }
 
+    // Hide the modal
     const hide = () => {
         node.close()
     }
@@ -53,10 +55,12 @@ const Modal = () => {
         return node
     }
 
+    // Initialize the module. In this module, 'node' is a dialog element 
+    // so we can use node.showModal, node.close, etc to do what we want
     const node = document.createElement('dialog')
     node.classList.add('modal')
     node.id = 'modal'
-    registerEventListeners()
+    node.addEventListener('click', handleClick)
 
     return {
         get,

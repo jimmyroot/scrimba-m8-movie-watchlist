@@ -61,14 +61,10 @@
     }
 
     @media (min-width: 640px) {
-        & {
-            
-        }
 
         .home__tagline {
             width: auto;
-        } 
-        
+        }
     
         .home__cta {
             display: block;

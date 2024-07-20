@@ -11,19 +11,19 @@
         gap: 1em;
         align-items: center;
         cursor: pointer;
-
+        
         & * {
             pointer-events: none;
         }
     }
-    
+
     .header__logo {
         color: var(--on-background);
         font-family: Oswald, sans-serif;
         text-transform: uppercase;
         cursor: pointer;
         margin: 0;
-    }    
+    }
 
     .header__logo-img {
         display: block;
@@ -40,40 +40,26 @@
         height: 40px;
         aspect-ratio: 1/1;
     }
-
+    
     .header__menu {
-        background-color: var(--surface);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        gap: 1em;
-        position: fixed;
         list-style-type: none;
-        top: 0;
-        left: -1px;
-        width: 0;
-        height: 100vh;
-        padding: 2.5em 0 0 0;
-        transition-duration: .2s;
-        transition-timing-function:cubic-bezier(0.23, 1, 0.320, 1);
-        z-index: 20;
-        overflow: hidden;
-        border-right: 1px solid var(--surface-highlight);
+        display: flex;
+        align-items: center;
+        gap: 2em;
         -webkit-touch-callout: none;
         -webkit-user-select: none;
         -khtml-user-select: none;
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
-        
-        .nav__item {
-            .nav__link { 
+    
+        li {
+            a {
                 color: var(--on-background);
+                font-size: .9rem;
                 font-weight: 500;
-                font-size: 1.2em;
                 text-decoration: none;
-
+    
                 &:hover {
                     color: var(--primary);
                 }
@@ -82,8 +68,8 @@
                     filter: brightness(1.1);
                 }
             }
-
-            .nav__sign-in {
+    
+            a.sign-in {
                 display: block;
                 color: var(--on-primary);
                 background-color: var(--primary);
@@ -91,7 +77,6 @@
                 padding: .75em 1.5em;
     
                 &:hover {
-                    color: var(--on-primary);
                     filter: brightness(1.1);
                 }
 
@@ -100,53 +85,62 @@
                 }
             }
 
-            .nav__link--active {
+            .nav__item--active {
                 color: var(--primary);
             }
         }
-
-        .header__avatar-li {
-            order: 1;
-            margin: 0 0 .6em 0;
-        }
-    }
-
-    .open {
-        width: 50vw;
     }
 
     .hamburger {
-        padding: 0;
-        display: block;
+        display: none;
+        transform: scale(0.8);
+        z-index: 50;
     }
+    
+    @media (max-width: 640px) {
+        & {
+            justify-content: space-between;
+        }
 
-    @media (min-width: 640px) {
         .header__menu {
-            background-color: transparent;
-            position: relative;
-            height: fit-content;
-            width: auto;
-            justify-content: flex-end;
-            transition-duration: 0ms;
-            border: none;
-            display: flex;
-            flex-direction: row;
+            position: fixed;
+            top: 0;
+            left: -1px;
+            width: 0;
+            height: 100vh;
+            flex-direction: column;
             align-items: center;
-            gap: 2em;
-            margin: 0;
-            padding: 0;
-
-            .nav__item {
-                .nav__link {
-                    font-size: .9em;
+            justify-content: flex-start;
+            gap: 1em;
+            background-color: var(--surface);
+            overflow: hidden;
+            padding: 2.5em 0 0 0;
+            transition-duration: .2s;
+            transition-timing-function:cubic-bezier(0.23, 1, 0.320, 1);
+            border-right: 1px solid var(--surface-highlight);
+            z-index: 20;
+            
+            li {
+                a { 
+                    font-size: 1.2em;
                 }
+                order: 2;
+            }
+
+            .header__avatar-li {
+                order: 1;
+                margin: 0 0 .6em 0;
             }
         }
 
-        .hamburger {
-            display: none;
-            transform: scale(0.8);
-            z-index: 50;
+        .open {
+            width: 50vw;
         }
+
+        .hamburger {
+            padding: 0;
+            display: block;
+        }   
     }
 }
+

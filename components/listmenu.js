@@ -1,42 +1,45 @@
+// This is the context menu, found a simple example online and used that code for 
+// positioning, displaying etc, had to incorporate it into this module style 
+// that I've been using, then add the code for getting the users lists, etc.
+
 import { db } from '../data/db'
 import { modal } from '../components/modal'
 
 const ListMenu = () => {
 
+    // btnThatOpenedTheMenu is used to control styling on the calling button, just
+    // seems a bit more intuitive, visually speaking, for the user
+    // movieCardEl is the movie el for the movie being added, we use this so we know
+    // where to add the spinner during the add process 
     let btnThatOpenedTheMenu = null
     let movieCardEl = null
 
-    const registerEventListeners = () => {
-        node.addEventListener('click', e => {
-            handleClick(e)
-        })
-    }
-
+    // Click handler, uses an object literal to perform a 'switch' depending on the 'type'
+    // data attribute of the calling element
     const handleClick = e => {
         const execute = {
             addmovie: async () => {
-                const { list, movieid } = e.target.dataset
-                const { movietitle } = e.target.closest('ul').dataset
-                closeMenu()
-                if (list) {
-                    movieCardEl.classList.add('spinner','movie__card--dimmed')
-                    await db.addMovieToList(list, movieid, modal, movietitle)
-                    movieCardEl.classList.remove('spinner','movie__card--dimmed')
-                }
+                await addMovie(e.target)
             },
             closelist: () => {
                 closeMenu()
             }
         }
+
         e.preventDefault()
         const { type } = e.target.dataset
         if (execute[type]) execute[type]()
     }
 
+    // Render function to refresh the context menu's data, is called each time 
+    // the menu is opened
     const render = (lists, movieid, movietitle) => {
+
+        const listsHtml = renderLists(lists, movieid)
+
         let html = `
             <ul class="context-menu__watchlists" data-movietitle="${movietitle}">
-                ${renderLists(lists, movieid)}
+                ${listsHtml}
             </ul>
             <button class="context-menu__close-btn" data-type="closelist">
                 <i class='bx bx-x'></i>
@@ -46,9 +49,11 @@ const ListMenu = () => {
         return html
     }
 
+    // Render the lists. We use the docPath and the movieid to identity the path and the movie 
+    // we may need to add 
     const renderLists = (lists, movieid) => {
         if (lists) {
-            let html = lists.map(list => {
+            const html = lists.map(list => {
                 const { title } = list.data
                 const { docPath } = list
 
@@ -58,7 +63,6 @@ const ListMenu = () => {
                         <span>${title}</span>
                     </li>
                 `
-
             }).join('')
             return html
         }
@@ -67,14 +71,19 @@ const ListMenu = () => {
         }
     }
 
+    // Orchestrates the process of opening the context menu, takes in two arguments
+    // an object containing data about the current users available lists and the 
+    // target (this was the button that opened the list)
     const handleOpenMenu = (lists, target) => {
 
-        // Set this value in the module scope so the close function can access it
-        // when the context menu is closed
+        // These are values that we created when the context menu was originally imported,
+        // locally scoped variables pertaining to the calling btn/movie card, which lets us
+        // set their states, etc
         btnThatOpenedTheMenu = target
         btnThatOpenedTheMenu.classList.add('movie__add-btn--active')
         movieCardEl = target.closest('li')
         
+        // Refresh the list and add event listeners for closing it
         const { movieid, movietitle } = target.dataset
         refresh(lists, movieid, movietitle)
         if (menuState != 1) {
@@ -85,10 +94,7 @@ const ListMenu = () => {
         }
     }
 
-    const handleKeyUp = e => {
-        if (e.which === 27) closeMenu()
-    }
-
+    // Decides whether a click was outside the context menu and if so, close it
     const handleCloseMenu = e => {
         const wasInside = document.querySelector('#context-menu').contains(e.target)
         if (!wasInside) {
@@ -96,7 +102,10 @@ const ListMenu = () => {
         }
     }
 
+    // Performs the actual task of closing the menu
     const closeMenu = () => {
+        // Turn off active class from the btn that originally called it, then close menu,
+        // remove event listener
         btnThatOpenedTheMenu.classList.remove('movie__add-btn--active')
         if (menuState != 0) {
             menuState = 0
@@ -105,6 +114,12 @@ const ListMenu = () => {
         }
     }
 
+    // If user pressed escape key, close the menu
+    const handleKeyUp = e => {
+        if (e.which === 27) closeMenu()
+    }
+
+    // Get position of the click that is opening the menu
     const getPosition = e => {
         var posX = 0
         var posY = 0
@@ -128,6 +143,9 @@ const ListMenu = () => {
         }
     }
 
+    // Set the position of the menu relative to the click. This is the cool thing about modules,
+    // it's easier to position as I can just use 'node' to refer to itself (node is the html node 
+    // we create when the module is loaded, it's near the bottom of the module)
     const positionMenu = e => {
         let posClick = getPosition(e)
         let posClickX = posClick.x
@@ -154,20 +172,37 @@ const ListMenu = () => {
         }
     }
 
+    // Add the movie  to the relevant list, calls function in the db.js module, takes
+    // care of adding the spinner to the movie card, etc
+    const addMovie = async target => {
+        const { list, movieid } = target.dataset
+        const { movietitle } = target.closest('ul').dataset
+        closeMenu()
+        if (list) {
+            movieCardEl.classList.add('spinner','movie__card--dimmed')
+            await db.addMovieToList(list, movieid, modal, movietitle)
+            movieCardEl.classList.remove('spinner','movie__card--dimmed')
+        }
+    }
+
+    // Refreshes the list content
     const refresh = (lists, movieid, movietitle) => {   
         node.innerHTML = render(lists, movieid, movietitle)
     }
 
-    const get = args => {
+    // Returns the node, used when adding the context menu to the DOM
+    const get = () => {
         refresh()
         return node
     }
-
+    
+    // Initialize the module
     const node = document.createElement('div')
     node.id = 'context-menu'
     node.classList.add('context-menu')
-    registerEventListeners()
+    node.addEventListener('click', handleClick)
 
+    // Set basic state 
     let menuState = 0
     let active = 'block'
 

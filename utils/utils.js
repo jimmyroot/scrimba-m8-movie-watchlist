@@ -62,6 +62,36 @@ function splitName(name) {
     }
 }
 
+const shaveEls = node => {
+    const titles = node.querySelectorAll('.movie__title')
+    const plots = node.querySelectorAll('.movie__plot')
+    const genres = node.querySelectorAll('.movie__genre')
+    // Only test plots, there will never be a plot without a title, genre, etc
+    if (plots.length > 0) {
+        
+        // Convert nodelist to an array so we can use reduce and get the tallest element
+        // We're using it so that we can keep testing it's height and keep 'shaving'
+        // Until the target els have been reduced to the size we want. I'm doing it this
+        // way because it was difficult to get the shave function to fire reliably at the 
+        // appropriate time to do it's job...often it would fire too quickly and the page
+        // would render with the desired elements too big, until resize event when it would
+        // shave again. Like this, we just keep shaving until the job is done...I guess there
+        // is potential for this to loop forever but it never occurred during testing :)
+        const plotEls = [...plots]
+        const tallestPlot = plotEls.reduce((tallestPlot, currentPlot) => {
+            return (currentPlot.offsetHeight > tallestPlot) ? currentPlot : tallestPlot
+        })
+        console.log(tallestPlot.offsetHeight)
+
+        // shave until the tallest element has been reduced to target size
+        do {
+            shave(titles, 50)
+            shave(plots, 80)
+            shave(genres, 20)
+        } while (tallestPlot.offsetHeight > 80)
+    }
+}
+
 const timer = ms => new Promise(res => setTimeout(res, ms))
 
 export {
@@ -70,5 +100,6 @@ export {
     validatePassword,
     percentageOfTrue,
     splitName,
+    shaveEls,
     timer
 }

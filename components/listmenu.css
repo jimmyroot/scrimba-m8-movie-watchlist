@@ -1,6 +1,6 @@
 .context-menu {
-    background-color: var(--context-menu-surface);
-    color: var(--context-menu-text);
+    background-color: var(--surface);
+    color: var(--on-surface);
     width: 102%;
     height: 102%;
     min-width: 102;
@@ -28,7 +28,8 @@
             }
 
             &:hover {
-                background-color: var(--context-menu-hover);
+                background-color: var(--surface-highlight);
+                color: var(--on-surface);
             }
 
             &:active {
