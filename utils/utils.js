@@ -63,28 +63,33 @@ function splitName(name) {
 }
 
 const shaveEls = () => {
-    let titles = document.querySelectorAll('.movie__title')
-    let plots = document.querySelectorAll('.movie__plot')
-    let genres = document.querySelectorAll('.movie__genre')
-    let plotEls = [...plots]
+    setTimeout(() => {
+        shave('.movie__plot', 80)
+        shave('.movie__genre', 20)
+        shave('.movie__title', 50)
+    }, 1000);
+    // let titles = document.querySelectorAll('.movie__title')
+    // let plots = document.querySelectorAll('.movie__plot')
+    // let genres = document.querySelectorAll('.movie__genre')
+    // let plotEls = [...plots]
 
-    let needToShave = plotEls.some(el => el.offsetHeight >= 80)
+    // let needToShave = plotEls.some(el => el.offsetHeight >= 80)
 
-    while (needToShave) {
-        shave(titles, 50)
-        shave(plots, 80)
-        shave(genres, 20)
-        titles = document.querySelectorAll('.movie__title')
-        plots = document.querySelectorAll('.movie__plot')
-        genres = document.querySelectorAll('.movie__genre')
+    // while (needToShave) {
+    //     shave(titles, 50)
+    //     shave(plots, 80)
+    //     shave(genres, 20)
+    //     titles = document.querySelectorAll('.movie__title')
+    //     plots = document.querySelectorAll('.movie__plot')
+    //     genres = document.querySelectorAll('.movie__genre')
 
-        plotEls = [...plots]
-        console.log(plotEls)
-        plotEls.forEach(el => console.log(el.clientHeight))
-        needToShave = plotEls.some(el => el.clientHeight >= 80)
+    //     plotEls = [...plots]
+    //     console.log(plotEls)
+    //     plotEls.forEach(el => console.log(el.offsetHeight))
+    //     needToShave = plotEls.some(el => el.offsetHeight >= 80)
 
-        console.log(needToShave)
-    }
+    //     console.log(needToShave)
+    // }
     // Only test plots, there will never be a plot without a title, genre, etc
     // if (plots.length > 0) {
     //     const plotEls = [...plots]

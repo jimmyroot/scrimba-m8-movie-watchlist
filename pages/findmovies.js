@@ -140,6 +140,7 @@ const Findmovies = () => {
         node.innerHTML = await render()
         node.appendChild(listMenu.get())
         node.appendChild(modal.get())
+        shaveEls()
     }
 
     const get = async user => {
@@ -169,12 +170,12 @@ const Findmovies = () => {
     resizeObserver.observe(node)
 
     // Shave on node update
-    const mutationObserver = new MutationObserver((mutationList, observer) => {
-        console.log('mutated')
-        shaveEls(node)
-    })
+    // const mutationObserver = new MutationObserver((mutationList, observer) => {
+    //     console.log('mutated')
+    //     shaveEls(node)
+    // })
 
-    mutationObserver.observe(node, {attributes: false, childList: true, subtree: false})
+    // mutationObserver.observe(node, {attributes: false, childList: true, subtree: false})
 
     return {
         get
