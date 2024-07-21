@@ -15,16 +15,28 @@ import { db } from './db'
 import { showError } from '../utils/forms'
 
 const Auth = () => {
+
+    // This function takes a newUser object as an argument and tries to create a
+    // new user in Firebase with it
     const fbCreateUserAndSignIn = async ( newUser ) => {
         try {
+            // Check we actually have a new user object
             if (!newUser) throw 'newUser object missing'
+
+            // Try and create the user
             const credential = await createUserWithEmailAndPassword(auth, newUser.email, newUser.password)
+
+            // Update the displayname in the new profile
             await updateProfile(credential.user, {
                 displayName: `${newUser.givenName} ${newUser.familyName}`
             })
+
+            // Create a profile in our firestore db for the user
             await db.createAccount(credential.user)
         }
         catch (e) {
+            // Show any errors. showError is a little function that appends an error somewhere
+            // on the page
             if (e.code === 'auth/email-already-in-use') {
                 const el = document.querySelector('#email')
                 showError(el, 'Email address already in use')
@@ -35,11 +47,12 @@ const Auth = () => {
                     showError(el, msg)
                 }
             }
-            // console.error(`User could not be created. Error code and message were: ${e.code}, ${e.message}`)
         }
     }
 
+    // Sign in function, wrapper for firebase sign in with email/password account
     const fbSignIn = async ( email, password ) => {
+        // Try to sign in and display any errors
         try {
             const credential = await signInWithEmailAndPassword(auth, email, password)
         } catch (e) {
@@ -60,6 +73,7 @@ const Auth = () => {
         // do anything we need with credential here in future 
     }
 
+    // Initiate sign in with Google account
     const signInWithGoogle =  async showError  => {
         try {
             const credential = await signInWithPopup(auth, google)
@@ -73,7 +87,6 @@ const Auth = () => {
             if (e.code === 'auth/account-exists-with-different-credential') {
                 const msg = 'Email address already in use with an alternate provider.'
                 showError(el, msg)
-                // console.error(`An account is already registered using either an alternate provider, or email & password.`)            
             } else {
                 const msg = e.code
                 showError(el, msg)
@@ -81,6 +94,7 @@ const Auth = () => {
         }
     }
 
+    // Initiate sign in with Github
     const signInWithGithub = async () => {
         try {
             const credential = await signInWithPopup(auth, github)
@@ -94,7 +108,6 @@ const Auth = () => {
             if (e.code === 'auth/account-exists-with-different-credential') {
                 const msg = 'Email address already in use with an alternate provider.'
                 showError(el, msg)
-                // console.error(`An account is already registered using either an alternate provider, or email & password.`)            
             } else {
                 const msg = e.code
                 showError(el, msg)
@@ -102,6 +115,7 @@ const Auth = () => {
         }
     }
 
+    // Signout function, currently error output just goes to the console
     const fbSignOut = () => {
         try { 
             signOut(auth)
@@ -111,6 +125,8 @@ const Auth = () => {
         }
     }
 
+    // This function initiates an onAuthStateChanged listener, was used just for testing
+    // if login/logout was working and logs the result to the console
     const watchAuthState = () => {
         onAuthStateChanged(auth, user => {
             if (user) {
@@ -124,14 +140,17 @@ const Auth = () => {
         })
     }
 
+    // Return the auth object
     const get = () => {
         return auth
     }
 
+    // Return the user or null if there isn't one
     const getUser = () => {
         return auth.currentUser || null
     }
 
+    // Set up providers
     const auth = getAuth(db.get())
     const google = new GoogleAuthProvider()
     const github = new GithubAuthProvider()
