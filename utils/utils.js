@@ -62,31 +62,41 @@ function splitName(name) {
     }
 }
 
-const shaveEls = node => {
-    const titles = node.querySelectorAll('.movie__title')
-    let plots = node.querySelectorAll('.movie__plot')
-    const genres = node.querySelectorAll('.movie__genre')
-    // Only test plots, there will never be a plot without a title, genre, etc
-    if (plots.length > 0) {
-        
-        // Convert nodelist to an array so we can use reduce and get the tallest element
-        // We're using it so that we can keep testing it's height and keep 'shaving'
-        // Until the target els have been reduced to the size we want. I'm doing it this
-        // way because it was difficult to get the shave function to fire reliably at the 
-        // appropriate time to do it's job...often it would fire too quickly and the page
-        // would render with the desired elements too big, until resize event when it would
-        // shave again. Like this, we just keep shaving until the job is done...I guess there
-        // is potential for this to loop forever but it never occurred during testing :)
-        const plotEls = [...plots]
-        
-        do {
-            shave(titles, 50)
-            shave(plots, 80)
-            shave(genres, 20)
-            plots = node.querySelectorAll('.movie__plot')
-        } while (plotEls.some(el => el.offsetHeight > 80))
-        
+const shaveEls = () => {
+    let titles = document.querySelectorAll('.movie__title')
+    let plots = document.querySelectorAll('.movie__plot')
+    let genres = document.querySelectorAll('.movie__genre')
+    let plotEls = [...plots]
+
+    let needToShave = plotEls.some(el => el.offsetHeight >= 80)
+
+    while (needToShave) {
+        shave(titles, 50)
+        shave(plots, 80)
+        shave(genres, 20)
+        titles = document.querySelectorAll('.movie__title')
+        plots = document.querySelectorAll('.movie__plot')
+        genres = document.querySelectorAll('.movie__genre')
+
+        plotEls = [...plots]
+        console.log(plotEls)
+        plotEls.forEach(el => console.log(el.clientHeight))
+        needToShave = plotEls.some(el => el.clientHeight >= 80)
+
+        console.log(needToShave)
     }
+    // Only test plots, there will never be a plot without a title, genre, etc
+    // if (plots.length > 0) {
+    //     const plotEls = [...plots]
+        
+    //     // do {
+    //     shave(titles, 50)
+    //     shave(plots, 80)
+    //     shave(genres, 20)
+    //         // plots = node.querySelectorAll('.movie__plot')
+    //     // } while (plotEls.some(el => el.offsetHeight > 80))
+        
+    // }
 }
 
 const timer = ms => new Promise(res => setTimeout(res, ms))
