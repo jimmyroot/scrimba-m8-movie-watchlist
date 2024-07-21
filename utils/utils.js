@@ -64,7 +64,7 @@ function splitName(name) {
 
 const shaveEls = node => {
     const titles = node.querySelectorAll('.movie__title')
-    const plots = node.querySelectorAll('.movie__plot')
+    let plots = node.querySelectorAll('.movie__plot')
     const genres = node.querySelectorAll('.movie__genre')
     // Only test plots, there will never be a plot without a title, genre, etc
     if (plots.length > 0) {
@@ -78,17 +78,14 @@ const shaveEls = node => {
         // shave again. Like this, we just keep shaving until the job is done...I guess there
         // is potential for this to loop forever but it never occurred during testing :)
         const plotEls = [...plots]
-        const tallestPlot = plotEls.reduce((tallestPlot, currentPlot) => {
-            return (currentPlot.offsetHeight > tallestPlot) ? currentPlot : tallestPlot
-        })
-        console.log(tallestPlot.offsetHeight)
-
-        // shave until the tallest element has been reduced to target size
+        
         do {
             shave(titles, 50)
             shave(plots, 80)
             shave(genres, 20)
-        } while (tallestPlot.offsetHeight > 80)
+            plots = node.querySelectorAll('.movie__plot')
+        } while (plotEls.some(el => el.offsetHeight > 80))
+        
     }
 }
 
