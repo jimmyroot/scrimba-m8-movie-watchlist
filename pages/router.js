@@ -12,6 +12,7 @@ const Router = () => {
     // Compiles a single page and returns an array of the nodes,
     // header, page content and footer. Calls 'get' of each module
     const compilePage = async (page, user, route, listPath) => {
+        
         try {
             const nodes = [
                 await header.get(route, user),
@@ -118,8 +119,10 @@ const Router = () => {
         try {
             // Comile the page into the content property of the relevant route object, pass in the
             // params we need, they will be ignored if not needed
-            routes[route].content = await compilePage(routes[route].module, auth.getUser(), route, listPath)
+            const page = await compilePage(routes[route].module, auth.getUser(), route, listPath)
+            console.log(page)
 
+            routes[route].content = await compilePage(routes[route].module, auth.getUser(), route, listPath)
             // Update the DOM with the page we just rendered
             document.querySelector('#app').replaceChildren(...routes[route].content)
         }

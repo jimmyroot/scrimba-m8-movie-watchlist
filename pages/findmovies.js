@@ -6,7 +6,7 @@ import { listMenu } from '../components/listmenu'
 import { modal } from '../components/modal'
 import blankPosterUrl from '../assets/poster-placeholder.png'
 import imgStarURL from '../assets/goldstar.svg'
-import { shaveEls, shaveEl } from '../utils/utils'
+import { shaveEls } from '../utils/utils'
 
 const Findmovies = () => {
 
@@ -87,6 +87,8 @@ const Findmovies = () => {
         let html = ``
 
         if (currentSearch) {
+            
+            // Use promise.all to wait for all the calls to finish in the map loop
             html = await Promise.all(currentSearch.map(
                 async movie => {
 

@@ -1,14 +1,17 @@
+// Validate an email address
 const validateEmail = email => {
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         return regex.test(email)
 }
 
+// Validate a plain text name
 const validateName = string => {
     // const regex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/
     const regex = /^[A-Za-zÀ-ÖØ-öø-ÿ]([A-Za-zÀ-ÖØ-öø-ÿ '’-]*[A-Za-zÀ-ÖØ-öø-ÿ])?$/
     return regex.test(string)
 }
 
+// Validate password length
 const validatePassword = (pw1, pw2) => {
     if (!pw1 || !pw2) {
         return false
@@ -17,6 +20,8 @@ const validatePassword = (pw1, pw2) => {
     }
 }
 
+// Function to work out percentage of true values in an array of booleans (used
+// to calculate percentage of a watchlist that's been watched)
 function percentageOfTrue(arr) {
     const total = arr.length;
     if (total === 0) return 0
@@ -29,6 +34,8 @@ function percentageOfTrue(arr) {
     return percentage
 }
 
+// Functino that attempts to get a firstname and familyname from a single
+// string displayname
 function splitName(name) {
     if (name) {
         // Regular expression to match names with possible prefixes
@@ -62,22 +69,14 @@ function splitName(name) {
     }
 }
 
-const shaveEl = el => {
-    const title = el.querySelector('.movie__title')
-    const genre = el.querySelector('.movie__genre')
-    const plot = el.querySelector('.movie__plot')
-
-    shave(plot, 80)
-    shave(genre, 20)
-    shave(title, 50)
-}
-
+// Shave the specified elements to the specified size
 const shaveEls = () => {
     shave('.movie__plot', 80)
     shave('.movie__genre', 20)
     shave('.movie__title', 50)
 }
 
+// A little timer function to delay execution on the main thread
 const timer = ms => new Promise(res => setTimeout(res, ms))
 
 export {
@@ -87,6 +86,5 @@ export {
     percentageOfTrue,
     splitName,
     shaveEls,
-    shaveEl,
     timer
 }
