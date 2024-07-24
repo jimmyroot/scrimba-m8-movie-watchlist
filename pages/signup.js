@@ -1,18 +1,11 @@
+// signup.js — page for signing up to an email based account
+
 import { auth } from '../data/auth'
 import * as utils from '../utils/utils'
 import { setInputState, validateForm } from '../utils/forms'
 import { router } from './router'
 
 const SignUp = () => {
-
-    const registerEventListeners = () => {
-        node.addEventListener('click', e => {
-            handleClick(e)
-        })
-        node.addEventListener('input', e => {
-            validateInput(e.target)
-        })
-    }
 
     const handleClick = e => {
         const execute = {
@@ -167,8 +160,12 @@ const SignUp = () => {
 
     const node = document.createElement('main')
     node.classList.add('main')
-    refresh()
-    registerEventListeners()
+
+    // // Update the content 
+    // refresh()
+
+    node.addEventListener('click', handleClick)
+    node.addEventListener('input', e => validateInput(e.target))
 
     return {
         get

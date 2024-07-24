@@ -69,7 +69,7 @@
         list-style-type: none;
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 2em;
+        gap: 1em;
         padding: 1em;
 
         .watchlist__item {

@@ -53,14 +53,13 @@
     }
 
     .movie__card {
-        /* background-color: var(--surface); */
         border-radius: var(--br);
         max-width: 100%;
         position: relative;
         display: flex;
         height: 180px;
         overflow: hidden;
-        gap: .7em;
+        gap: 1em;
 
         .movie__info,
         .movie__header,
@@ -73,6 +72,17 @@
             height: 180px;
             width: 120px;
             border-radius: 7px;
+            border: 1px solid var(--surface-highlight);
+        }
+
+        .movie__info {
+            color: var(--on-background); ;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: .7em;
+            font-size: .7rem;
+            padding: .4em 0;
         }
 
         .movie__header {
@@ -107,14 +117,6 @@
             }
         }
 
-        .movie__info {
-            color: var(--on-background); ;
-            display: flex;
-            flex-direction: column;
-            gap: .7em;
-            font-size: .7rem;      ;      
-        }
-
         .movie__details {
             gap: 1em;
         }
@@ -128,7 +130,6 @@
 
         .movie__btns {
             display: flex;
-            flex-grow: 1;
             align-items: end;
             padding-bottom: .2em;
         }

@@ -85,6 +85,7 @@ const ListMenu = () => {
         
         // Refresh the list and add event listeners for closing it
         const { movieid, movietitle } = target.dataset
+
         refresh(lists, movieid, movietitle)
         if (menuState != 1) {
             menuState = 1
@@ -143,9 +144,7 @@ const ListMenu = () => {
         }
     }
 
-    // Set the position of the menu relative to the click. This is the cool thing about modules,
-    // it's easier to position as I can just use 'node' to refer to itself (node is the html node 
-    // we create when the module is loaded, it's near the bottom of the module)
+    // Set the position of the menu relative to the click
     const positionMenu = e => {
         let posClick = getPosition(e)
         let posClickX = posClick.x
@@ -157,19 +156,38 @@ const ListMenu = () => {
         let windowWidth = window.innerWidth;
         let windowHeight = window.innerHeight;
 
-        if (windowWidth - posClickX < menuWidth) {
-            node.style.left = windowWidth - menuWidth + "px"
-        }
-        else {
-            node.style.left = posClickX + "px"
-        }
+        let mobileQuery = window.matchMedia('(min-width: 500px)')
 
-        if (windowHeight - posClickY < menuHeight) {
-            node.style.top = windowHeight - menuHeight + "px"
+        // console.log(`${posClickX}, ${posClickY}, ${menuWidth}, ${menuHeight}, ${windowWidth}, ${windowHeight}`)
+        // console.log(`posClickX: ${posClickX}`)
+        // console.log(`posClickY: ${posClickY}`)
+        // console.log(`menuWidth: ${menuWidth}`)
+        // console.log(`menuHeight: ${menuHeight}`)
+        // console.log(`windowWidth: ${windowWidth}`)
+        // console.log(`windowHeight: ${windowHeight}`)
+        
+        if (mobileQuery.matches) {
+            console.log('rendering for dekstop')
+            if (windowWidth - posClickX < menuWidth) {
+                node.style.left = windowWidth - menuWidth + "px"
+            }
+            else {
+                node.style.left = posClickX + "px"
+            }
+    
+            if (windowHeight - posClickY < menuHeight) {
+                node.style.top = windowHeight - menuHeight + "px"
+            }
+            else {
+                node.style.top = posClickY + "px"
+            }
         }
         else {
-            node.style.top = posClickY + "px"
+            console.log('rendering for mobile')
+            node.style.top = 0;
+            node.style.left = 0;
         }
+        
     }
 
     // Add the movie  to the relevant list, calls function in the db.js module, takes

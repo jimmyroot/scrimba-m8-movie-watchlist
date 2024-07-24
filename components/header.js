@@ -61,10 +61,10 @@ const Header = () => {
             nav = `
                 <ul class="header__menu" id="menu">
                     <li class="nav__item">
-                        <a href="/findmovies" class="nav__link" data-type="navigate">Find Movies</a>
+                        <a href="/findmovies" class="nav__link ${route === '/findmovies' ? 'nav__link--active' : ''}" data-type="navigate">Find Movies</a>
                     </li>
                     <li class="nav__item">
-                        <a href="/mylists" class="nav__link" data-type="navigate">My Lists</a>
+                        <a href="/mylists" class="nav__link ${route === '/mylists' ? 'nav__link--active' : ''}" data-type="navigate">My Lists</a>
                     </li>
                     <li class="nav__item">
                         <a href="#" class="nav__link" data-type="signout">Sign out</a>
@@ -79,7 +79,7 @@ const Header = () => {
             nav = `
                 <ul class="header__menu" id="menu">
                     <li class="nav__item">
-                        <a href="/signup" class="nav__link" data-type="navigate">Sign up</a>
+                        <a href="/signup" class="nav__link ${route === '/signup' ? 'nav__link--active' : ''}" data-type="navigate">Sign up</a>
                     </li>
                     <li class="nav__item">
                         <a href="/signin" class="nav__link nav__sign-in" data-type="navigate">Sign in</a>

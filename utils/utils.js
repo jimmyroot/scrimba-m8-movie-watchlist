@@ -62,46 +62,20 @@ function splitName(name) {
     }
 }
 
+const shaveEl = el => {
+    const title = el.querySelector('.movie__title')
+    const genre = el.querySelector('.movie__genre')
+    const plot = el.querySelector('.movie__plot')
+
+    shave(plot, 80)
+    shave(genre, 20)
+    shave(title, 50)
+}
+
 const shaveEls = () => {
-    setTimeout(() => {
-        shave('.movie__plot', 80)
-        shave('.movie__genre', 20)
-        shave('.movie__title', 50)
-    }, 1000);
-    // let titles = document.querySelectorAll('.movie__title')
-    // let plots = document.querySelectorAll('.movie__plot')
-    // let genres = document.querySelectorAll('.movie__genre')
-    // let plotEls = [...plots]
-
-    // let needToShave = plotEls.some(el => el.offsetHeight >= 80)
-
-    // while (needToShave) {
-    //     shave(titles, 50)
-    //     shave(plots, 80)
-    //     shave(genres, 20)
-    //     titles = document.querySelectorAll('.movie__title')
-    //     plots = document.querySelectorAll('.movie__plot')
-    //     genres = document.querySelectorAll('.movie__genre')
-
-    //     plotEls = [...plots]
-    //     console.log(plotEls)
-    //     plotEls.forEach(el => console.log(el.offsetHeight))
-    //     needToShave = plotEls.some(el => el.offsetHeight >= 80)
-
-    //     console.log(needToShave)
-    // }
-    // Only test plots, there will never be a plot without a title, genre, etc
-    // if (plots.length > 0) {
-    //     const plotEls = [...plots]
-        
-    //     // do {
-    //     shave(titles, 50)
-    //     shave(plots, 80)
-    //     shave(genres, 20)
-    //         // plots = node.querySelectorAll('.movie__plot')
-    //     // } while (plotEls.some(el => el.offsetHeight > 80))
-        
-    // }
+    shave('.movie__plot', 80)
+    shave('.movie__genre', 20)
+    shave('.movie__title', 50)
 }
 
 const timer = ms => new Promise(res => setTimeout(res, ms))
@@ -113,5 +87,6 @@ export {
     percentageOfTrue,
     splitName,
     shaveEls,
+    shaveEl,
     timer
 }

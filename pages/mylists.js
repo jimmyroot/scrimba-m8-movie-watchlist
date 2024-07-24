@@ -1,3 +1,4 @@
+//Mylists.js — loads the logged in users lists
 import { db } from '../data/db'
 import { auth } from '../data/auth'
 import { router } from '../pages/router'
@@ -6,20 +7,7 @@ import { modalWithConfirm } from '../components/modalwithconfirm'
 
 const MyLists = async () => {
 
-    const registerEventListeners = () => {
-        node.addEventListener('click', e => {
-            handleClick(e)
-        })
-        node.addEventListener('input', e => {
-            if (e.target.classList.contains('warning')) e.target.classList.remove('warning')
-        })
-        node.addEventListener('keyup', e => {
-            if (e.code === 'Enter') {
-                validateInputAndCreateNewList()
-            }
-        })
-    }
-
+    // Click handler
     const handleClick = e => {
         const execute = {
             navigate: () => {
@@ -40,21 +28,17 @@ const MyLists = async () => {
         if (execute[type]) execute[type]()
     }
 
-    const validateInputAndCreateNewList = async () => {
-        const input = document.getElementById('input-watchlist-title')
-        const value = input.value
-        if (value) {
-            const params = {
-                uid: auth.getUser().uid,
-                title: document.getElementById('input-watchlist-title').value
-            }
-            await db.createList(params)
-        }
-        else {
-            input.classList.add('warning')
-        }
+    // Input handler
+    const handleInput = e => {
+        if (e.target.classList.contains('warning')) e.target.classList.remove('warning')
     }
 
+    // keyUp handler, run the search if Enter key is pressed
+    const handleKeyUp = e => {
+        if (e.code === 'Enter') validateInputAndCreateNewList()
+    }
+
+    // Main render function
     const render = async (lists) => {
         const html = `
             <header class="page__header">
@@ -75,6 +59,7 @@ const MyLists = async () => {
         return html
     }
 
+    // Render the html for the user's lists, or a placeholder if they have none
     const renderLists = lists => {
         
         let html = ``
@@ -83,10 +68,16 @@ const MyLists = async () => {
             html = lists.map(list => {
                 const { data, docPath } = list
                 const moviesCount = data.movies.length
+
+                // Create a new array of all the true/false (watched/unwatched) values
                 const watchedBoolArr = data.movies.reduce((watchedArr, movie) => {
                     watchedArr.push(movie.watched)
                     return watchedArr
                 }, [])
+
+                // Use the array from the last step to calculate percentage of movies watched,
+                // Use it to fill 'Watched: ' but also for the width of the progress bar on each
+                // list
                 const percentComplete = percentageOfTrue(watchedBoolArr)
 
                 return `
@@ -120,6 +111,28 @@ const MyLists = async () => {
         return html
     }
 
+    // Make sure the input field isn't empty and create a new list
+    const validateInputAndCreateNewList = async () => {
+        const input = document.getElementById('input-watchlist-title')
+        const value = input.value
+        if (value) {
+            const params = {
+                uid: auth.getUser().uid,
+                title: document.getElementById('input-watchlist-title').value
+            }
+            await db.createList(params)
+        }
+        else {
+            input.classList.add('warning')
+        }
+    }
+
+    // This listener is slightly different to the one in list.js, instead of a 
+    // document it listens to the results of a query via a querySnapshot
+    // In this case it's querying all lists that match the users UID, every time
+    // that data changes the page will refresh (basically when lists are added
+    // or deleted). To be fair, this could of been done with a manual refresh and
+    // I'm sure it would work just fine, but this seems way cooler :)
     const listenForChangesAndRefreshLists = async uid => {
         const q = db.query(db.collection(db.db, 'lists'), db.where("uid", "==", uid))
         unsubscribeFromListsListener = db.onSnapshot(q, querySnapshot => {
@@ -136,34 +149,45 @@ const MyLists = async () => {
         })
     }
 
+    // Append modal function
     const appendModal = () => {
         const modal = modalWithConfirm.get()
         node.append(modal)
     }
 
+    // Refresh the page, in this context called only by
+    // listnForChangesAndRefreshLists()
     const refresh = async (lists) => {
         node.innerHTML = await render(lists)
-
-        // Insert modal
         appendModal()
     }
 
+    // Returns the node with modal appended; we have to apend
+    // the modal here, as well as in the refresh function, because often times
+    // this page will be refreshed without 'get' being called, or
+    // get will be called when the data hasn't been refreshed...so if 
+    // we don't call in both locations, sometimes a situation occurs
+    // where the list has rendered but the modal isn't in the DOM
     const get = async () => {
         appendModal()
-
-        // We don't need to refresh as the listener is doing this for us
         return node
     }
 
+    // Initialize the node
     const node = document.createElement('main')
     node.classList.add('main')
     let unsubscribeFromListsListener = null
 
     // for any content that will use the user id, we need to use
     // onAuthState changed. E.g. here we are loading lists based on 
-    // if they belong to the logged in user ID. Unlike list.js which 
-    // only loads a list based on it's path, we don't use the user ID...so there,
-    // we don't need on authstatechanged
+    // if they belong to the logged in user ID, and we also 
+    // want the behaviour that if the user is for some reason logged out, 
+    // they will get re-directed back to the homepage. Unlike list.js which 
+    // only loads a list based on it's path, we don't use the user ID...so in
+    // that case we don't need on authstatechanged
+    // 
+    // This runs all the time after the module is imported, so only needs to be
+    // called once, here, and will refresh the data as appropriate on this page
     await auth.onAuthStateChanged(auth.get(), user => {
         if (user) {
             node.innerHTML = ``
@@ -173,7 +197,10 @@ const MyLists = async () => {
         }
     })
 
-    registerEventListeners()
+    // Add event listeners
+    node.addEventListener('click', handleClick)
+    node.addEventListener('input', handleInput)
+    node.addEventListener('keyup', handleKeyUp)
 
     return {
         get

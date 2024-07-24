@@ -1,3 +1,5 @@
+// Homepage, not much interesting stuff going on here
+
 import { router } from './router'
 
 const Home = () => {

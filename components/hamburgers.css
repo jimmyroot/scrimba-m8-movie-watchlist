@@ -7,32 +7,32 @@
  */
  
  .hamburger {
-    padding: 15px 15px;
-    display: inline-block;
-    cursor: pointer;
-    transition-property: opacity, filter;
-    transition-duration: 0.15s;
-    transition-timing-function: linear;
-    font: inherit;
-    color: inherit;
-    text-transform: none;
-    background-color: transparent;
-    border: 0;
-    margin: 0;
-    overflow: visible; }
-    .hamburger:hover {
-      opacity: 0.8; }
-    .hamburger.is-active:hover {
-      opacity: 0.8; }
-    .hamburger.is-active .hamburger-inner,
-    .hamburger.is-active .hamburger-inner::before,
-    .hamburger.is-active .hamburger-inner::after {
-      background-color: var(--on-background); }
+   padding: 15px 15px;
+   display: inline-block;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+   cursor: pointer;
+   transition-property: opacity, filter;
+   transition-duration: 0.15s;
+   transition-timing-function: linear;
+   font: inherit;
+   color: inherit;
+   text-transform: none;
+   background-color: transparent;
+   border: 0;
+   margin: 0;
+   overflow: visible; }
+  .hamburger:hover {
+    opacity: 0.8; }
+  .hamburger.is-active:hover {
+    opacity: 0.8; }
+  .hamburger.is-active .hamburger-inner,
+  .hamburger.is-active .hamburger-inner::before,
+  .hamburger.is-active .hamburger-inner::after {
+    background-color: var(--on-background); }
   
   .hamburger-box {
     width: 40px;
     height: 24px;
-    display: inline-block;
+    display: block;
     position: relative; }
   
   .hamburger-inner {

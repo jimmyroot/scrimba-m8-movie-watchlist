@@ -1,15 +1,14 @@
-.context-menu {
+.context-menu {    
     background-color: var(--surface);
     color: var(--on-surface);
-    width: 102%;
-    height: 102%;
-    min-width: 102;
-    margin: 0;
-    padding: 1em;
-    font-size: 2rem;
+    min-width: 100%;
+    min-height: 100%;
+    padding: 2.2em .5em 0 .5em;
+    font-size: 1.5rem;
     position: fixed;
     display: none;
-    z-index: 100;
+    z-index: 200;
+    margin: 0;
 
     .context-menu__watchlists {
         list-style-type: none;
@@ -73,10 +72,11 @@
             }
         }
         & {
-            position: absolute;
+            position: fixed;
             width: auto;
             height: auto;
             min-width: 200px;
+            min-height: auto;
             padding: .4em;
             font-size: .9rem;
             border-radius: 5px;

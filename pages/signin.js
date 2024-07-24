@@ -1,29 +1,19 @@
+// signin.js — Sign in page 
+
 import { auth } from '../data/auth'
 import * as utils from '../utils/utils'
 import { setInputState, validateForm } from '../utils/forms'
+import { modal } from '../components/modal'
 
 const SignIn = () => {
 
-    const registerEventListeners = () => {
-        node.addEventListener('click', e => {
-            handleClick(e)
-        })
-        node.addEventListener('input', e => {
-            validateInput(e.target)
-        })
-    }
-
+    // Click handlers
     const handleClick = e => {
         const execute = {
             'signin': async () => {
                 e.preventDefault()
                 const form = e.target.closest('form')
-                if (validateForm(form, validateInput)) {
-                    node.classList.add('spinner', 'dimmed')
-                    const email = document.getElementById('login-email').value
-                    const password = document.getElementById('login-password').value
-                    await auth.fbSignIn(email, password)
-                }
+                if (form) handleSignIn(form)
             },
             'signinwithgoogle': () => {
                 auth.signInWithGoogle()
@@ -37,6 +27,7 @@ const SignIn = () => {
         if (execute[type]) execute[type]()
     }
 
+    // Page content
     const render = () => {
         const html = `
             <section class="page__container page__container-small">
@@ -69,10 +60,16 @@ const SignIn = () => {
                </div>
             </section>
         `
+        
         return html
     }
 
+    // Validate input fields
     const validateInput = input => {
+
+        // Object literal containing our validation rules, so 
+        // we can call validate[input-id]() to run the validation, 
+        // very convenient!!!
         const validate = {
             'login-email': () => {
                 valid = loginEmail && utils.validateEmail(loginEmail) ? true : false
@@ -90,6 +87,8 @@ const SignIn = () => {
 
         const { id } = input
         const form = input.closest('form')
+        // This is a slick way to convert the form fields/values into a nice 
+        // object we can use destructuring on
         const formData = Object.fromEntries(Object.values(form).map(el => [el.name, el.value]))
         const el = node.querySelector(`#${id}`)
         let valid = null
@@ -98,16 +97,37 @@ const SignIn = () => {
 
         const { 'login-email': loginEmail, 'login-password': loginPassword } = formData
 
+        // Check if we have a validation rule for the input's id; if so run the validation
         if (validate[id]) validate[id]()
 
+        // make a little object with error info, we can also reset the 
+        // validation state (e.g. remove all visual indicators)
         let errPayload = {
             resetState: resetState,
             valid: valid,
             msg: msg,
         }
+
+        // call setInputState with an element to work on, and 
+        // the details of the err or not 
         setInputState(el, errPayload)
     }
 
+    const handleSignIn = async form => {
+        if (window.navigator.onLine === true) {
+            if (validateForm(form, validateInput)) {
+                console.log('validated')
+                node.classList.add('spinner', 'dimmed')
+                const email = document.getElementById('login-email').value
+                const password = document.getElementById('login-password').value
+                await auth.fbSignIn(email, password)
+            }
+        } else {
+            if (modal) modal.show('You appear to be offline. Please re-connect and try again.')
+        } 
+    }
+
+    // Update this page, remove a spinner if there's one present
     const refresh = () => {
         if (node.classList.contains('spinner')) node.classList.remove('spinner', 'dimmed')
         node.innerHTML = render()
@@ -115,12 +135,17 @@ const SignIn = () => {
 
     const get = () => {
         refresh()
+        node.append(modal.get())
         return node
     }
 
+    // Init module
     const node = document.createElement('main')
-    registerEventListeners()
     node.classList.add('main')
+
+    // Add listeners
+    node.addEventListener('click', handleClick)
+    node.addEventListener('input', e => validateInput(e.target))
 
     return {
         get

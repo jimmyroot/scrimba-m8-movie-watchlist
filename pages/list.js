@@ -1,3 +1,5 @@
+// List.js - renders all the movies in given list
+
 import { db } from '../data/db'
 import { shaveEls } from '../utils/utils'
 import { modalWithConfirm } from '../components/modalwithconfirm'
@@ -6,6 +8,7 @@ import blankPosterUrl from '../assets/poster-placeholder.png'
 
 const List = async () => {
 
+    // Click handler, these are all self explanatory
     const handleClick = e => {
         const execute = {
             back: () => {
@@ -15,16 +18,12 @@ const List = async () => {
             removemovie: async () => {
                 const { listPath } = e.target.closest('ul').dataset
                 const { movieId, movieTitle } = e.target.dataset
-
-                if (listPath && movieId) {
-                    const result = (await modalWithConfirm.show(`Really remove '${movieTitle}'?`)) === 'yes' ? true : false
-                    if (result) await db.removeMovieFromList(listPath, movieId)
-                }
+                removeMovie(listPath, movieId, movieTitle)          
+                
             },
             togglewatched: async () => {
                 const { listPath } = e.target.closest('ul').dataset
                 const { movieId } = e.target.dataset
-                console.log(listPath, movieId)
                 await db.toggleMovieWatched(listPath, movieId)  
             }
         }
@@ -54,28 +53,33 @@ const List = async () => {
         return html
     }
 
+    // Render movies, or a placeholder if none exist
     const renderMoviesForList = async (arrMovieIDs, listPath) => {
         const moviesFromList = await db.getMoviesFromList(listPath)
         
         let html = ``
 
         if (arrMovieIDs.length > 0) {
+            // Get the movie data (this all comes from our own database, no more calls to OMDB)
             const movieData = await db.getMovies(arrMovieIDs)
 
+            // Map over the movieData array
             html = movieData.map(movie => {
                 const { Title, Runtime, Genre, Plot, Poster, imdbID } = movie
                 const currentMovieFromUsersList = moviesFromList.find(movieFromList => movieFromList.imdbID === movie.imdbID)
 
-                // Catch blank poster
+                // Catch blank poster and set appropriate URL
                 const posterUrl = Poster === 'N/A' ? blankPosterUrl : Poster
 
-                // Set the rating
+                // Set the rating if it exists else leave as NA
                 let Rating = 'N/A'
                 if (movie.Ratings[0]) {
                     Rating = movie.Ratings[0].Value
                 }
 
-                // Set up the buttons
+                // Render the buttons, this could be done on the fly inside the main render but
+                // feels nicer sorting the buttons first then adding them to the rest of the 
+                // html
                 const watched = currentMovieFromUsersList.watched
 
                 const watchedBtn = `
@@ -98,7 +102,7 @@ const List = async () => {
                         <span>IMDb</span>
                     </a>
                 `
-
+                // Return the html for this movie
                 return `    
                         <li class="movie__card">
                             <img class="movie__thumbnail" src="${posterUrl}" alt="Poster for the movie ${Title}">
@@ -136,6 +140,18 @@ const List = async () => {
         return html
     }
 
+    // Remove a single movie, called from handleClick
+    const removeMovie = async (listPath, movieId, movieTitle) => {
+        if (listPath && movieId) {
+            const result = (await modalWithConfirm.show(`Really remove '${movieTitle}'?`)) === 'yes' ? true : false
+            if (result) await db.removeMovieFromList(listPath, movieId)
+        }
+    }
+
+    // This function ultimately drives this page, it initializes an 'onSnapshot' listener
+    // that fires every time thee data in the references document (a watchlist) changes
+    // In this way every time we remove a movie, or toggle the watched status, it 
+    // triggers a re-render of the page
     const listenForChangesAndRefreshList = async listPath => {
         const listDoc = db.doc(db.db, listPath)
 
@@ -150,12 +166,25 @@ const List = async () => {
         })
     }
 
+    // Similar to find movies, but we're getting our list of movies from 
+    // the referenced list rather than the 'currentSearch' results
     const refresh = async (listPath, title, arrMovieIDs) => {
         const html = await render(listPath, title, arrMovieIDs)
         node.innerHTML = html
         node.querySelector('#page-section').after(modalWithConfirm.get())
+
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                shaveEls()
+            })
+        })
     }
 
+    // The get function is slightly different from the other modules, here
+    // we make sure that there is an instance of our snapshot listener
+    // running. To make sure we don't add multiple listeners, we assign the
+    // result to a variable in this module, then check it before we
+    // re-initialize ('get' will be called each time the user navigates to a list)
     const get = async (user, listPath) => {
         node.innerHTML = ``
 
@@ -177,22 +206,13 @@ const List = async () => {
     
     const node = document.createElement('main')
     node.classList.add('main')
+
+    // Event listeners
     node.addEventListener('click', handleClick)
 
     // Fire the shave function whenever the node changes size
-    const resizeObserver = new ResizeObserver(entries => shaveEls(node))
+    const resizeObserver = new ResizeObserver(entries => shaveEls())
     resizeObserver.observe(node)
-
-    // Fire the shave function when node is modified (i.e. a list is loaded)
-    const mutationObserver = new MutationObserver((mutationList, observer) => {
-        for (const mutation of mutationList) {
-            if (mutation.type === 'childList') {
-                shaveEls(node)
-            }
-        }
-    })
-
-    mutationObserver.observe(node, {attributes: false, childList: true, subtree: false})
 
     return {
         get

@@ -1,4 +1,5 @@
 .header {
+
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -116,8 +117,8 @@
     }
 
     .hamburger {
-        padding: 0;
         display: block;
+        transform: scale(0.9);
     }
 
     @media (min-width: 640px) {
@@ -141,11 +142,14 @@
                     font-size: .9em;
                 }
             }
+
+            .header__avatar-li {
+                margin: 0;
+            }
         }
 
         .hamburger {
             display: none;
-            transform: scale(0.8);
             z-index: 50;
         }
     }

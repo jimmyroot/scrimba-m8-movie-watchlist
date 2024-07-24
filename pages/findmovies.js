@@ -1,22 +1,35 @@
+// Find movies page
+
 import { omdb } from '../data/omdb'
 import { db } from '../data/db'
 import { listMenu } from '../components/listmenu'
 import { modal } from '../components/modal'
 import blankPosterUrl from '../assets/poster-placeholder.png'
 import imgStarURL from '../assets/goldstar.svg'
-import { shaveEls } from '../utils/utils'
+import { shaveEls, shaveEl } from '../utils/utils'
 
 const Findmovies = () => {
 
+    // Event handler
     const handleClick = e => {
         const execute = {
             submit: () => {
-                validateInputAndSubmitSeach()
+                if (window.navigator.onLine === true) {
+                    validateInputAndSubmitSearch()
+                }
+                else {
+                    if (modal) modal.show(`It looks like you've gone offline! Please re-connect and try again.`)
+                }
             },
             add: async () => {
                 if (lists.length > 0) {
                     if (e.target.dataset.movieid) {
+                        // Open context menu, pass the users lists and 
+                        // the event target (the button that the user clicked)
+                        // so we can keep it 'active' with a visual style
+                        // until the menu is closed
                         listMenu.handleOpenMenu(lists, e.target)
+                        // Position the context menu
                         listMenu.positionMenu(e)
                     }
                 }
@@ -31,7 +44,9 @@ const Findmovies = () => {
         if (execute[type]) execute[type]()
     }
 
-    const validateInputAndSubmitSeach = () => {
+    // Make sure the search field contains something and if yes,
+    // add the spinner and submit the search
+    const validateInputAndSubmitSearch = () => {
         const input = document.getElementById('find-movies-input')
         const value = input.value
         if (value) {
@@ -44,7 +59,9 @@ const Findmovies = () => {
         }
     }
 
+    // Render the page
     const render = async () => {
+        // Render results in the currentSearch object
         const resultsList = await renderResults(currentSearch)
 
         const html = `
@@ -65,6 +82,7 @@ const Findmovies = () => {
         return html
     }
 
+    // Render the results of current search, or a placeholder
     const renderResults = async currentSearch => {
         let html = ``
 
@@ -117,9 +135,13 @@ const Findmovies = () => {
             `]
         }
         
+        // Use spreadsyntax because promise.all returns an bunch of arrays
+        // the contents of which we must extract, spread syntax is an 
+        // amazingly succint way of doing so, I love it
         return [...html].join('')
     }
 
+    // Submit the search results to the omdb module
     const getResults = async value => {
         try {
             if (!value) throw 'No search term supplied'
@@ -132,17 +154,32 @@ const Findmovies = () => {
         }
     }
 
+    // No explanation needed
     const removeWarning = e => {
         if (e.target.classList.contains('warning')) e.target.classList.remove('warning')
     }
     
+    // Refresh this page, we perform the main render and then
+    // append the html for the context menu and modal. We also 
+    // use requestAnimationFrame to synchronize the firing of the 
+    // shaveEls function with the window re-paint (else it fires 
+    // too early). The shave function is how the movie plot text
+    // stays within 3 lines with the ellipsis appended
     const refresh = async () => {
         node.innerHTML = await render()
         node.appendChild(listMenu.get())
         node.appendChild(modal.get())
-        shaveEls()
+
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                shaveEls()
+            })
+        })        
     }
 
+    // A bit more setup to do in this module, when it's called
+    // We configure a few parameters that are needed for the 
+    // page's contents to render
     const get = async user => {
         uid = user.uid
         lists = await db.getListsForUser(uid)
@@ -157,25 +194,21 @@ const Findmovies = () => {
     
     const node = document.createElement('main')
     node.classList.add('main')
+
+    // Add event listeners
     node.addEventListener('click', handleClick)
     node.addEventListener('input', removeWarning)
     node.addEventListener('keyup', e => {
         if (e.code === 'Enter') {
-            validateInputAndSubmitSeach()
+            validateInputAndSubmitSearch()
         }
     })
 
-    // Shave on node resize
-    const resizeObserver = new ResizeObserver(entries => shaveEls(node))
+    // Shave on node resize, pretty much does what you'd think...
+    // When the window is resized it makes sure a few elements'
+    // text is trimmed to stay within boundaries
+    const resizeObserver = new ResizeObserver(() => shaveEls())
     resizeObserver.observe(node)
-
-    // Shave on node update
-    // const mutationObserver = new MutationObserver((mutationList, observer) => {
-    //     console.log('mutated')
-    //     shaveEls(node)
-    // })
-
-    // mutationObserver.observe(node, {attributes: false, childList: true, subtree: false})
 
     return {
         get

@@ -74,7 +74,7 @@ const Auth = () => {
     }
 
     // Initiate sign in with Google account
-    const signInWithGoogle =  async showError  => {
+    const signInWithGoogle =  async showError => {
         try {
             const credential = await signInWithPopup(auth, google)
             const user = credential.user
@@ -154,8 +154,6 @@ const Auth = () => {
     const auth = getAuth(db.get())
     const google = new GoogleAuthProvider()
     const github = new GithubAuthProvider()
-
-    // watchAuthState()
 
     return {
         get,
