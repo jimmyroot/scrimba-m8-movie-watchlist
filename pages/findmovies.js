@@ -12,9 +12,9 @@ const Findmovies = () => {
   // Event handler
   const handleClick = (e) => {
     const execute = {
-      submit: () => {
+      submit: async () => {
         if (window.navigator.onLine === true) {
-          validateInputAndSubmitSearch()
+          await validateInputAndSubmitSearch()
         } else {
           if (modal)
             modal.show(
@@ -48,7 +48,7 @@ const Findmovies = () => {
 
   // Make sure the search field contains something and if yes,
   // add the spinner and submit the search
-  const validateInputAndSubmitSearch = () => {
+  const validateInputAndSubmitSearch = async () => {
     const input = document.getElementById('find-movies-input')
     const value = input.value
     if (value) {
@@ -56,7 +56,7 @@ const Findmovies = () => {
         .querySelector('#page-results')
         .classList.add('spinner', 'page__results--dimmed')
       const { value } = document.querySelector('#find-movies-input')
-      getResults(value)
+      await getResults(value)
     } else {
       input.classList.add('warning')
     }
@@ -85,64 +85,74 @@ const Findmovies = () => {
     return html
   }
 
-  // Render the results of current search, or a placeholder
-  const renderResults = async (currentSearch) => {
-    let html = ``
+  // Retrieve the detailed information for all movies in the search
+  // I was previusly using Promise.all for this, but turns out that can overload
+  // resources and it was actually returning a lot slower than this
+  const getFullMovieData = async () => {
+    let arr = []
+    await (async () => {
+      if (currentSearch) {
+        currentSearch.forEach(async result => {
+          arr.push(await omdb.getMovieByIMDBId(result.imdbID))
+          console.log('pushing')
+        })
+      }
+    })()
+    return arr
+  }
 
-    if (currentSearch) {
+  // Render the results of current search, or a placeholder
+  const renderResults = async () => {
+    let html = ``
+    fullResultsData = await getFullMovieData()
+    console.log('rendering')
+    if (fullResultsData.length > 0) {
       // Use promise.all to wait for all the calls to finish in the map loop
-      html = await Promise.all(
-        currentSearch.map(async (movie) => {
-          const fullMovieData = await omdb.getMovieByIMDBId(movie.imdbID)
-          const { Title, Year, Genre, Plot, Poster, imdbID } = fullMovieData
+      html = fullResultsData.map((movie) => {
+          const { Title, Year, Genre, Plot, Poster, imdbID } = movie
 
           // Catch blank poster
           const posterUrl = Poster === 'N/A' ? blankPosterUrl : Poster
 
           // Set rating
           let Rating = ''
-          if (fullMovieData.Ratings[0]) {
-            Rating = fullMovieData.Ratings[0].Value
+          if (movie.Ratings[0]) {
+            Rating = movie.Ratings[0].Value
           }
 
           return `
-                        <li class="movie__card">
-                            <img class="movie__thumbnail" src="${posterUrl}" alt="Poster for the movie ${Title}">
-                            <div class="movie__info">
-                                <div class="movie__header">
-                                    <h3 class="movie__title">${Title}</h3>
-                                    <p><img class="movie__star" src="${imgStarURL}"><span>${Rating}</span></p>
-                                </div>
-                                <div class="movie__details">
-                                    <span>${Year}</span>• 
-                                    <span class="movie__genre">${Genre}</span>
-                                </div>
-                                <p class="movie__plot">${Plot}</p>
-                                <div class="movie__btns">
-                                    <button class="movie__btn movie__add-btn" data-type="add" data-movieid="${imdbID}" data-movietitle="${Title}"><i class='bx bx-add-to-queue bx-sm'></i> <span>Add to list</span></button>
-                                </div>
-                            </div>
-                        </li>
-                    `
-        })
-      )
-    } else {
-      html = [
+            <li class="movie__card">
+                <img class="movie__thumbnail" src="${posterUrl}" alt="Poster for the movie ${Title}">
+                <div class="movie__info">
+                    <div class="movie__header">
+                        <h3 class="movie__title">${Title}</h3>
+                        <p><img class="movie__star" src="${imgStarURL}"><span>${Rating}</span></p>
+                    </div>
+                    <div class="movie__details">
+                        <span>${Year}</span>• 
+                        <span class="movie__genre">${Genre}</span>
+                    </div>
+                    <p class="movie__plot">${Plot}</p>
+                    <div class="movie__btns">
+                        <button class="movie__btn movie__add-btn" data-type="add" data-movieid="${imdbID}" data-movietitle="${Title}"><i class='bx bx-add-to-queue bx-sm'></i> <span>Add to list</span></button>
+                    </div>
+                </div>
+            </li>
         `
-                <li class="page__empty">
-                    <p><i class='bx bx-movie-play bx-lg'></i></p>
-                    <p>
-                        Enter a movie title and hit search to get started!
-                    </p>
-                </li>
-            `,
-      ]
+        }).join('')
+    } else {
+      html = 
+        `
+            <li class="page__empty">
+                <p><i class='bx bx-movie-play bx-lg'></i></p>
+                <p>
+                    Enter a movie title and hit search to get started!
+                </p>
+            </li>
+        `
     }
 
-    // Use spreadsyntax because promise.all returns an bunch of arrays
-    // the contents of which we must extract, spread syntax is an
-    // amazingly succint way of doing so, I love it
-    return [...html].join('')
+    return html
   }
 
   // Submit the search results to the omdb module
@@ -201,14 +211,15 @@ const Findmovies = () => {
   // page's contents to render
   const get = async (user) => {
     uid = user.uid
-    lists = await db.getListsForUser(uid)
     currentSearch = null
+    lists = await db.getListsForUser(uid)
     await refresh()
     return node
   }
 
   let uid = null
   let currentSearch = null
+  let fullResultsData = null
   let lists = null
 
   const node = document.createElement('main')
