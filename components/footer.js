@@ -7,31 +7,30 @@
 // of node.
 
 const Footer = () => {
-
-    const render = () => {
-        const html = `
+  const render = () => {
+    const html = `
             <p>Reel Talk</p>
             <p>Copyright Jimmy ©2024</p>
         `
-        
-        return html
-    }
 
-    const refresh = () => {
-        node.innerHTML = render()
-    }
+    return html
+  }
 
-    const get = () => {
-        refresh()
-        return node
-    }
+  const refresh = () => {
+    node.innerHTML = render()
+  }
 
-    const node = document.createElement('footer')
-    node.classList.add('footer')
+  const get = () => {
+    refresh()
+    return node
+  }
 
-    return {
-        get
-    }
+  const node = document.createElement('footer')
+  node.classList.add('footer')
+
+  return {
+    get,
+  }
 }
 
 export const footer = Footer()

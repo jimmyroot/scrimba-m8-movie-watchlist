@@ -7,42 +7,47 @@
 @import './forms.css';
 
 #app {
-    background-color: var(--background);
-    height: 100vh;
-    min-height: 400px;
-    display: flex;
-    flex-direction: column;
-    min-width: 400px; 
-    overflow-y: scroll;
-    scrollbar-gutter: stable;
-    position: relative;
+  background-color: var(--background);
+  height: 100vh;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  min-width: 400px;
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+  position: relative;
 }
 
 .main {
-    flex-grow: 1;
+  flex-grow: 1;
 }
 
 dialog {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .has-no-events {
-    & * {
-        pointer-events: none;
-    }
+  & * {
+    pointer-events: none;
+  }
 }
 
-h1, h2, h3, h4, h5, p {
-    color: var(--on-background);
+h1,
+h2,
+h3,
+h4,
+h5,
+p {
+  color: var(--on-background);
 }
 
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-    -webkit-transition: "color 9999s ease-out, background-color 9999s ease-out";
-    -webkit-transition-delay: 9999s;
+  -webkit-transition: 'color 9999s ease-out, background-color 9999s ease-out';
+  -webkit-transition-delay: 9999s;
 }

@@ -1,93 +1,91 @@
-.context-menu {    
-    background-color: var(--surface);
-    color: var(--on-surface);
-    min-width: 100%;
-    min-height: 100%;
-    padding: 2.2em .5em 0 .5em;
-    font-size: 1.5rem;
-    position: fixed;
-    display: none;
-    z-index: 200;
+.context-menu {
+  background-color: var(--surface);
+  color: var(--on-surface);
+  min-width: 100%;
+  min-height: 100%;
+  padding: 2.2em 0.5em 0 0.5em;
+  font-size: 1.5rem;
+  position: fixed;
+  display: none;
+  z-index: 200;
+  margin: 0;
+
+  .context-menu__watchlists {
+    list-style-type: none;
     margin: 0;
+    padding: 0;
 
+    .context-menu__list {
+      display: flex;
+      gap: 0.4em;
+      align-items: center;
+      border-radius: 5px;
+      padding: 0.4em 0.5em;
+
+      & * {
+        pointer-events: none;
+      }
+
+      &:hover {
+        background-color: var(--surface-highlight);
+        color: var(--on-surface);
+      }
+
+      &:active {
+        filter: brightness(0.9);
+      }
+
+      i {
+        font-size: 2.6rem;
+      }
+    }
+  }
+
+  .context-menu__close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: var(--text-lighter);
+    font-size: 2.4rem;
+    cursor: pointer;
+    opacity: 0.8;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  @media (min-width: 500px) {
     .context-menu__watchlists {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
+      .context-menu__list {
+        padding: 0.8em 0.5em;
 
-        .context-menu__list {
-            display: flex;
-            gap: .4em;
-            align-items: center;
-            border-radius: 5px;
-            padding: .4em .5em;
-
-            & * {
-                pointer-events: none;
-            }
-
-            &:hover {
-                background-color: var(--surface-highlight);
-                color: var(--on-surface);
-            }
-
-            &:active {
-                filter: brightness(.9)
-            }
-
-            i {
-                font-size: 2.6rem;
-            }
+        i {
+          font-size: 1.4rem;
         }
+      }
+    }
+    & {
+      position: fixed;
+      width: auto;
+      height: auto;
+      min-width: 200px;
+      min-height: auto;
+      padding: 0.4em;
+      font-size: 0.9rem;
+      border-radius: 5px;
     }
 
     .context-menu__close-btn {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        color: var(--text-lighter);
-        font-size: 2.4rem;
-        cursor: pointer;
-        opacity: 0.8;
-
-        &:hover {
-            opacity: 1;
-        }
-
-        &:active {
-            transform: scale(0.95);
-        }
+      display: none;
     }
-
-    @media (min-width: 500px) {
-
-        .context-menu__watchlists {
-            
-            .context-menu__list {
-                padding: .8em .5em;
-
-                i {
-                    font-size: 1.4rem;
-                }
-            }
-        }
-        & {
-            position: fixed;
-            width: auto;
-            height: auto;
-            min-width: 200px;
-            min-height: auto;
-            padding: .4em;
-            font-size: .9rem;
-            border-radius: 5px;
-        }
-
-        .context-menu__close-btn {
-            display: none;
-        }
-    }
+  }
 }
 
 .block {
-    display: block;
+  display: block;
 }
