@@ -75,6 +75,18 @@ const shaveEls = () => {
   shave('.movie__title', 50)
 }
 
+function adjustPercentages(arr) {
+  // Find the minimum and maximum values in the array
+  const min = Math.min(...arr);
+  const max = Math.max(...arr);
+
+  // Calculate the range
+  const range = max - min;
+
+  // Adjust each value in the array to its relative value between 0 and 100 percent
+  return arr.map(value => ((value - min) / range) * 100);
+}
+
 // A little timer function to delay execution on the main thread
 const timer = (ms) => new Promise((res) => setTimeout(res, ms))
 
@@ -86,4 +98,5 @@ export {
   splitName,
   shaveEls,
   timer,
+  adjustPercentages
 }

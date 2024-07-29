@@ -43,7 +43,7 @@
 }
 
 .page__results {
-  
+
   .movie__list {
     list-style-type: none;
     display: grid;
@@ -248,9 +248,7 @@
 }
 
 .page__results--dimmed {
-  & * {
-    opacity: 0.6;
-  }
+  opacity: .1;
 }
 
 .page__empty {
@@ -276,6 +274,6 @@
 
 .dimmed {
   & * {
-    opacity: 0.4;
+    opacity: .4;
   }
 }

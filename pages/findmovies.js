@@ -4,9 +4,10 @@ import { omdb } from '../data/omdb'
 import { db } from '../data/db'
 import { listMenu } from '../components/listmenu'
 import { modal } from '../components/modal'
+import { shaveEls, adjustPercentages } from '../utils/utils'
+import { progressBar } from '../components/progressbar'
 import blankPosterUrl from '../assets/poster-placeholder.png'
 import imgStarURL from '../assets/goldstar.svg'
-import { shaveEls } from '../utils/utils'
 
 const Findmovies = () => {
   // Event handler
@@ -54,7 +55,9 @@ const Findmovies = () => {
     if (value) {
       node
         .querySelector('#page-results')
-        .classList.add('spinner', 'page__results--dimmed')
+        .classList.add('page__results--dimmed')
+      node
+        .append(progressBar.get())
       const { value } = document.querySelector('#find-movies-input')
       await getResults(value)
     } else {
@@ -86,29 +89,47 @@ const Findmovies = () => {
   }
 
   // Retrieve the detailed information for all movies in the search
-  // I was previusly using Promise.all for this, but turns out that can overload
-  // resources and it was actually returning a lot slower than this
-  const getFullMovieData = async () => {
+  // I was previusly using Promise.all for this, but had a few
+  // performance issues with it (maybe too many http requests?)
+  const getFullResultsData = async () => {
     let arr = []
-    await (async () => {
-      if (currentSearch) {
-        currentSearch.forEach(async result => {
-          arr.push(await omdb.getMovieByIMDBId(result.imdbID))
-          console.log('pushing')
-        })
+    let progbar = document.querySelector('.progress-bar')
+
+  
+    // We use a for loop because it ensures a) the code executes sequentially
+    // and b) it executes in the context of it's parent function and so
+    // 'await' will work as expected
+    if (currentSearch) {
+      let increments = []
+    
+      // Calculate adjusted increments so the progress bar shows a more
+      // accurate representation of progress
+      for (const [index, result] of currentSearch.entries()) {
+        increments.push((index / currentSearch.length).toFixed(2))
       }
-    })()
+      const adjustedIncrements = adjustPercentages(increments)
+
+      // Loop through the search, retrieve full movie info, and 
+      // update the loading bar
+      for (const [index, result] of currentSearch.entries()) {
+          const movie = await omdb.getMovieByIMDBId(result.imdbID)
+          arr.push(movie)
+        
+          progbar.value = adjustedIncrements[index]/100
+      }        
+    }
+
     return arr
   }
 
   // Render the results of current search, or a placeholder
   const renderResults = async () => {
+    const allData = await getFullResultsData()
     let html = ``
-    fullResultsData = await getFullMovieData()
-    console.log('rendering')
-    if (fullResultsData.length > 0) {
+    
+    if (allData.length > 0) {
       // Use promise.all to wait for all the calls to finish in the map loop
-      html = fullResultsData.map((movie) => {
+      html = allData.map((movie) => {
           const { Title, Year, Genre, Plot, Poster, imdbID } = movie
 
           // Catch blank poster
@@ -171,6 +192,7 @@ const Findmovies = () => {
         )
       }
       await refresh()
+    
     } catch (e) {
       console.error(`Unable to get results because: ${e}`)
     }
@@ -219,7 +241,6 @@ const Findmovies = () => {
 
   let uid = null
   let currentSearch = null
-  let fullResultsData = null
   let lists = null
 
   const node = document.createElement('main')
@@ -241,7 +262,7 @@ const Findmovies = () => {
   resizeObserver.observe(node)
 
   return {
-    get,
+    get
   }
 }
 

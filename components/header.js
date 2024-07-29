@@ -119,7 +119,7 @@ const Header = () => {
 
     // Use an if, because for some pages this action won't be valid, so this
     // is easier than coding each individual case
-    if (navLinkForCurrentPage)
+    if (navLinkForCurrentPage && navLinkForCurrentPage.pathname !== '/signin')
       navLinkForCurrentPage.classList.add('nav__link--active')
   }
 

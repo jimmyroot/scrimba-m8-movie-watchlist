@@ -9,9 +9,9 @@
 const Footer = () => {
   const render = () => {
     const html = `
-            <p>Reel Talk</p>
-            <p>Copyright Jimmy ©2024</p>
-        `
+      <p>Reel Talk</p>
+      <p>Copyright Jimmy ©2024</p>
+    `
 
     return html
   }
@@ -29,7 +29,7 @@ const Footer = () => {
   node.classList.add('footer')
 
   return {
-    get,
+    get
   }
 }
 

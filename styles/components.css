@@ -1,6 +1,7 @@
 @import '../components/header.css';
 @import '../components/footer.css';
 @import '../components/hamburgers.css';
+@import '../components/progressbar.css';
 
 @keyframes spinner {
   to {
@@ -23,3 +24,4 @@
   border-top-color: var(--primary);
   animation: spinner 0.3s linear infinite;
 }
+

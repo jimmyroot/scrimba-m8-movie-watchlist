@@ -23,12 +23,12 @@ const Modal = () => {
   // Render the dialog inner html with whatever message we passed in
   const render = (msg) => {
     let html = `
-            <div id="modal__inner" class="modal__inner">
-                <p><i class='bx bxs-error-circle bx-md'></i></p>
-                <p class="modal__p">${msg}</p>
-                <button class="modal__btn" data-type="hide">Close</button>
-            </div>
-        `
+      <div id="modal__inner" class="modal__inner">
+        <p><i class='bx bxs-error-circle bx-md'></i></p>
+        <p class="modal__p">${msg}</p>
+        <button class="modal__btn" data-type="hide">Close</button>
+      </div>
+    `
     return html
   }
 
