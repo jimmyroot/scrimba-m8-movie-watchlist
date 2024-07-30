@@ -32,19 +32,22 @@
 } 
  
 progress {
+    box-sizing: content-box;
     --_track-size: min(10px, 1ex);
     --_radius: 1e3px;
 
      /* reset  */
     appearance: none;
-    border: none;
     position: relative;
     width: 100%;
     height: var(--_track-size);
     border-radius: var(--_radius);
     overflow: hidden;
     color-scheme: light dark;
- }
+    border: none;
+    background-origin: border-box;
+    animation: rotate 2s linear infinite;
+}
 
  progress[value]::-webkit-progress-value {
     background-color: var(--secondary);

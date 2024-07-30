@@ -47,24 +47,6 @@ const Findmovies = () => {
     if (execute[type]) execute[type]()
   }
 
-  // Make sure the search field contains something and if yes,
-  // add the spinner and submit the search
-  const validateInputAndSubmitSearch = async () => {
-    const input = document.getElementById('find-movies-input')
-    const value = input.value
-    if (value) {
-      node
-        .querySelector('#page-results')
-        .classList.add('page__results--dimmed')
-      node
-        .append(progressBar.get())
-      const { value } = document.querySelector('#find-movies-input')
-      await getResults(value)
-    } else {
-      input.classList.add('warning')
-    }
-  }
-
   // Render the page
   const render = async () => {
     // Render results in the currentSearch object
@@ -86,40 +68,6 @@ const Findmovies = () => {
             </section>
         `
     return html
-  }
-
-  // Retrieve the detailed information for all movies in the search
-  // I was previusly using Promise.all for this, but had a few
-  // performance issues with it (maybe too many http requests?)
-  const getFullResultsData = async () => {
-    let arr = []
-    let progbar = document.querySelector('.progress-bar')
-
-  
-    // We use a for loop because it ensures a) the code executes sequentially
-    // and b) it executes in the context of it's parent function and so
-    // 'await' will work as expected
-    if (currentSearch) {
-      let increments = []
-    
-      // Calculate adjusted increments so the progress bar shows a more
-      // accurate representation of progress
-      for (const [index, result] of currentSearch.entries()) {
-        increments.push((index / currentSearch.length).toFixed(2))
-      }
-      const adjustedIncrements = adjustPercentages(increments)
-
-      // Loop through the search, retrieve full movie info, and 
-      // update the loading bar
-      for (const [index, result] of currentSearch.entries()) {
-          const movie = await omdb.getMovieByIMDBId(result.imdbID)
-          arr.push(movie)
-        
-          progbar.value = adjustedIncrements[index]/100
-      }        
-    }
-
-    return arr
   }
 
   // Render the results of current search, or a placeholder
@@ -176,6 +124,24 @@ const Findmovies = () => {
     return html
   }
 
+  // Make sure the search field contains something and if yes,
+  // add the spinner and submit the search
+  const validateInputAndSubmitSearch = async () => {
+    const input = document.getElementById('find-movies-input')
+    const value = input.value
+    if (value) {
+      node
+        .querySelector('#page-results')
+        .classList.add('page__results--dimmed')
+      node
+        .append(progressBar.get())
+      const { value } = document.querySelector('#find-movies-input')
+      await getResults(value)
+    } else {
+      input.classList.add('warning')
+    }
+  }
+
   // Submit the search results to the omdb module
   const getResults = async (value) => {
     try {
@@ -196,6 +162,40 @@ const Findmovies = () => {
     } catch (e) {
       console.error(`Unable to get results because: ${e}`)
     }
+  }
+
+  // Retrieve the detailed information for all movies in the search
+  // I was previusly using Promise.all for this, but had a few
+  // performance issues with it (maybe too many http requests?)
+  const getFullResultsData = async () => {
+    let arr = []
+    let progbar = document.querySelector('.progress-bar')
+
+  
+    // We use a for loop because it ensures a) the code executes sequentially
+    // and b) it executes in the context of it's parent function and so
+    // 'await' will work as expected
+    if (currentSearch) {
+      let increments = []
+    
+      // Calculate adjusted increments so the progress bar shows a more
+      // accurate representation of progress
+      for (const [index, result] of currentSearch.entries()) {
+        increments.push((index / currentSearch.length).toFixed(2))
+      }
+      const adjustedIncrements = adjustPercentages(increments)
+
+      // Loop through the search, retrieve full movie info, and 
+      // update the loading bar
+      for (const [index, result] of currentSearch.entries()) {
+          const movie = await omdb.getMovieByIMDBId(result.imdbID)
+          arr.push(movie)
+          const value = adjustedIncrements[index]/100
+          progbar.value = value
+      }        
+    }
+
+    return arr
   }
 
   // No explanation needed
