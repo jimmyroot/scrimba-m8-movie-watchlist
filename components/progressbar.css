@@ -1,25 +1,26 @@
 .progress-bar__container {
-    position: fixed;
-    width: 35%;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  position: fixed;
+  width: 35%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 
-    .sr-only {
-        clip: rect(1px, 1px, 1px, 1px);
-        clip-path: inset(50%);
-        height: 1px;
-        width: 1px;
-        margin: -1px;
-        overflow: hidden;
-        padding: 0;
-        position: absolute; }
-    
-    .progress-bar:not([max])[value="1"]::before,
-    .progress-bar:progress[max="100"][value="100"]::before {
-    content: "✓";
+  .sr-only {
+    clip: rect(1px, 1px, 1px, 1px);
+    clip-path: inset(50%);
+    height: 1px;
+    width: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+  }
+
+  .progress-bar:not([max])[value='1']::before,
+  .progress-bar:progress[max='100'][value='100']::before {
+    content: '✓';
     /* color: black; */
-    
+
     position: absolute;
     inset-block: 0;
     inset-inline: auto 0;
@@ -28,32 +29,32 @@
     padding-inline-end: max(calc(var(--_track-size) / 4), 3px);
     color: white;
     font-size: calc(var(--_track-size) / 1.25);
-    }
-} 
- 
-progress {
-    box-sizing: content-box;
-    --_track-size: min(10px, 1ex);
-    --_radius: 1e3px;
-
-     /* reset  */
-    appearance: none;
-    position: relative;
-    width: 100%;
-    height: var(--_track-size);
-    border-radius: var(--_radius);
-    overflow: hidden;
-    color-scheme: light dark;
-    border: none;
-    background-origin: border-box;
-    animation: rotate 2s linear infinite;
+  }
 }
 
- progress[value]::-webkit-progress-value {
-    background-color: var(--secondary);
-    transition: inline-size .25s ease-out;
+progress {
+  box-sizing: content-box;
+  --_track-size: min(10px, 1ex);
+  --_radius: 1e3px;
+
+  /* reset  */
+  appearance: none;
+  position: relative;
+  width: 100%;
+  height: var(--_track-size);
+  border-radius: var(--_radius);
+  overflow: hidden;
+  color-scheme: light dark;
+  border: none;
+  background-origin: border-box;
+  animation: rotate 2s linear infinite;
+}
+
+progress[value]::-webkit-progress-value {
+  background-color: var(--secondary);
+  transition: inline-size 0.25s ease-out;
 }
 
 progress[value]::-webkit-progress-bar {
-    background-color: var(--surface-highlight);
+  background-color: var(--surface-highlight);
 }

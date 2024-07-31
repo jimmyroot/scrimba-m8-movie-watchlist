@@ -10,7 +10,7 @@ import logoUrl from '../assets/logo-dark.png'
 import blankProfImgUrl from '../assets/blank.png'
 
 const Header = () => {
-  const handleClick = (e) => {
+  const handleClick = e => {
     const execute = {
       hamburger: () => {
         toggleHamburger()
@@ -32,7 +32,7 @@ const Header = () => {
   }
 
   // Header render function
-  const render = async (route) => {
+  const render = async route => {
     let nav = ``
 
     // Renders nav based on logged in state, either shows logged in nav (lists, etc)
@@ -113,7 +113,7 @@ const Header = () => {
   }
 
   // Route is used to highlight the appropriate nav item
-  const refresh = async (route) => {
+  const refresh = async route => {
     node.innerHTML = await render(route)
     const navLinkForCurrentPage = node.querySelector(`[href="${route}"]`)
 
@@ -141,7 +141,7 @@ const Header = () => {
   node.addEventListener('click', handleClick)
 
   // This one is for closing the hamburger menu when the user clicks outside of it
-  document.addEventListener('click', (e) => {
+  document.addEventListener('click', e => {
     const menu = document.querySelector('.header__menu')
     if (
       !e.target.closest('.header__menu') &&

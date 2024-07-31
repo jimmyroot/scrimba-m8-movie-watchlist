@@ -9,7 +9,7 @@ const OMDB_BASE_IMG_PATH = `https://img.omdbapi.com/?apikey=${OMDB_API_KEY}&`
 const Omdb = async () => {
   // Search for movies, pass in the term. We also specify the type as
   // 'movie' otherwise the results are polluted with games, etc
-  const searchMovies = async (term) => {
+  const searchMovies = async term => {
     const path = `${OMDB_BASE_PATH}s=${term}&type=movie`
     const headers = {
       method: 'GET',
@@ -22,7 +22,7 @@ const Omdb = async () => {
   }
 
   // Get a single movie by it's ID
-  const getMovieByIMDBId = async (id) => {
+  const getMovieByIMDBId = async id => {
     const path = `${OMDB_BASE_PATH}i=${id}&type=movie`
     const headers = {
       method: 'GET',

@@ -7,7 +7,7 @@ import { modalWithConfirm } from '../components/modalwithconfirm'
 
 const MyLists = async () => {
   // Click handler
-  const handleClick = (e) => {
+  const handleClick = e => {
     const execute = {
       navigate: () => {
         const path = e.target.dataset.path.split('/')[1]
@@ -33,18 +33,18 @@ const MyLists = async () => {
   }
 
   // Input handler
-  const handleInput = (e) => {
+  const handleInput = e => {
     if (e.target.classList.contains('warning'))
       e.target.classList.remove('warning')
   }
 
   // keyUp handler, run the search if Enter key is pressed
-  const handleKeyUp = (e) => {
+  const handleKeyUp = e => {
     if (e.code === 'Enter') validateInputAndCreateNewList()
   }
 
   // Main render function
-  const render = async (lists) => {
+  const render = async lists => {
     const html = `
             <header class="page__header">
                 <div class="header__new-watchlist-input">
@@ -65,12 +65,12 @@ const MyLists = async () => {
   }
 
   // Render the html for the user's lists, or a placeholder if they have none
-  const renderLists = (lists) => {
+  const renderLists = lists => {
     let html = ``
 
     if (lists.length > 0) {
       html = lists
-        .map((list) => {
+        .map(list => {
           const { data, docPath } = list
           const moviesCount = data.movies.length
 
@@ -137,15 +137,15 @@ const MyLists = async () => {
   // that data changes the page will refresh (basically when lists are added
   // or deleted). To be fair, this could of been done with a manual refresh and
   // I'm sure it would work just fine, but this seems way cooler :)
-  const listenForChangesAndRefreshLists = async (uid) => {
+  const listenForChangesAndRefreshLists = async uid => {
     const q = db.query(
       db.collection(db.db, 'lists'),
       db.where('uid', '==', uid)
     )
-    unsubscribeFromListsListener = db.onSnapshot(q, (querySnapshot) => {
+    unsubscribeFromListsListener = db.onSnapshot(q, querySnapshot => {
       const lists = []
       if (!querySnapshot.empty) {
-        querySnapshot.forEach((doc) => {
+        querySnapshot.forEach(doc => {
           lists.push({
             docPath: doc.ref.path,
             data: doc.data(),
@@ -164,7 +164,7 @@ const MyLists = async () => {
 
   // Refresh the page, in this context called only by
   // listnForChangesAndRefreshLists()
-  const refresh = async (lists) => {
+  const refresh = async lists => {
     node.innerHTML = await render(lists)
     appendModal()
   }
@@ -195,7 +195,7 @@ const MyLists = async () => {
   //
   // This runs all the time after the module is imported, so only needs to be
   // called once, here, and will refresh the data as appropriate on this page
-  await auth.onAuthStateChanged(auth.get(), (user) => {
+  await auth.onAuthStateChanged(auth.get(), user => {
     if (user) {
       node.innerHTML = ``
       listenForChangesAndRefreshLists(user.uid)

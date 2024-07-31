@@ -15,7 +15,7 @@ const ListMenu = () => {
 
   // Click handler, uses an object literal to perform a 'switch' depending on the 'type'
   // data attribute of the calling element
-  const handleClick = (e) => {
+  const handleClick = e => {
     const execute = {
       addmovie: async () => {
         await addMovie(e.target)
@@ -52,7 +52,7 @@ const ListMenu = () => {
   const renderLists = (lists, movieid) => {
     if (lists) {
       const html = lists
-        .map((list) => {
+        .map(list => {
           const { title } = list.data
           const { docPath } = list
 
@@ -96,7 +96,7 @@ const ListMenu = () => {
   }
 
   // Decides whether a click was outside the context menu and if so, close it
-  const handleCloseMenu = (e) => {
+  const handleCloseMenu = e => {
     const wasInside = document.querySelector('#context-menu').contains(e.target)
     if (!wasInside) {
       closeMenu()
@@ -116,12 +116,12 @@ const ListMenu = () => {
   }
 
   // If user pressed escape key, close the menu
-  const handleKeyUp = (e) => {
+  const handleKeyUp = e => {
     if (e.which === 27) closeMenu()
   }
 
   // Get position of the click that is opening the menu
-  const getPosition = (e) => {
+  const getPosition = e => {
     var posX = 0
     var posY = 0
 
@@ -148,7 +148,7 @@ const ListMenu = () => {
   }
 
   // Set the position of the menu relative to the click
-  const positionMenu = (e) => {
+  const positionMenu = e => {
     let posClick = getPosition(e)
     let posClickX = posClick.x
     let posClickY = posClick.y
@@ -181,7 +181,7 @@ const ListMenu = () => {
 
   // Add the movie  to the relevant list, calls function in the db.js module, takes
   // care of adding the spinner to the movie card, etc
-  const addMovie = async (target) => {
+  const addMovie = async target => {
     const { list, movieid } = target.dataset
     const { movietitle } = target.closest('ul').dataset
     closeMenu()

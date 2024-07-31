@@ -8,7 +8,7 @@ import blankPosterUrl from '../assets/poster-placeholder.png'
 
 const List = async () => {
   // Click handler, these are all self explanatory
-  const handleClick = (e) => {
+  const handleClick = e => {
     const execute = {
       back: () => {
         e.preventDefault()
@@ -63,10 +63,10 @@ const List = async () => {
 
       // Map over the movieData array
       html = movieData
-        .map((movie) => {
+        .map(movie => {
           const { Title, Runtime, Genre, Plot, Poster, imdbID } = movie
           const currentMovieFromUsersList = moviesFromList.find(
-            (movieFromList) => movieFromList.imdbID === movie.imdbID
+            movieFromList => movieFromList.imdbID === movie.imdbID
           )
 
           // Catch blank poster and set appropriate URL
@@ -156,21 +156,18 @@ const List = async () => {
   // that fires every time thee data in the references document (a watchlist) changes
   // In this way every time we remove a movie, or toggle the watched status, it
   // triggers a re-render of the page
-  const listenForChangesAndRefreshList = async (listPath) => {
+  const listenForChangesAndRefreshList = async listPath => {
     const listDoc = db.doc(db.db, listPath)
 
-    unsubscribeFromListListener = db.onSnapshot(
-      listDoc,
-      async (docSnapshot) => {
-        if (docSnapshot.exists()) {
-          const { title, movies } = docSnapshot.data()
-          const arrMovieIDs = Object.values(movies).map((movie) => {
-            return movie.imdbID
-          })
-          await refresh(listPath, title, arrMovieIDs)
-        }
+    unsubscribeFromListListener = db.onSnapshot(listDoc, async docSnapshot => {
+      if (docSnapshot.exists()) {
+        const { title, movies } = docSnapshot.data()
+        const arrMovieIDs = Object.values(movies).map(movie => {
+          return movie.imdbID
+        })
+        await refresh(listPath, title, arrMovieIDs)
       }
-    )
+    })
   }
 
   // Similar to find movies, but we're getting our list of movies from
@@ -217,7 +214,7 @@ const List = async () => {
   node.addEventListener('click', handleClick)
 
   // Fire the shave function whenever the node changes size
-  const resizeObserver = new ResizeObserver((entries) => shaveEls())
+  const resizeObserver = new ResizeObserver(entries => shaveEls())
   resizeObserver.observe(node)
 
   return {

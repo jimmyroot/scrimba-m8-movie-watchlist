@@ -28,7 +28,7 @@ const Router = () => {
   // It also makes sure that the page refreshes if the auth state changes,
   // If the user logs out they will be re-directed back to the homepage
   const initialize = () => {
-    auth.onAuthStateChanged(auth.get(), async (user) => {
+    auth.onAuthStateChanged(auth.get(), async user => {
       navigate(location.pathname)
     })
   }
@@ -99,7 +99,7 @@ const Router = () => {
   }
 
   // Ok, we decided if we can show the page or not in navigate(), now what? Render the route
-  const render = async (route) => {
+  const render = async route => {
     // Remove any trailing slash (unless route is homepage)
     if (route != '/') route = route.replace(/\/$/, '')
 
@@ -133,7 +133,7 @@ const Router = () => {
   }
 
   // Router init, register our navigate function with onpopstate
-  window.onpopstate = (e) => navigate(location.pathname, false)
+  window.onpopstate = e => navigate(location.pathname, false)
 
   return {
     navigate,

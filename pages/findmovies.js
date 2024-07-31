@@ -11,7 +11,7 @@ import imgStarURL from '../assets/goldstar.svg'
 
 const Findmovies = () => {
   // Event handler
-  const handleClick = (e) => {
+  const handleClick = e => {
     const execute = {
       submit: async () => {
         if (window.navigator.onLine === true) {
@@ -74,10 +74,11 @@ const Findmovies = () => {
   const renderResults = async () => {
     const allData = await getFullResultsData()
     let html = ``
-    
+
     if (allData.length > 0) {
       // Use promise.all to wait for all the calls to finish in the map loop
-      html = allData.map((movie) => {
+      html = allData
+        .map(movie => {
           const { Title, Year, Genre, Plot, Poster, imdbID } = movie
 
           // Catch blank poster
@@ -108,10 +109,10 @@ const Findmovies = () => {
                 </div>
             </li>
         `
-        }).join('')
+        })
+        .join('')
     } else {
-      html = 
-        `
+      html = `
             <li class="page__empty">
                 <p><i class='bx bx-movie-play bx-lg'></i></p>
                 <p>
@@ -130,11 +131,8 @@ const Findmovies = () => {
     const input = document.getElementById('find-movies-input')
     const value = input.value
     if (value) {
-      node
-        .querySelector('#page-results')
-        .classList.add('page__results--dimmed')
-      node
-        .append(progressBar.get())
+      node.querySelector('#page-results').classList.add('page__results--dimmed')
+      node.append(progressBar.get())
       const { value } = document.querySelector('#find-movies-input')
       await getResults(value)
     } else {
@@ -143,7 +141,7 @@ const Findmovies = () => {
   }
 
   // Submit the search results to the omdb module
-  const getResults = async (value) => {
+  const getResults = async value => {
     try {
       if (!value) throw 'No search term supplied'
       const results = await omdb.searchMovies(value)
@@ -158,7 +156,6 @@ const Findmovies = () => {
         )
       }
       await refresh()
-    
     } catch (e) {
       console.error(`Unable to get results because: ${e}`)
     }
@@ -171,13 +168,12 @@ const Findmovies = () => {
     let arr = []
     let progbar = document.querySelector('.progress-bar')
 
-  
     // We use a for loop because it ensures a) the code executes sequentially
     // and b) it executes in the context of it's parent function and so
     // 'await' will work as expected
     if (currentSearch) {
       let increments = []
-    
+
       // Calculate adjusted increments so the progress bar shows a more
       // accurate representation of progress
       for (const [index, result] of currentSearch.entries()) {
@@ -185,21 +181,21 @@ const Findmovies = () => {
       }
       const adjustedIncrements = adjustPercentages(increments)
 
-      // Loop through the search, retrieve full movie info, and 
+      // Loop through the search, retrieve full movie info, and
       // update the loading bar
       for (const [index, result] of currentSearch.entries()) {
-          const movie = await omdb.getMovieByIMDBId(result.imdbID)
-          arr.push(movie)
-          const value = adjustedIncrements[index]/100
-          progbar.value = value
-      }        
+        const movie = await omdb.getMovieByIMDBId(result.imdbID)
+        arr.push(movie)
+        const value = adjustedIncrements[index] / 100
+        progbar.value = value
+      }
     }
 
     return arr
   }
 
   // No explanation needed
-  const removeWarning = (e) => {
+  const removeWarning = e => {
     if (e.target.classList.contains('warning'))
       e.target.classList.remove('warning')
   }
@@ -221,9 +217,9 @@ const Findmovies = () => {
         shaveEls()
       })
     })
-    
+
     // Catch them again if requestAnimationFrame was too fast...this results
-    // in an ugly visual blip where the text appears momentarily too long. 
+    // in an ugly visual blip where the text appears momentarily too long.
     // But better than nothing I guess...
     setTimeout(shaveEls, 200)
   }
@@ -231,7 +227,7 @@ const Findmovies = () => {
   // A bit more setup to do in this module, when it's called
   // We configure a few parameters that are needed for the
   // page's contents to render
-  const get = async (user) => {
+  const get = async user => {
     uid = user.uid
     currentSearch = null
     lists = await db.getListsForUser(uid)
@@ -249,7 +245,7 @@ const Findmovies = () => {
   // Add event listeners
   node.addEventListener('click', handleClick)
   node.addEventListener('input', removeWarning)
-  node.addEventListener('keyup', (e) => {
+  node.addEventListener('keyup', e => {
     if (e.code === 'Enter') {
       validateInputAndSubmitSearch()
     }
@@ -262,7 +258,7 @@ const Findmovies = () => {
   resizeObserver.observe(node)
 
   return {
-    get
+    get,
   }
 }
 

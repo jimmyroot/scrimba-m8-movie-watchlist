@@ -7,7 +7,7 @@ import { modal } from '../components/modal'
 
 const SignIn = () => {
   // Click handlers
-  const handleClick = (e) => {
+  const handleClick = e => {
     const execute = {
       signin: async () => {
         e.preventDefault()
@@ -64,7 +64,7 @@ const SignIn = () => {
   }
 
   // Validate input fields
-  const validateInput = (input) => {
+  const validateInput = input => {
     // Object literal containing our validation rules, so
     // we can call validate[input-id]() to run the validation,
     // very convenient!!!
@@ -88,7 +88,7 @@ const SignIn = () => {
     // This is a slick way to convert the form fields/values into a nice
     // object we can use destructuring on
     const formData = Object.fromEntries(
-      Object.values(form).map((el) => [el.name, el.value])
+      Object.values(form).map(el => [el.name, el.value])
     )
     const el = node.querySelector(`#${id}`)
     let valid = null
@@ -114,7 +114,7 @@ const SignIn = () => {
     setInputState(el, errPayload)
   }
 
-  const handleSignIn = async (form) => {
+  const handleSignIn = async form => {
     if (window.navigator.onLine === true) {
       if (validateForm(form, validateInput)) {
         node.classList.add('spinner', 'dimmed')
@@ -147,7 +147,7 @@ const SignIn = () => {
 
   // Add listeners
   node.addEventListener('click', handleClick)
-  node.addEventListener('input', (e) => validateInput(e.target))
+  node.addEventListener('input', e => validateInput(e.target))
 
   return {
     get,

@@ -2,7 +2,7 @@
 
 const Modal = () => {
   // Generic click handler
-  const handleClick = (e) => {
+  const handleClick = e => {
     const execute = {
       hide: () => {
         hide()
@@ -21,7 +21,7 @@ const Modal = () => {
   }
 
   // Render the dialog inner html with whatever message we passed in
-  const render = (msg) => {
+  const render = msg => {
     let html = `
       <div id="modal__inner" class="modal__inner">
         <p><i class='bx bxs-error-circle bx-md'></i></p>
@@ -33,12 +33,12 @@ const Modal = () => {
   }
 
   // Refresh the inner html of the dialog
-  const refresh = (msg) => {
+  const refresh = msg => {
     node.innerHTML = render(msg)
   }
 
   // Show the dialog as a modal
-  const show = (msg) => {
+  const show = msg => {
     refresh(msg)
     node.showModal()
   }

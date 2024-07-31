@@ -66,7 +66,7 @@ const setInputState = (el, errPayload) => {
 const validateForm = (form, validateInput) => {
   const formEls = [...form.elements]
 
-  formEls.forEach((input) => {
+  formEls.forEach(input => {
     if (input.type !== 'submit') validateInput(input)
   })
 

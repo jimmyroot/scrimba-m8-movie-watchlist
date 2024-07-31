@@ -31,7 +31,7 @@ import {
   const f = document.createElement('link').relList
   if (f && f.supports && f.supports('modulepreload')) return
   for (const u of document.querySelectorAll('link[rel="modulepreload"]')) _(u)
-  new MutationObserver((u) => {
+  new MutationObserver(u => {
     for (const h of u)
       if (h.type === 'childList')
         for (const o of h.addedNodes)
@@ -61,18 +61,18 @@ const fe = 'AIzaSyCwbb7PceRaS4TpHA422uRqU3f7aHKLB38',
   _e = 'a84e34ea',
   Y = `https://www.omdbapi.com/?apikey=${_e}&`,
   ye = async () => ({
-    searchMovies: async (g) => {
+    searchMovies: async g => {
       const _ = `${Y}s=${g}&type=movie`
       return await (await fetch(_, { method: 'GET' })).json()
     },
-    getMovieByIMDBId: async (g) => {
+    getMovieByIMDBId: async g => {
       const _ = `${Y}i=${g}&type=movie`
       return await (await fetch(_, { method: 'GET' })).json()
     },
   }),
   U = await ye(),
-  X = (c) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c),
-  K = (c) =>
+  X = c => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c),
+  K = c =>
     /^[A-Za-zÀ-ÖØ-öø-ÿ]([A-Za-zÀ-ÖØ-öø-ÿ '’-]*[A-Za-zÀ-ÖØ-öø-ÿ])?$/.test(c)
 function be(c) {
   const f = c.length
@@ -95,7 +95,7 @@ function we(c) {
       console.error('No name was specified'), { givenName: '', familyName: '' }
     )
 }
-const C = (c) => {
+const C = c => {
     const f = c.querySelectorAll('.movie__title')
     let g = c.querySelectorAll('.movie__plot')
     const _ = c.querySelectorAll('.movie__genre')
@@ -106,10 +106,10 @@ const C = (c) => {
           shave(g, 80),
           shave(_, 20),
           (g = c.querySelectorAll('.movie__plot'))
-      while (u.some((h) => h.offsetHeight > 80))
+      while (u.some(h => h.offsetHeight > 80))
     }
   },
-  Le = (c) => new Promise((f) => setTimeout(f, c)),
+  Le = c => new Promise(f => setTimeout(f, c)),
   xe = {
     apiKey: fe,
     authDomain: 'reel-talk-28ac2.firebaseapp.com',
@@ -121,23 +121,23 @@ const C = (c) => {
   },
   Ee = async () => {
     const c = async () => await ce(xe),
-      f = async (m) => {
+      f = async m => {
         const n = await O(S(l, 'accounts', m))
         if (n.exists()) return n.data()
       },
-      g = async (m) => {
+      g = async m => {
         const n = [],
           d = q(l, 'movies'),
           y = B(d, H('imdbID', 'in', m)),
           b = await z(y)
         return b.empty
           ? !1
-          : (b.forEach((w) => {
+          : (b.forEach(w => {
               n.push(w.data())
             }),
             n)
       },
-      _ = async (m) => {
+      _ = async m => {
         const n = q(l, 'lists'),
           d = B(n, H('uid', '==', m)),
           y = await z(d)
@@ -145,18 +145,18 @@ const C = (c) => {
         {
           const b = []
           return (
-            y.forEach((w) => {
+            y.forEach(w => {
               b.push({ docPath: w.ref.path, data: w.data() })
             }),
             b
           )
         }
       },
-      u = async (m) => {
+      u = async m => {
         const n = await O(S(l, m))
         if (n.exists()) return n.data()
       },
-      h = async (m) => {
+      h = async m => {
         try {
           const n = q(l, 'lists'),
             d = await me(n, {
@@ -171,26 +171,26 @@ const C = (c) => {
       },
       o = async (m, n) => {
         try {
-          await I(l, async (d) => {
+          await I(l, async d => {
             const y = S(l, m),
               b = (await d.get(y)).data().movies,
-              w = b.find((L) => L.imdbID === n)
+              w = b.find(L => L.imdbID === n)
             ;(w.watched = !w.watched), await d.update(y, { movies: b })
           })
         } catch (d) {
           console.error(d)
         }
       },
-      e = async (m) => {
+      e = async m => {
         const n = await O(S(l, m))
         if (n.exists()) return n.data().movies
       },
-      a = async (m) => {
+      a = async m => {
         await pe(S(l, m))
       },
-      p = async (m) => {
+      p = async m => {
         try {
-          await I(l, async (n) => {
+          await I(l, async n => {
             const d = S(l, 'movies', m)
             if ((await n.get(d)).exists())
               throw `There is already a local entry for ${m}`
@@ -208,11 +208,11 @@ const C = (c) => {
       },
       i = async (m, n, d, y) => {
         try {
-          await I(l, async (b) => {
+          await I(l, async b => {
             const w = S(l, m),
               L = await b.get(w)
             if (!L.exists()) throw 'The specified list does not exist'
-            const k = L.data().movies.find((M) => M.imdbID === n)
+            const k = L.data().movies.find(M => M.imdbID === n)
             try {
               if (k) d && d.show(`'${y}' is already on that watchlist!`)
               else {
@@ -243,11 +243,11 @@ const C = (c) => {
       },
       t = async (m, n) => {
         try {
-          await I(l, async (d) => {
+          await I(l, async d => {
             const y = S(l, m),
               b = await d.get(y)
             if (!b.exists()) throw "The specified list doesn't exist"
-            const L = b.data().movies.find((E) => E.imdbID === n)
+            const L = b.data().movies.find(E => E.imdbID === n)
             try {
               if (L)
                 await d.update(y, { movies: ve(L) }),
@@ -265,9 +265,9 @@ const C = (c) => {
           console.error(`Failed to remove because: ${d}`)
         }
       },
-      v = async (m) => {
+      v = async m => {
         try {
-          await I(l, async (n) => {
+          await I(l, async n => {
             const d = S(l, 'accounts', m.uid),
               y = await n.get(d),
               { givenName: b, familyName: w } = we(m.displayName)
@@ -353,14 +353,14 @@ const C = (c) => {
   },
   Z = (c, f) => {
     const g = [...c.elements]
-    g.forEach((_) => {
+    g.forEach(_ => {
       _.type !== 'submit' && f(_)
     })
     for (const _ of g) if (_.classList.contains('warning')) return !1
     return !0
   },
   $e = () => {
-    const c = async (t) => {
+    const c = async t => {
         try {
           if (!t) throw 'newUser object missing'
           const v = await ae(a, t.email, t.password)
@@ -399,7 +399,7 @@ const C = (c) => {
           }
         }
       },
-      g = async (t) => {
+      g = async t => {
         try {
           const r = (await G(a, p)).user
           ;(await x.getAccount(r.uid)) || x.createAccount(r)
@@ -435,7 +435,7 @@ const C = (c) => {
         }
       },
       h = () => {
-        W(a, (t) => {
+        W(a, t => {
           console.log(t ? `User ${t.email} is logged in` : 'User is logged out')
         })
       },
@@ -458,7 +458,7 @@ const C = (c) => {
   },
   $ = $e(),
   Me = () => {
-    const c = (h) => {
+    const c = h => {
         const o = {
             navigate: () => {
               h.preventDefault()
@@ -492,7 +492,7 @@ const C = (c) => {
   },
   Se = Me(),
   ke = () => {
-    const c = (e) => {
+    const c = e => {
         const a = {
             hide: () => {
               u()
@@ -501,17 +501,17 @@ const C = (c) => {
           { type: p } = e.target.dataset
         a[p] ? a[p]() : e.target.tagName === 'DIALOG' && u()
       },
-      f = (e) => `
+      f = e => `
             <div id="modal__inner" class="modal__inner">
                 <p><i class='bx bxs-error-circle bx-md'></i></p>
                 <p class="modal__p">${e}</p>
                 <button class="modal__btn" data-type="hide">Close</button>
             </div>
         `,
-      g = (e) => {
+      g = e => {
         o.innerHTML = f(e)
       },
-      _ = (e) => {
+      _ = e => {
         g(e), o.showModal()
       },
       u = () => {
@@ -530,7 +530,7 @@ const C = (c) => {
   Ae = () => {
     let c = null,
       f = null
-    const g = (n) => {
+    const g = n => {
         const d = {
           addmovie: async () => {
             await t(n.target)
@@ -557,7 +557,7 @@ const C = (c) => {
       u = (n, d) =>
         n
           ? n
-              .map((b) => {
+              .map(b => {
                 const { title: w } = b.data,
                   { docPath: L } = b
                 return `
@@ -581,7 +581,7 @@ const C = (c) => {
             document.addEventListener('click', o, { capture: !0 }),
             document.addEventListener('keyup', a))
       },
-      o = (n) => {
+      o = n => {
         document.querySelector('#context-menu').contains(n.target) || e()
       },
       e = () => {
@@ -591,10 +591,10 @@ const C = (c) => {
             s.classList.remove(m),
             document.removeEventListener('click', o, !0))
       },
-      a = (n) => {
+      a = n => {
         n.which === 27 && e()
       },
-      p = (n) => {
+      p = n => {
         var d = 0,
           y = 0
         return (
@@ -612,7 +612,7 @@ const C = (c) => {
           { x: d, y }
         )
       },
-      i = (n) => {
+      i = n => {
         let d = p(n),
           y = d.x,
           b = d.y,
@@ -623,7 +623,7 @@ const C = (c) => {
         E - y < w ? (s.style.left = E - w + 'px') : (s.style.left = y + 'px'),
           k - b < L ? (s.style.top = k - L + 'px') : (s.style.top = b + 'px')
       },
-      t = async (n) => {
+      t = async n => {
         const { list: d, movieid: y } = n.dataset,
           { movietitle: b } = n.closest('ul').dataset
         e(),
@@ -649,7 +649,7 @@ const C = (c) => {
   J =
     "data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='UTF-8'?%3e%3csvg%20xmlns='http://www.w3.org/2000/svg'%20width='240'%20height='240'%3e%3cpath%20fill='%23F8D64E'%20d='m48,234%2073-226%2073,226-192-140h238z'/%3e%3c/svg%3e",
   Ie = () => {
-    const c = (s) => {
+    const c = s => {
         const l = {
           submit: () => {
             f()
@@ -693,12 +693,12 @@ const C = (c) => {
                 </ul>
             </section>
         `,
-      _ = async (s) => {
+      _ = async s => {
         let l = ''
         return (
           s
             ? (l = await Promise.all(
-                s.map(async (m) => {
+                s.map(async m => {
                   const n = await U.getMovieByIMDBId(m.imdbID),
                     {
                       Title: d,
@@ -747,7 +747,7 @@ const C = (c) => {
           [...l].join('')
         )
       },
-      u = async (s) => {
+      u = async s => {
         try {
           if (!s) throw 'No search term supplied'
           ;(p = (await U.searchMovies(s)).Search), await o()
@@ -755,7 +755,7 @@ const C = (c) => {
           console.error(`Unable to get results because: ${l}`)
         }
       },
-      h = (s) => {
+      h = s => {
         s.target.classList.contains('warning') &&
           s.target.classList.remove('warning')
       },
@@ -764,7 +764,7 @@ const C = (c) => {
           t.appendChild(P.get()),
           t.appendChild(F.get())
       },
-      e = async (s) => (
+      e = async s => (
         (a = s.uid), (i = await x.getListsForUser(a)), (p = null), await o(), t
       )
     let a = null,
@@ -775,10 +775,10 @@ const C = (c) => {
       t.classList.add('main'),
       t.addEventListener('click', c),
       t.addEventListener('input', h),
-      t.addEventListener('keyup', (s) => {
+      t.addEventListener('keyup', s => {
         s.code === 'Enter' && f()
       }),
-      new ResizeObserver((s) => C(t)).observe(t),
+      new ResizeObserver(s => C(t)).observe(t),
       new MutationObserver((s, l) => {
         console.log('mutated'), C(t)
       }).observe(t, { attributes: !1, childList: !0, subtree: !1 }),
@@ -788,11 +788,11 @@ const C = (c) => {
   Te = Ie(),
   qe = () => {
     const c = () => {
-        e.addEventListener('click', (a) => {
+        e.addEventListener('click', a => {
           f(a)
         })
       },
-      f = (a) => {
+      f = a => {
         const p = {
             hide: () => {
               h()
@@ -807,7 +807,7 @@ const C = (c) => {
           { type: i } = a.target.dataset
         p[i] ? p[i]() : a.target.tagName === 'DIALOG' && h()
       },
-      g = (a) => `
+      g = a => `
             <div id="modal__inner" class="modal__inner">
                 <p><i class='bx bxs-error-circle bx-md'></i></p>
                 <p class="modal__p">${a}</p>
@@ -817,10 +817,10 @@ const C = (c) => {
                 </div>
             </div>
         `,
-      _ = (a) => {
+      _ = a => {
         e.innerHTML = g(a)
       },
-      u = async (a) => (
+      u = async a => (
         _(a),
         e.showModal(),
         document.addEventListener('click', f),
@@ -834,7 +834,7 @@ const C = (c) => {
           )
         })
       ),
-      h = (a) => {
+      h = a => {
         e.close(a)
       },
       o = () => (_(), e),
@@ -849,18 +849,18 @@ const C = (c) => {
   D = qe(),
   Ce = async () => {
     const c = () => {
-        p.addEventListener('click', (t) => {
+        p.addEventListener('click', t => {
           f(t)
         }),
-          p.addEventListener('input', (t) => {
+          p.addEventListener('input', t => {
             t.target.classList.contains('warning') &&
               t.target.classList.remove('warning')
           }),
-          p.addEventListener('keyup', (t) => {
+          p.addEventListener('keyup', t => {
             t.code === 'Enter' && g()
           })
       },
-      f = (t) => {
+      f = t => {
         const v = {
           navigate: () => {
             const s = t.target.dataset.path.split('/')[1]
@@ -890,7 +890,7 @@ const C = (c) => {
           await x.createList(r)
         } else t.classList.add('warning')
       },
-      _ = async (t) => `
+      _ = async t => `
             <header class="page__header">
                 <div class="header__new-watchlist-input">
                     <label for="input-watchlist-title">New Watchlist Title</label>
@@ -905,12 +905,12 @@ const C = (c) => {
                 </ul>
             </section>
         `,
-      u = (t) => {
+      u = t => {
         let v = ''
         return (
           t.length > 0
             ? (v = t
-                .map((r) => {
+                .map(r => {
                   const { data: s, docPath: l } = r,
                     m = s.movies.length,
                     n = s.movies.reduce((y, b) => (y.push(b.watched), y), []),
@@ -943,12 +943,12 @@ const C = (c) => {
           v
         )
       },
-      h = async (t) => {
+      h = async t => {
         const v = x.query(x.collection(x.db, 'lists'), x.where('uid', '==', t))
-        i = x.onSnapshot(v, (r) => {
+        i = x.onSnapshot(v, r => {
           const s = []
           r.empty ||
-            r.forEach((l) => {
+            r.forEach(l => {
               s.push({ docPath: l.ref.path, data: l.data() })
             }),
             e(s)
@@ -958,7 +958,7 @@ const C = (c) => {
         const t = D.get()
         p.append(t)
       },
-      e = async (t) => {
+      e = async t => {
         ;(p.innerHTML = await _(t)), o()
       },
       a = async () => (o(), p),
@@ -966,7 +966,7 @@ const C = (c) => {
     p.classList.add('main')
     let i = null
     return (
-      await $.onAuthStateChanged($.get(), (t) => {
+      await $.onAuthStateChanged($.get(), t => {
         t ? ((p.innerHTML = ''), h(t.uid)) : !i === null && i()
       }),
       c(),
@@ -975,7 +975,7 @@ const C = (c) => {
   },
   De = await Ce(),
   Ne = async () => {
-    const c = (i) => {
+    const c = i => {
         const t = {
             back: () => {
               i.preventDefault(), history.go(-1)
@@ -1019,7 +1019,7 @@ const C = (c) => {
         return (
           i.length > 0
             ? (r = (await x.getMovies(i))
-                .map((l) => {
+                .map(l => {
                   const {
                       Title: m,
                       Runtime: n,
@@ -1028,7 +1028,7 @@ const C = (c) => {
                       Poster: b,
                       imdbID: w,
                     } = l,
-                    L = v.find((ee) => ee.imdbID === l.imdbID),
+                    L = v.find(ee => ee.imdbID === l.imdbID),
                     E = b === 'N/A' ? Q : b
                   let k = 'N/A'
                   l.Ratings[0] && (k = l.Ratings[0].Value)
@@ -1084,12 +1084,12 @@ const C = (c) => {
           r
         )
       },
-      _ = async (i) => {
+      _ = async i => {
         const t = x.doc(x.db, i)
-        o = x.onSnapshot(t, async (v) => {
+        o = x.onSnapshot(t, async v => {
           if (!v.empty) {
             const { title: r, movies: s } = v.data(),
-              l = Object.values(s).map((m) => m.imdbID)
+              l = Object.values(s).map(m => m.imdbID)
             await u(i, r, l)
           }
         })
@@ -1108,7 +1108,7 @@ const C = (c) => {
     return (
       e.classList.add('main'),
       e.addEventListener('click', c),
-      new ResizeObserver((i) => C(e)).observe(e),
+      new ResizeObserver(i => C(e)).observe(e),
       new MutationObserver((i, t) => {
         for (const v of i) v.type === 'childList' && C(e)
       }).observe(e, { attributes: !1, childList: !0, subtree: !1 }),
@@ -1118,14 +1118,14 @@ const C = (c) => {
   Re = await Ne(),
   Be = () => {
     const c = () => {
-        o.addEventListener('click', (e) => {
+        o.addEventListener('click', e => {
           f(e)
         }),
-          o.addEventListener('input', (e) => {
+          o.addEventListener('input', e => {
             _(e.target)
           })
       },
-      f = (e) => {
+      f = e => {
         const a = {
             signin: async () => {
               e.preventDefault()
@@ -1178,7 +1178,7 @@ const C = (c) => {
                </div>
             </section>
         `,
-      _ = (e) => {
+      _ = e => {
         const a = {
             'login-email': () => {
               ;(r = !!(m && X(m))),
@@ -1190,9 +1190,7 @@ const C = (c) => {
           },
           { id: p } = e,
           i = e.closest('form'),
-          t = Object.fromEntries(
-            Object.values(i).map((y) => [y.name, y.value])
-          ),
+          t = Object.fromEntries(Object.values(i).map(y => [y.name, y.value])),
           v = o.querySelector(`#${p}`)
         let r = null,
           s = null,
@@ -1212,21 +1210,21 @@ const C = (c) => {
   He = Be(),
   Oe = () => {
     const c = () => {
-        o.addEventListener('click', (e) => {
+        o.addEventListener('click', e => {
           f(e)
         }),
-          o.addEventListener('input', (e) => {
+          o.addEventListener('input', e => {
             g(e.target)
           })
       },
-      f = (e) => {
+      f = e => {
         const a = {
           signup: async () => {
             const i = e.target.closest('form')
             if (Z(i, g)) {
               o.classList.add('spinner', 'dimmed')
               const t = Object.fromEntries(
-                  Object.values(i).map((n) => [n.name, n.value])
+                  Object.values(i).map(n => [n.name, n.value])
                 ),
                 {
                   'given-name': v,
@@ -1252,7 +1250,7 @@ const C = (c) => {
         const { type: p } = e.target.dataset
         a[p] && a[p]()
       },
-      g = (e) => {
+      g = e => {
         const a = {
             'given-name': () => {
               ;(r = !!(m && K(m))),
@@ -1282,9 +1280,7 @@ const C = (c) => {
           },
           { id: p } = e,
           i = e.closest('form'),
-          t = Object.fromEntries(
-            Object.values(i).map((L) => [L.name, L.value])
-          ),
+          t = Object.fromEntries(Object.values(i).map(L => [L.name, L.value])),
           v = o.querySelector(`#${p}`)
         let r = null,
           s = null,
@@ -1341,7 +1337,7 @@ const C = (c) => {
   Ue = '/assets/logo-dark-Bslq0CVD.png',
   Fe = '/assets/blank-CGtgiMPE.png',
   je = () => {
-    const c = (e) => {
+    const c = e => {
         const a = {
           hamburger: () => {
             g()
@@ -1362,7 +1358,7 @@ const C = (c) => {
         const { type: p } = e.target.dataset
         a[p] && a[p]()
       },
-      f = async (e) => {
+      f = async e => {
         let a = ''
         if (o) {
           let i = null
@@ -1416,7 +1412,7 @@ const C = (c) => {
           document.querySelector('.main').classList.toggle('has-no-events'),
           h.querySelector('.header__menu').classList.toggle('open')
       },
-      _ = async (e) => {
+      _ = async e => {
         h.innerHTML = await f()
         const a = h.querySelector(`[href="${e}"]`)
         a && a.classList.add('nav__item--active')
@@ -1427,7 +1423,7 @@ const C = (c) => {
     let o = null
     return (
       h.addEventListener('click', c),
-      document.addEventListener('click', (e) => {
+      document.addEventListener('click', e => {
         const a = document.querySelector('.header__menu')
         !e.target.closest('.header__menu') &&
           a.classList.contains('open') &&
@@ -1483,7 +1479,7 @@ const C = (c) => {
         }
       },
       g = () => {
-        window.onpopstate = (e) => {
+        window.onpopstate = e => {
           h(location.pathname, !1)
         }
       },
@@ -1495,7 +1491,7 @@ const C = (c) => {
         }
       },
       u = () => {
-        $.onAuthStateChanged($.get(), async (e) => {
+        $.onAuthStateChanged($.get(), async e => {
           h(location.pathname)
         })
       },
@@ -1522,7 +1518,7 @@ const C = (c) => {
           i ? s.loggedIn() : s.notLoggedIn()
         } else a && history.pushState({}, '', p), o(p)
       },
-      o = async (e) => {
+      o = async e => {
         e != '/' && (e = e.replace(/\/$/, ''))
         const a = e.split('/')
         let p = ''

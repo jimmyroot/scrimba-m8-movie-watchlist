@@ -1,9 +1,8 @@
 // progressbar.js — a progress bar
 
 const ProgressBar = () => {
-
-    const render = () => {
-      const html = `
+  const render = () => {
+    const html = `
           <label>
             <span class="sr-only">Movie search progress"</label>
             <progress
@@ -16,26 +15,25 @@ const ProgressBar = () => {
             </progress>
           </label>
         `
-  
-      return html
-    }
-  
-    const refresh = () => {
-      node.innerHTML = render()
-    }
-  
-    const get = () => {
-      refresh()
-      return node
-    }
-    
-    const node = document.createElement('div')
-    node.classList.add('progress-bar__container')
-    
-    return {
-      get
-    }
+
+    return html
   }
-  
-  export const progressBar = ProgressBar()
-  
+
+  const refresh = () => {
+    node.innerHTML = render()
+  }
+
+  const get = () => {
+    refresh()
+    return node
+  }
+
+  const node = document.createElement('div')
+  node.classList.add('progress-bar__container')
+
+  return {
+    get,
+  }
+}
+
+export const progressBar = ProgressBar()

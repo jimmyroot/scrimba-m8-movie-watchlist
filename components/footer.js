@@ -29,7 +29,7 @@ const Footer = () => {
   node.classList.add('footer')
 
   return {
-    get
+    get,
   }
 }
 

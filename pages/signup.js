@@ -8,7 +8,7 @@ import { modal } from '../components/modal'
 
 const SignUp = () => {
   // Click handler
-  const handleClick = (e) => {
+  const handleClick = e => {
     const execute = {
       signup: async () => {
         const form = e.target.closest('form')
@@ -27,7 +27,7 @@ const SignUp = () => {
 
   // A bigger and badder version of the validate function in signin.js
   // All the same comments apply here!
-  const validateInput = (input) => {
+  const validateInput = input => {
     const validate = {
       'given-name': () => {
         valid = givenName && utils.validateName(givenName) ? true : false
@@ -75,7 +75,7 @@ const SignUp = () => {
     const { id } = input
     const form = input.closest('form')
     const formData = Object.fromEntries(
-      Object.values(form).map((el) => [el.name, el.value])
+      Object.values(form).map(el => [el.name, el.value])
     )
     const el = node.querySelector(`#${id}`)
     let valid = null
@@ -134,7 +134,7 @@ const SignUp = () => {
   }
 
   // Handle the signup process
-  const handleSignUp = async (form) => {
+  const handleSignUp = async form => {
     // If the form is valid
     if (validateForm(form, validateInput)) {
       // If the device is online
@@ -142,7 +142,7 @@ const SignUp = () => {
         // Add spinner, get form data, destructure formData
         node.classList.add('spinner', 'dimmed')
         const formData = Object.fromEntries(
-          Object.values(form).map((el) => [el.name, el.value])
+          Object.values(form).map(el => [el.name, el.value])
         )
         const {
           'given-name': givenName,
@@ -188,7 +188,7 @@ const SignUp = () => {
 
   // Add event listeners
   node.addEventListener('click', handleClick)
-  node.addEventListener('input', (e) => validateInput(e.target))
+  node.addEventListener('input', e => validateInput(e.target))
 
   return {
     get,

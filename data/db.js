@@ -43,7 +43,7 @@ const Db = async () => {
   }
 
   // Get account data for the given user id from the db
-  const getAccount = async (id) => {
+  const getAccount = async id => {
     const profileDocSnapshot = await getDoc(doc(db, 'accounts', id))
 
     if (profileDocSnapshot.exists()) {
@@ -54,7 +54,7 @@ const Db = async () => {
   }
 
   // Get movie data for a single movie in our local movies collection
-  const getMovie = async (id) => {
+  const getMovie = async id => {
     const movieDocRef = doc(db, 'movies', id)
     const movieDocSnapshot = await getDoc(movieDocRef)
 
@@ -67,7 +67,7 @@ const Db = async () => {
 
   // Retrieve all movies in the array of IDs from our local 'movies' collection
   // and return as an array, using a firestore query
-  const getMovies = async (arrMovieIDs) => {
+  const getMovies = async arrMovieIDs => {
     const movies = []
     const moviesRef = collection(db, 'movies')
 
@@ -75,7 +75,7 @@ const Db = async () => {
     const querySnapshot = await getDocs(q)
 
     if (!querySnapshot.empty) {
-      querySnapshot.forEach((doc) => {
+      querySnapshot.forEach(doc => {
         movies.push(doc.data())
       })
       return movies
@@ -85,7 +85,7 @@ const Db = async () => {
   }
 
   // Get all lists for a specific user id and return them
-  const getListsForUser = async (id) => {
+  const getListsForUser = async id => {
     // Get a collection reference
     const listsRef = collection(db, 'lists')
 
@@ -101,7 +101,7 @@ const Db = async () => {
     // and then we also return the actual data contained in the list
     if (!querySnapshot.empty) {
       const lists = []
-      querySnapshot.forEach((doc) => {
+      querySnapshot.forEach(doc => {
         lists.push({
           docPath: doc.ref.path,
           data: doc.data(),
@@ -114,7 +114,7 @@ const Db = async () => {
   }
 
   // Get watchlist data for a single list using the full Firestore path e.g. lists/listid
-  const getListByPath = async (path) => {
+  const getListByPath = async path => {
     // Get a reference using the path
     const listDoc = await getDoc(doc(db, path))
     if (listDoc.exists()) {
@@ -125,7 +125,7 @@ const Db = async () => {
   // Create a new list with unique ID (addDoc() generates the ID). This should
   // Probably be a transaction that checks a few things first (does UID exist,
   // Does a list with the same title already exist? But it works for now)
-  const createList = async (params) => {
+  const createList = async params => {
     try {
       // Get a reference to the firebase collection
       const lists = collection(db, 'lists')
@@ -149,7 +149,7 @@ const Db = async () => {
     try {
       // Use a 'transaction', which allows us to batch operations, e.g. we can get
       // read some data first and then update it, or update something else.
-      await runTransaction(db, async (transaction) => {
+      await runTransaction(db, async transaction => {
         const listRef = doc(db, listPath)
 
         // Not bothering to check if the movie exists, we know it does otherwise there would be
@@ -157,7 +157,7 @@ const Db = async () => {
         // We go ahead and flip the 'watched' boolean, and write it back
         const targetMoviesArr = (await transaction.get(listRef)).data().movies
         const targetMovie = targetMoviesArr.find(
-          (movie) => movie.imdbID === movieID
+          movie => movie.imdbID === movieID
         )
         targetMovie.watched = !targetMovie.watched
         await transaction.update(listRef, { movies: targetMoviesArr })
@@ -168,14 +168,14 @@ const Db = async () => {
   }
 
   // Get all movies in a given list
-  const getMoviesFromList = async (listPath) => {
+  const getMoviesFromList = async listPath => {
     const movies = await getDoc(doc(db, listPath))
     if (movies.exists()) return movies.data().movies
   }
 
   // Remove the list at the given path, should probably do some more checks
   // to verify that the list exists first :) but oh well
-  const removeListAtPath = async (path) => {
+  const removeListAtPath = async path => {
     try {
       await deleteDoc(doc(db, path))
     } catch (e) {
@@ -189,9 +189,9 @@ const Db = async () => {
   // movie store, and if we don't have it, copies it. This way we can retrieve movie
   // details from our own store rather than use api calls to omdb every time a user
   // loads a list
-  const addMovieToDB = async (movieID) => {
+  const addMovieToDB = async movieID => {
     try {
-      await runTransaction(db, async (transaction) => {
+      await runTransaction(db, async transaction => {
         const movieRef = doc(db, 'movies', movieID)
         const movieDoc = await transaction.get(movieRef)
         if (!movieDoc.exists()) {
@@ -210,7 +210,7 @@ const Db = async () => {
   const addMovieToList = async (docPath, movieID, modal, movieTitle) => {
     try {
       // Batch everything into a transaction
-      await runTransaction(db, async (transaction) => {
+      await runTransaction(db, async transaction => {
         // First make sure requested list exists
         const listDocRef = doc(db, docPath)
         const list = await transaction.get(listDocRef)
@@ -220,7 +220,7 @@ const Db = async () => {
 
         // Now check that the movie is not already on the list
         const movies = list.data().movies
-        const movieExists = movies.find((entry) => entry.imdbID === movieID)
+        const movieExists = movies.find(entry => entry.imdbID === movieID)
 
         // Try to add the movie, if it doesn't exist
         try {
@@ -274,7 +274,7 @@ const Db = async () => {
   const removeMovieFromList = async (listPath, movieID) => {
     try {
       // Batch everything into a transaction
-      await runTransaction(db, async (transaction) => {
+      await runTransaction(db, async transaction => {
         const listDocRef = doc(db, listPath)
         const list = await transaction.get(listDocRef)
 
@@ -282,7 +282,7 @@ const Db = async () => {
         if (!list.exists()) throw `The specified list doesn't exist`
 
         const movies = list.data().movies
-        const movieToRemove = movies.find((entry) => entry.imdbID === movieID)
+        const movieToRemove = movies.find(entry => entry.imdbID === movieID)
 
         // Try to remove the movie
         try {
@@ -308,10 +308,10 @@ const Db = async () => {
   // Create the account data for our user in the db, function needs a better name as it's
   // a little misleading (we are actually checking and THEN creating account only if
   // it doesn't exist)
-  const createAccount = async (user) => {
+  const createAccount = async user => {
     try {
       // Batch ops in a transaction
-      await runTransaction(db, async (transaction) => {
+      await runTransaction(db, async transaction => {
         const accountDocRef = doc(db, 'accounts', user.uid)
         const accountDoc = await transaction.get(accountDocRef)
 

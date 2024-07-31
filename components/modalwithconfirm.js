@@ -3,7 +3,7 @@
 
 const ModalWithConfirm = () => {
   const registerEventListeners = () => {
-    node.addEventListener('click', (e) => {
+    node.addEventListener('click', e => {
       handleClick(e)
     })
   }
@@ -11,7 +11,7 @@ const ModalWithConfirm = () => {
   // Click handler - if user clicks yes or no, call the hide function and
   // pass the value, this will in turn call close(value) so the calling
   // page can retrieve the value and act accordingly
-  const handleClick = (e) => {
+  const handleClick = e => {
     const execute = {
       hide: () => {
         hide()
@@ -36,7 +36,7 @@ const ModalWithConfirm = () => {
   }
 
   // Render function, nothing special here
-  const render = (msg) => {
+  const render = msg => {
     let html = `
             <div id="modal__inner" class="modal__inner">
                 <p><i class='bx bxs-error-circle bx-md'></i></p>
@@ -51,12 +51,12 @@ const ModalWithConfirm = () => {
   }
 
   // Refresh function
-  const refresh = (msg) => {
+  const refresh = msg => {
     node.innerHTML = render(msg)
   }
 
   // Show function; takes a msg string to display in the modal
-  const show = async (msg) => {
+  const show = async msg => {
     refresh(msg)
     node.showModal()
     document.addEventListener('click', handleClick)
@@ -76,7 +76,7 @@ const ModalWithConfirm = () => {
   }
 
   // Close the modal and set return value
-  const hide = (confirmed) => {
+  const hide = confirmed => {
     node.close(confirmed)
   }
 

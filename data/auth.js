@@ -18,7 +18,7 @@ import { showError } from '../utils/forms'
 const Auth = () => {
   // This function takes a newUser object as an argument and tries to create a
   // new user in Firebase with it
-  const fbCreateUserAndSignIn = async (newUser) => {
+  const fbCreateUserAndSignIn = async newUser => {
     try {
       // Check we actually have a new user object
       if (!newUser) throw 'newUser object missing'
@@ -76,7 +76,7 @@ const Auth = () => {
   }
 
   // Initiate sign in with Google account
-  const signInWithGoogle = async (showError) => {
+  const signInWithGoogle = async showError => {
     try {
       const credential = await signInWithPopup(auth, google)
       const user = credential.user
@@ -127,7 +127,7 @@ const Auth = () => {
   // This function initiates an onAuthStateChanged listener, was used just for testing
   // if login/logout was working and logs the result to the console
   const watchAuthState = () => {
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, user => {
       if (user) {
         console.log(`User ${user.email} is logged in`)
         // router.navigate(location.pathname)
