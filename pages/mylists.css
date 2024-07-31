@@ -166,7 +166,7 @@
       }
 
       .item__progbar-prog {
-        background-color: green;
+        background-color: var(--secondary);
         width: 0%;
         height: 5px;
         border-radius: 3px;

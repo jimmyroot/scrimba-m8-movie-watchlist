@@ -186,7 +186,7 @@ const Findmovies = () => {
       for (const [index, result] of currentSearch.entries()) {
         const movie = await omdb.getMovieByIMDBId(result.imdbID)
         arr.push(movie)
-        const value = adjustedIncrements[index] / 100
+        const value = adjustedIncrements[index] / 100 || 1
         progbar.value = value
       }
     }
