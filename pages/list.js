@@ -132,7 +132,7 @@ const List = async () => {
                 <li class="page__empty">
                     <p><i class='bx bx-confused bx-lg'></i></p>
                     <p>
-                       This list needs movies! Head over to 'Find Movies' to add some.
+                       This list needs movies! Go to <a href="/findmovies" class="link__find-movies" data-type="navigate">Find Movies</a> to get started! 
                     </p>
                 </li>`
     }

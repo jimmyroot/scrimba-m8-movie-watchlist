@@ -38,3 +38,12 @@
     }
   }
 }
+
+.link__find-movies {
+  color: var(--primary);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
