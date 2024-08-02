@@ -75,18 +75,29 @@ const shaveEls = () => {
   shave('.movie__title', 50)
 }
 
-function adjustPercentages(arr) {
-  // Find the minimum and maximum values in the array
-  const min = Math.min(...arr)
-  const max = Math.max(...arr)
-
-  // Calculate the range
-  const range = max - min
-
-  // Adjust each value in the array to its relative value between 0 and 100 percent
-  return arr.map(value => ((value - min) / range) * 100)
+const adjustPercentages = percentages => {
+  // Convert input percentages to numbers if they are in string format
+  percentages = percentages.map(Number);
+  
+  // Find the minimum and maximum values in the input percentages
+  const minP = Math.min(...percentages);
+  const maxP = Math.max(...percentages);
+  
+  // If all percentages are the same, return an array of 100%
+  if (minP === maxP) {
+      return new Array(percentages.length).fill(100.0);
+  }
+  
+  // Function to scale each percentage
+  function scale(p) {
+      return 10 + 90 * ((p - minP) / (maxP - minP));
+  }
+  
+  // Apply the scaling function to all percentages
+  const adjustedPercentages = percentages.map(scale);
+  
+  return adjustedPercentages;
 }
-
 // A little timer function to delay execution on the main thread
 const timer = ms => new Promise(res => setTimeout(res, ms))
 

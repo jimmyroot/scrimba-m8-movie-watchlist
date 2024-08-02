@@ -184,10 +184,10 @@ const Findmovies = () => {
       // Loop through the search, retrieve full movie info, and
       // update the loading bar
       for (const [index, result] of currentSearch.entries()) {
-        const movie = await omdb.getMovieByIMDBId(result.imdbID)
-        arr.push(movie)
         const value = adjustedIncrements[index] / 100 || 1
         progbar.value = value
+        const movie = await omdb.getMovieByIMDBId(result.imdbID)
+        arr.push(movie)
       }
     }
 

@@ -47,12 +47,12 @@ progress {
   color-scheme: light dark;
   border: none;
   background-origin: border-box;
-  animation: rotate 2s linear infinite;
+  /* animation: rotate 2s linear infinite; */
 }
 
 progress[value]::-webkit-progress-value {
   background-color: var(--secondary);
-  transition: inline-size 0.25s ease-out;
+  transition: inline-size 0.15s ease-out;
 }
 
 progress[value]::-webkit-progress-bar {
