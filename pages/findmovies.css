@@ -22,8 +22,8 @@
     .search__btn {
       position: absolute;
       background-color: transparent;
-      color: var(--on-surface);
-      opacity: 0.3;
+      color: var(--primary);
+      /* opacity: 0.3; */
       border: none;
       z-index: 10;
       top: 6px;
@@ -35,12 +35,12 @@
       cursor: pointer;
 
       &:hover {
-        opacity: 0.5;
+        filter: brightness(1.3);
       }
 
       &:active {
         transform: scale(0.9);
-        opacity: 0.3;
+        filter: brightness(1);
       }
     }
 
