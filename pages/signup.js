@@ -1,10 +1,10 @@
 // signup.js — page for signing up to an email based account
 
-import { auth } from '../data/auth'
-import * as utils from '../utils/utils'
-import { setInputState, validateForm } from '../utils/forms'
+import { auth } from '/data/auth'
+import * as utils from '/utils/utils'
+import { setInputState, validateForm } from '/utils/forms'
 import { router } from './router'
-import { modal } from '../components/modal'
+import { modal } from '/components/modal'
 
 const SignUp = () => {
   // Click handler

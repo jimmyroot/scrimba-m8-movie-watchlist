@@ -1,9 +1,9 @@
 // signin.js — Sign in page
 
-import { auth } from '../data/auth'
-import * as utils from '../utils/utils'
-import { setInputState, validateForm } from '../utils/forms'
-import { modal } from '../components/modal'
+import { auth } from '/data/auth'
+import * as utils from '/utils/utils'
+import { setInputState, validateForm } from '/utils/forms'
+import { modal } from '/components/modal'
 
 const SignIn = () => {
   // Click handlers

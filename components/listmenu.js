@@ -2,8 +2,8 @@
 // positioning, displaying etc, had to incorporate it into this module style
 // that I've been using, then add the code for getting the users lists, etc.
 
-import { db } from '../data/db'
-import { modal } from '../components/modal'
+import { db } from '/data/db'
+import { modal } from '/components/modal'
 
 const ListMenu = () => {
   // btnThatOpenedTheMenu is used to control styling on the calling button, just

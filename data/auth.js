@@ -13,7 +13,7 @@ import {
 } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js'
 
 import { db } from './db'
-import { showError } from '../utils/forms'
+import { showError } from '/utils/forms'
 
 const Auth = () => {
   // This function takes a newUser object as an argument and tries to create a

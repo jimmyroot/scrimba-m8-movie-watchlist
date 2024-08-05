@@ -1,9 +1,9 @@
 //Mylists.js — loads the logged in users lists
-import { db } from '../data/db'
-import { auth } from '../data/auth'
-import { router } from '../pages/router'
-import { percentageOfTrue, validateEmail } from '../utils/utils'
-import { modalWithConfirm } from '../components/modalwithconfirm'
+import { db } from '/data/db'
+import { auth } from '/data/auth'
+import { router } from '/pages/router'
+import { percentageOfTrue, validateEmail } from '/utils/utils'
+import { modalWithConfirm } from '/components/modalwithconfirm'
 
 const MyLists = async () => {
   // Click handler

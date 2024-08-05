@@ -21,9 +21,8 @@ import {
   where,
 } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js'
 
-import { getAuth } from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js'
-import { omdb } from '../data/omdb'
-import { splitName } from '../utils/utils'
+import { omdb } from '/data/omdb'
+import { splitName } from '/utils/utils'
 import { FB_API_KEY } from './keys'
 
 const firebaseConfig = {

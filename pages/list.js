@@ -1,10 +1,10 @@
 // List.js - renders all the movies in given list
 
-import { db } from '../data/db'
-import { shaveEls } from '../utils/utils'
-import { modalWithConfirm } from '../components/modalwithconfirm'
-import imgStarURL from '../assets/goldstar.svg'
-import blankPosterUrl from '../assets/poster-placeholder.png'
+import { db } from '/data/db'
+import { shaveEls } from '/utils/utils'
+import { modalWithConfirm } from '/components/modalwithconfirm'
+import imgStarURL from '/assets/goldstar.svg'
+import blankPosterUrl from '/assets/poster-placeholder.png'
 
 const List = async () => {
   // Click handler, these are all self explanatory

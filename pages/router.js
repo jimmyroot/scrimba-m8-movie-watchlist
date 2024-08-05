@@ -3,9 +3,9 @@
 // that require a login
 
 import routes from './routes.js'
-import { auth } from '../data/auth'
-import { header } from '../components/header'
-import { footer } from '../components/footer'
+import { auth } from '/data/auth'
+import { header } from '/components/header'
+import { footer } from '/components/footer'
 
 const Router = () => {
   // Compiles a single page and returns an array of the nodes,
@@ -27,7 +27,11 @@ const Router = () => {
   // it makes sure that the current is loaded, so the app doesn't 'reset'
   // It also makes sure that the page refreshes if the auth state changes,
   // If the user logs out they will be re-directed back to the homepage
-  const initialize = () => {
+  const initialize = appRootEl => {
+    // set root element
+    rootEl = appRootEl
+
+    // set onAuthStateChanged listener
     auth.onAuthStateChanged(auth.get(), async user => {
       navigate(location.pathname)
     })
@@ -124,16 +128,20 @@ const Router = () => {
         listPath
       )
       // Update the DOM with the page we just rendered
-      document.querySelector('#app').replaceChildren(...routes[route].content)
+      rootEl.replaceChildren(...routes[route].content)
     } catch (e) {
       console.error(`Router error: ${e}`)
       // If there was an error, show the unknown route so the user knows there is a problem
-      document.querySelector('#app').replaceChildren(routes['/unknown'].content)
+      rootEl.replaceChildren(routes['/unknown'].content)
     }
   }
 
+
+
   // Router init, register our navigate function with onpopstate
+  let rootEl = null
   window.onpopstate = e => navigate(location.pathname, false)
+
 
   return {
     navigate,

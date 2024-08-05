@@ -1,3 +1,7 @@
-import { router } from './pages/router'
+import { router } from '/pages/router'
 
-router.initialize()
+const ROOT_ID = 'app'
+
+const appRootEl = document.getElementById(ROOT_ID)
+
+router.initialize(appRootEl)

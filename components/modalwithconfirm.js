@@ -2,11 +2,6 @@
 // and returns the users answer
 
 const ModalWithConfirm = () => {
-  const registerEventListeners = () => {
-    node.addEventListener('click', e => {
-      handleClick(e)
-    })
-  }
 
   // Click handler - if user clicks yes or no, call the hide function and
   // pass the value, this will in turn call close(value) so the calling
@@ -90,7 +85,7 @@ const ModalWithConfirm = () => {
   const node = document.createElement('dialog')
   node.classList.add('modal')
   node.id = 'modal-confirm'
-  registerEventListeners()
+  node.addEventListener('click', handleClick)
 
   return {
     get,
