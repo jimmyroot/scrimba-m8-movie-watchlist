@@ -120,7 +120,7 @@
   .hamburger {
     display: block;
     transform: scale(0.9);
-    padding: .7em 0;
+    padding: 0.7em 0;
   }
 
   @media (min-width: 640px) {

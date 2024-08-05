@@ -2,7 +2,6 @@
 // and returns the users answer
 
 const ModalWithConfirm = () => {
-
   // Click handler - if user clicks yes or no, call the hide function and
   // pass the value, this will in turn call close(value) so the calling
   // page can retrieve the value and act accordingly

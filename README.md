@@ -38,10 +38,10 @@ I have used the realtime firebase database for a few projects now, but intrigued
 - Firestore for authentication (?)
 - Boxicons for, well, icons
 - Finishing touches…
-    - Ability to rate a movie (maybe re-use star rating functions from M5: Restaurant Ordering Project?)
-    - Ability to add a comment for each movie
-    - Ability to mark a movie as watched/unwatched
-    - Pagination for many results, if needed
+  - Ability to rate a movie (maybe re-use star rating functions from M5: Restaurant Ordering Project?)
+  - Ability to add a comment for each movie
+  - Ability to mark a movie as watched/unwatched
+  - Pagination for many results, if needed
 - I had this idea a couple of days later…what about a kind of timeline that shows you what you watched and when? Ooo…and I was hoping to get this one done quite quickly…
 
 ## A first for everything
@@ -49,14 +49,14 @@ I have used the realtime firebase database for a few projects now, but intrigued
 These are the things I used for the first time in this project (probably why it took so long, haha)
 
 - Firestore Database
-    - CRUD operations, transactions, queries, although didn’t get round to using sort
+  - CRUD operations, transactions, queries, although didn’t get round to using sort
 - Firestore Authentication
-    - Signing up with email, signing in with google, github accounts
+  - Signing up with email, signing in with google, github accounts
 - Shave.js, a small but cool library for truncating text
 - A whole bunch of other built in javascript functions and html features that were necessary to get this working how I wanted, inc. but not limited to:
-    - Lots of work with the event object related to positioning (listmenu.js)
-    - Working with getting user input back from a modal (modalwithconfirm.js)
-    - html5 progress tag/element (progressbar.js)
+  - Lots of work with the event object related to positioning (listmenu.js)
+  - Working with getting user input back from a modal (modalwithconfirm.js)
+  - html5 progress tag/element (progressbar.js)
 - ChatGPT for helper functions; many functions in utils.js was written by ChatGPT and just required a few small tweaks, some of them I didn’t need to change at all and worked perfectly straight away
 
 ## The build process
@@ -81,21 +81,19 @@ These are the things I used for the first time in this project (probably why it 
 ## Netlify deploy notes
 
 - Couldn’t build at all using TLA (top level await) to load some of my async modules; received a build warning along the lines of ‘Top-level await is not available in the configured target environment’ or similar. Turns out not so much a netlify problem but the bundler that netlify uses to build the project (esbuild). Was using ES2020, and needed to use ES2022. Fixed by adding the following to the Vite config…
-    
-    ```jsx
-     build: {
-    	  target: "es2022"
-    },
-    esbuild: {
-        target: "es2022"
-    },
-    optimizeDeps:{
-        esbuildOptions: {
-        target: "es2022",
-        }
-    }
-    ```
-    
+  ```jsx
+   build: {
+  	  target: "es2022"
+  },
+  esbuild: {
+      target: "es2022"
+  },
+  optimizeDeps:{
+      esbuildOptions: {
+      target: "es2022",
+      }
+  }
+  ```
 
 ```
 build: {
@@ -128,10 +126,10 @@ Think of this as a diary of my ‘process’. I put process in quotes because it
 
 - Created new git repository, cloned it locally and scaffolded a new vite project
 - Created the folder structure
-    - ‘pages’ — js, css and/or html relating to project pages. router.js will also go here
-    - ‘data’ — a module containing all api functionality will live here, as will any firebase stuff going forward
-    - ‘styles’ — global css styles will live here
-    - ‘utils’ — utils and helper modules will go here
+  - ‘pages’ — js, css and/or html relating to project pages. router.js will also go here
+  - ‘data’ — a module containing all api functionality will live here, as will any firebase stuff going forward
+  - ‘styles’ — global css styles will live here
+  - ‘utils’ — utils and helper modules will go here
 - Decided on a working title for the app with the help of my good friend ChatGPT 4. I’m calling it ‘Reel talk’ for now (imagining some future social elements haha).
 - Did some basic project setup, adding simple html stuff like title, etc. Vite takes care of the other basics like doctype, lang, viewport, etc.
 - Applied some basic CSS rules. I found [this ‘modern’ CSS reset](https://www.joshwcomeau.com/css/custom-css-reset/) which was very similar to a lot of the stuff I already change before each project…plus a few extra goodies. It’s super minimal which I also like.
@@ -139,16 +137,14 @@ Think of this as a diary of my ‘process’. I put process in quotes because it
 - Took a deep breath, set up a new project in firebase, created a firestore db instance and authentication instance with a test user
 - Read about alternative ways to import Firestore (instead of Firebase SDK via npm) as I wanted to make sure it works in the Scrimba editor
 - Set up basic firebase import code. Because of the way I structure the modules, and because of using async code in the module, I had to come up with a way of loading the module but having the script wait for it. [This](https://www.notion.so/Project-Write-Up-Movie-Watchlist-acfe83807c484cd0a6688fecca615520?pvs=21) gave me half the answer, but as my module load asynchronously, returning a promise, I needed a way to await it’s fulfilment properly otherwise subsequent code won’t run. I ended up using a dynamic import inside an IFFE function like so…have to use this where ever I import my db module
-    
-    ```jsx
-    const db = await (async () => {
-        const { db } = await import('./data/db')
-        return db
-    })()
-    
-    // Do stuff with db
-    ```
-    
+  ```jsx
+  const db = await (async () => {
+    const { db } = await import('./data/db')
+    return db
+  })()
+
+  // Do stuff with db
+  ```
 - Set up basic firebase authentication functions, eventually tested successfully. Time to call it a night.
 
 ### May 25, 2024
@@ -176,21 +172,19 @@ Think of this as a diary of my ‘process’. I put process in quotes because it
 ### May 28, 2024
 
 - Morning commute
-    - Started watching an introductory series about Firestore, [here is a link to Episode 1](https://www.youtube.com/watch?v=v_hR4K4auoQ). Should have a bit more time to work on the project later today; catching a flight to Luxembourg as my company is soon moving premises there, and I have to go and do some prep work for that! But this evening I can spend mostly learning (hopefully)
-    - Did a bunch of reading about setting/accessing environment variables in Netlify (to hide API keys etc)
-    - Signed up for my Omdb API key, wrote a test function to check it was working
-    - I wanted to set up prettier before I get too much further into the project, so bookmarked this article about [setting up prettier with vite/npm](https://dev.to/sharathmohan007/setup-prettier-with-vite-vs-code-3fme) for later reading
+  - Started watching an introductory series about Firestore, [here is a link to Episode 1](https://www.youtube.com/watch?v=v_hR4K4auoQ). Should have a bit more time to work on the project later today; catching a flight to Luxembourg as my company is soon moving premises there, and I have to go and do some prep work for that! But this evening I can spend mostly learning (hopefully)
+  - Did a bunch of reading about setting/accessing environment variables in Netlify (to hide API keys etc)
+  - Signed up for my Omdb API key, wrote a test function to check it was working
+  - I wanted to set up prettier before I get too much further into the project, so bookmarked this article about [setting up prettier with vite/npm](https://dev.to/sharathmohan007/setup-prettier-with-vite-vs-code-3fme) for later reading
 - Airport lounge
-    - Read the above article re: prettier
-    - Wrote the API functions to pull the movie data from OMDB. Probably the most straight forward part of the project. Ended up with just two functions, one for search and another to pull the data for a single movie
-    - Copied over some more CSS that I will re-use from old projects for example the css for the loading spinner I used in the Invoice Creator and Color Picker projects
+  - Read the above article re: prettier
+  - Wrote the API functions to pull the movie data from OMDB. Probably the most straight forward part of the project. Ended up with just two functions, one for search and another to pull the data for a single movie
+  - Copied over some more CSS that I will re-use from old projects for example the css for the loading spinner I used in the Invoice Creator and Color Picker projects
 
 ### May 29, 2024
 
 - Watched [Episode 2 of the Firestore series](https://www.youtube.com/watch?v=Ofux_4c94FI&list=PLl-K7zZEsYLluG5MCVEzXAQ7ACZBCuZgZ&index=2) on youtube.
 - Also, here is the [complete playlist](https://www.youtube.com/playlist?list=PLl-K7zZEsYLluG5MCVEzXAQ7ACZBCuZgZ)
-    
-    
 
 ### May 30, 2024
 
@@ -213,8 +207,8 @@ Think of this as a diary of my ‘process’. I put process in quotes because it
 
 - Had some time in a hotel in the evening, so decided to make the routing module ‘user aware’ so that it can either either allow or deny access to a page based on authentication status, and do other stuff like show different menu options if the user is logged in
 - Added another field to each route in the routing object, `requiresLogin`, which is just a simple boolean and lets the router know if it should check for a logged in user before displaying the page
-- The thing that tripped me up for a good while here was where to place the onAuthStateChange call within my modular structure. I was having an issue where if I tried to access a page that shouldn’t load under a given scenario (e.g. the signin page should redirect if a user tries to access it while already logged in. by typing the URL manually) the page would briefly load before the onAuthStateChange fired off and redirected it. Not a dealbreaker but a visual anomaly I’d rather not have. 
-The solution was to move the onAuthStateChange call into my router.renderStartPage() function which is always called the first time the page loads or upon a refresh (or when user hits return, for example after typing a URL). I moved all the logic of deciding what should happen when the auth state changes into this function, which is the first thing to be called…in this way it prevents the ‘router’ from rendering anything before the authState has been determined.
+- The thing that tripped me up for a good while here was where to place the onAuthStateChange call within my modular structure. I was having an issue where if I tried to access a page that shouldn’t load under a given scenario (e.g. the signin page should redirect if a user tries to access it while already logged in. by typing the URL manually) the page would briefly load before the onAuthStateChange fired off and redirected it. Not a dealbreaker but a visual anomaly I’d rather not have.
+  The solution was to move the onAuthStateChange call into my router.renderStartPage() function which is always called the first time the page loads or upon a refresh (or when user hits return, for example after typing a URL). I moved all the logic of deciding what should happen when the auth state changes into this function, which is the first thing to be called…in this way it prevents the ‘router’ from rendering anything before the authState has been determined.
 - Then just needed to tweak it with a few if/else statements to make sure that it does the right thing when the user logs in/out, and voila.
 
 ### June 5, 2024
@@ -229,10 +223,10 @@ The solution was to move the onAuthStateChange call into my router.renderStartPa
 
 - Today was super fun, it’s a bit sad but I got the jitters from excitement working with firestore, haha.
 - Main references I used today were…
-    - [https://firebase.google.com/docs/firestore/query-data/get-data](https://firebase.google.com/docs/firestore/query-data/get-data)
-    - [https://firebase.google.com/docs/firestore/manage-data/add-data](https://firebase.google.com/docs/firestore/manage-data/add-data)
-    - [https://stackoverflow.com/questions/69519447/how-to-get-server-timestamp-from-firebase-v9](https://stackoverflow.com/questions/69519447/how-to-get-server-timestamp-from-firebase-v9)
-    - [https://firebase.google.com/docs/firestore/manage-data/transactions#transactions](https://firebase.google.com/docs/firestore/manage-data/transactions#transactions)
+  - [https://firebase.google.com/docs/firestore/query-data/get-data](https://firebase.google.com/docs/firestore/query-data/get-data)
+  - [https://firebase.google.com/docs/firestore/manage-data/add-data](https://firebase.google.com/docs/firestore/manage-data/add-data)
+  - [https://stackoverflow.com/questions/69519447/how-to-get-server-timestamp-from-firebase-v9](https://stackoverflow.com/questions/69519447/how-to-get-server-timestamp-from-firebase-v9)
+  - [https://firebase.google.com/docs/firestore/manage-data/transactions#transactions](https://firebase.google.com/docs/firestore/manage-data/transactions#transactions)
 - Built most of the simple functions I’ll need, then started looking into ‘transactions’. This is where you batch reads and writes into the same function, and all the operations are executed together.
 - Had a few weird issues but then spotted it was because I wasn’t using async/await properly in some places. Having worked with async/await a bit now, I’m starting to realise—when I get certain errors—that they are indicative of an async issue, so that’s good. I’m learning something!
 
@@ -348,9 +342,9 @@ Started work on CSS but was a bit directionless, decided I did need a Figma desi
 ### July 5, 2024
 
 - Fixed up a bunch of small things from my to do list such as
-    - Added the IMDB link to each movie card in a list
-    - Added placeholder image/text for empty lists, or no lists, and empty movie search
-    - Added a spinner to give a visual indication that something is happening after the user clicks to add a movie to a list; wanted to have a little tick animation or something, but running out of time and would like to get on with the rest of the course now 🙂
+  - Added the IMDB link to each movie card in a list
+  - Added placeholder image/text for empty lists, or no lists, and empty movie search
+  - Added a spinner to give a visual indication that something is happening after the user clicks to add a movie to a list; wanted to have a little tick animation or something, but running out of time and would like to get on with the rest of the course now 🙂
 
 ### July 8, 2024
 
@@ -374,11 +368,10 @@ Started work on CSS but was a bit directionless, decided I did need a Figma desi
 - Added spinner while API is grabbing the movie info, on the main search
 - Re-factored the ‘shaving’ function as it wasn’t firing under specific circumstances (e.g. initial page load)
 - I think the only major things remaining are…
-    - Responsive design
-    - And finally, refactor anything that needs it
-    - Upload to netlify
-    - Share!
-    
+  - Responsive design
+  - And finally, refactor anything that needs it
+  - Upload to netlify
+  - Share!
 
 ### July 14, 2024
 
@@ -418,7 +411,7 @@ Started work on CSS but was a bit directionless, decided I did need a Figma desi
 
 - Apologies that I didn’t keep up with posting the links to all the resources I used. I went on to read so much that in the end I just kept forgetting to link to it all in my daily entries. I’m thinking about writing a blog post series to describe everything in this project in more detail so stay tuned for that if you want to know more…?
 - I didn’t implement any proper security rules on the database, in a real project it would be important to lock down each user only to his/her relevant info, maybe will get around to this in the future but for now leaving it as is
-- I used ChatGPT to save myself a little time on this project (only a little, though). I got it to write most of the functions in the utils.js module, pretty cool…I actually found it *very* intuitive when it came to understanding what I wanted each function to do. Everything needed minor tweaks but, it was very useful still.
+- I used ChatGPT to save myself a little time on this project (only a little, though). I got it to write most of the functions in the utils.js module, pretty cool…I actually found it _very_ intuitive when it came to understanding what I wanted each function to do. Everything needed minor tweaks but, it was very useful still.
 - There is only minimal error checking for a live internet connection, real app would need more of this, I feel
 - Only minimal error checking for sign in/sign up issues, real app would need more errors/alerts
 - The CSS is all over the place, it started out well but there are some things in the wrong places now, and some of the class names/positions don’t make sense any more. Maybe I will re-factor this at some point but for now I’m done
@@ -427,4 +420,4 @@ Started work on CSS but was a bit directionless, decided I did need a Figma desi
 - If you decide to test the ‘sign up via email’ functionality, bear in mind there is no email validation flow, so be sure to enter email accurately 😝 (or you can just put in any email address, actually, as it doesn’t send anything, just uses email for the login id)
 - The progress bar was a last minute addition and uses the html progress tag which is quite cool, styling it was a pain though and as you can see it looks a bit ‘mis-placed’ just hanging out in front of all the other elements
 - I highly recommend this process of keeping extensive notes for your projects…I’ve retained so much more knowledge from this project just by ‘journaling’ my progress. Next time I think I will have a dedicated section in the project notes for issues I’ve come up against and how they were solved
-- ~~I’m not overly happy with how I’ve implemented loading of a single list, although it *does* work…I don’t like that in router page.get can be called with or without user and listpath, it seems too vague and hard to read for another developer to look at -~~ **FIXED!**
+- ~~I’m not overly happy with how I’ve implemented loading of a single list, although it _does_ work…I don’t like that in router page.get can be called with or without user and listpath, it seems too vague and hard to read for another developer to look at -~~ **FIXED!**

@@ -136,12 +136,9 @@ const Router = () => {
     }
   }
 
-
-
-  // Router init, register our navigate function with onpopstate
+  // initialize app container variable, register our navigate function with onpopstate
   let rootEl = null
   window.onpopstate = e => navigate(location.pathname, false)
-
 
   return {
     navigate,
