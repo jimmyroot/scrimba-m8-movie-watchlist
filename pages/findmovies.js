@@ -113,13 +113,13 @@ const Findmovies = () => {
         .join('')
     } else {
       html = `
-            <li class="page__empty">
-                <p><i class='bx bx-movie-play bx-lg'></i></p>
-                <p>
-                    Enter a movie title into the search box and click <i class='bx bx-search'></i> to search!
-                </p>
-            </li>
-        `
+        <li class="page__empty">
+            <p><i class='bx bx-movie-play bx-lg'></i></p>
+            <p>
+                Enter a movie title into the search box and click <i class='bx bx-search'></i> to search!
+            </p>
+        </li>
+      `
     }
 
     return html

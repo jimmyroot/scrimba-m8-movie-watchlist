@@ -134,7 +134,8 @@ const List = async () => {
                     <p>
                        This list needs movies! Go to <a href="/findmovies" class="link__find-movies" data-type="navigate">Find Movies</a> to get started! 
                     </p>
-                </li>`
+                </li>
+              `
     }
 
     return html
